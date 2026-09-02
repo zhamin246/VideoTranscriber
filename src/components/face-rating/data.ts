@@ -640,7 +640,12 @@ export const content = {
         href: CONVERT_HREF,
       },
     ],
-    more: [],
+    more: [] as {
+      title: string;
+      body: string;
+      cta: string;
+      href: string;
+    }[],
   },
   sample: { eyebrow: "", title: "", titleAccent: "", body: "" },
   transforms: {
