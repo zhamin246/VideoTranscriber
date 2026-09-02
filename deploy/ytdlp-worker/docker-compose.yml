@@ -1,0 +1,26 @@
+# Paste into Dokploy Compose (Raw). 2 vCPU / 4 GB is enough for 1 job at a time.
+services:
+  ytdlp-api:
+    build: .
+    image: ytdlp-worker:local
+    restart: always
+    environment:
+      - PORT=8000
+      # Optional. Same idea as Cobalt COOKIE_PATH.
+      - COOKIE_PATH=/data/cookies.txt
+      # Optional. If set, Next must send: Authorization: Bearer <token>
+      # - YTDLP_TOKEN=change-me
+    ports:
+      - "8000:8000"
+    volumes:
+      - ytdlp-data:/data
+    mem_limit: 3g
+    cpus: "1.5"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  ytdlp-data:

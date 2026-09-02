@@ -1,0 +1,290 @@
+:root {
+  /* AliveMoment 配色方案 - 参考 https://alivemoment.com/ */
+  
+  /* 背景色系 - 米白色/米色 */
+  --background: #F8F4EE;  /* rgb(248, 244, 238) - 主背景色 */
+  --foreground: #000000;  /* rgb(0, 0, 0) - 主文本颜色 */
+  
+  /* 卡片 */
+  --card: #FFFFFF;  /* rgb(255, 255, 255) - 白色卡片 */
+  --card-foreground: #000000;  /* 卡片文本颜色 */
+  
+  /* 弹出层 */
+  --popover: #FFFFFF;
+  --popover-foreground: #000000;
+  
+  /* 主色 - 深绿色 */
+  --primary: #124337;  /* rgb(18, 67, 55) - 主绿色 */
+  --primary-foreground: #FFFFFF;  /* 主色上的文本颜色 */
+  
+  /* 次要色 - 浅米色 */
+  --secondary: #EEEBE3;  /* rgb(238, 235, 227) - 浅米色 */
+  --secondary-foreground: #124337;
+  
+  /* 静音色 - 浅米色背景 */
+  --muted: #EEEBE3;  /* rgb(238, 235, 227) */
+  --muted-foreground: #6A7282;  /* rgb(106, 114, 130) - 中灰色文本 */
+  
+  /* 强调色 - 金黄色（AliveMoment 的黄色强调色） */
+  --accent: #FFDD45;  /* rgb(255, 221, 69) - 金黄色强调色 */
+  --accent-foreground: #000000;  /* 强调色上的文本颜色 */
+  
+  /* 警告/危险色 */
+  --destructive: #D94F4F;  /* rgb(217, 79, 79) - 红色 */
+  --destructive-foreground: #FFFFFF;
+  
+  /* 边框和输入框 */
+  --border: #EEEBE3;  /* 浅米色边框，参考 oklch(92.9% .013 255.508) */
+  --input: #EEEBE3;
+  --ring: #124337;  /* 焦点环颜色使用主绿色 */
+  
+  /* 图表颜色 */
+  --chart-1: #124337;  /* 主绿色 */
+  --chart-2: #0E362C;  /* 深绿色变体 */
+  --chart-3: #FFDD45;  /* 金黄色 */
+  --chart-4: #6A7282;  /* 中灰色 */
+  --chart-5: #EEEBE3;  /* 浅米色 */
+  
+  /* 侧边栏 */
+  --sidebar: #F8F4EE;  /* 米白色背景 */
+  --sidebar-foreground: #124337;
+  --sidebar-primary: #124337;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #FFFFFF;
+  --sidebar-accent-foreground: #124337;
+  --sidebar-border: #EEEBE3;
+  --sidebar-ring: #124337;
+  
+  /* 字体 — Inter + Instrument Serif (thefacereport) */
+  --font-sans: var(--font-inter), Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: var(--font-instrument), "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  
+  /* 圆角 */
+  --radius: 0.75rem;
+  
+  /* 阴影 - 轻微阴影增强层次感 */
+  --shadow-2xs: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+  --shadow-xs: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.05), 0px 1px 5px -4px rgba(0, 0, 0, 0.1);
+  --shadow: 0px 2px 8px -1px rgba(0, 0, 0, 0.1), 0px 1px 5px -4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0px 2px 8px -1px rgba(0, 0, 0, 0.1), 0px 1px 5px -4px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0px 2px 8px -1px rgba(0, 0, 0, 0.1), 0px 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0px 2px 8px -1px rgba(0, 0, 0, 0.1), 0px 8px 10px -1px rgba(0, 0, 0, 0.1);
+  --shadow-2xl: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
+  
+  /* 其他 */
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+  
+  /* 卡片变体 */
+  --card-light: #FFFFFF;  /* 白色 - 亮色模式下的浅色卡片 */
+  --card-dark: #EEEBE3;  /* 浅米色 - 亮色模式下的深色卡片 */
+  
+  /* AliveMoment 扩展颜色变量 */
+  --color-green-500: #124337;  /* 主绿色 */
+  --color-green-600: #0E362C;  /* 深绿色变体 */
+  --color-green-700: #0C2B25;  /* 更深绿色变体 */
+  --color-yellow-500: #FFDD45;  /* 金黄色强调色 */
+  --color-beige-500: #F8F4EE;  /* 米白色 */
+  --color-beige-600: #EEEBE3;  /* 浅米色 */
+  --color-gray-500: #6A7282;  /* 中灰色 */
+}
+
+.dark {
+  /* 暗色模式 - 保持 AliveMoment 的配色理念，但适配暗色主题 */
+  
+  /* 背景色系 - 深色背景 */
+  --background: #1A1A1A;  /* 深灰色背景 */
+  --foreground: #FAFAFA;  /* 浅色文字 */
+  
+  /* 卡片 */
+  --card: #2D2D2D;  /* 稍亮的深灰色卡片 */
+  --card-foreground: #FAFAFA;
+  
+  /* 弹出层 */
+  --popover: #1A1A1A;
+  --popover-foreground: #FAFAFA;
+  
+  /* 主色 - 在暗色模式下使用浅色 */
+  --primary: #124337;  /* 保持主绿色，但可以调整为更亮的变体 */
+  --primary-foreground: #FFFFFF;
+  
+  /* 次要色 */
+  --secondary: #2D2D2D;
+  --secondary-foreground: #FAFAFA;
+  
+  /* 静音色 */
+  --muted: #2D2D2D;
+  --muted-foreground: #9CA3AF;  /* 浅灰色文本 */
+  
+  /* 强调色 - 保持金黄色 */
+  --accent: #FFDD45;
+  --accent-foreground: #000000;
+  
+  /* 警告/危险色 */
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+  
+  /* 边框和输入框 */
+  --border: #3A3A3A;
+  --input: #3A3A3A;
+  --ring: #124337;
+  
+  /* 图表颜色 - 在暗色模式下使用更亮的变体 */
+  --chart-1: #124337;
+  --chart-2: #0E362C;
+  --chart-3: #FFDD45;
+  --chart-4: #9CA3AF;
+  --chart-5: #3A3A3A;
+  
+  /* 侧边栏 */
+  --sidebar: #1A1A1A;
+  --sidebar-foreground: #FAFAFA;
+  --sidebar-primary: #124337;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #2D2D2D;
+  --sidebar-accent-foreground: #FAFAFA;
+  --sidebar-border: #3A3A3A;
+  --sidebar-ring: #124337;
+  
+  /* 字体 — Inter + Instrument Serif */
+  --font-sans: var(--font-inter), Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: var(--font-instrument), "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  
+  /* 圆角 */
+  --radius: 0.75rem;
+  
+  /* 阴影 */
+  --shadow-2xs: 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+  --shadow-xs: 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 5px -4px rgba(0, 0, 0, 0.4);
+  --shadow: 0px 2px 8px -1px rgba(0, 0, 0, 0.4), 0px 1px 5px -4px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0px 2px 8px -1px rgba(0, 0, 0, 0.4), 0px 1px 5px -4px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0px 2px 8px -1px rgba(0, 0, 0, 0.4), 0px 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0px 2px 8px -1px rgba(0, 0, 0, 0.4), 0px 8px 10px -1px rgba(0, 0, 0, 0.4);
+  --shadow-2xl: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
+  
+  /* 其他 */
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+  
+  /* 卡片变体 */
+  --card-light: #2D2D2D;  /* 稍亮的灰色 - 暗黑模式下的浅色卡片 */
+  --card-dark: #1A1A1A;  /* 更深的灰色 - 暗黑模式下的深色卡片 */
+  
+  /* AliveMoment 扩展颜色变量 - 暗色模式 */
+  --color-green-500: #124337;
+  --color-green-600: #0E362C;
+  --color-green-700: #0C2B25;
+  --color-yellow-500: #FFDD45;
+  --color-beige-500: #2D2D2D;  /* 暗色模式下使用深灰色替代米色 */
+  --color-beige-600: #3A3A3A;
+  --color-gray-500: #9CA3AF;  /* 暗色模式下使用更亮的灰色 */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-card-light: var(--card-light);
+  --color-card-dark: var(--card-dark);
+  
+  /* AliveMoment 扩展颜色 */
+  --color-green-500: var(--color-green-500);
+  --color-green-600: var(--color-green-600);
+  --color-green-700: var(--color-green-700);
+  --color-yellow-500: var(--color-yellow-500);
+  --color-beige-500: var(--color-beige-500);
+  --color-beige-600: var(--color-beige-600);
+  --color-gray-500: var(--color-gray-500);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --shadow-2xs: var(--shadow-2xs);
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow: var(--shadow);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-2xl: var(--shadow-2xl);
+}
+
+/* AliveMoment 风格的文字样式 */
+.hero-title {
+  font-family: var(--font-sans);
+  font-size: 1.5rem; /* 24px - text-2xl */
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--primary);  /* 使用主绿色变量 */
+  letter-spacing: -0.02em;
+}
+
+.hero-title-light {
+  font-family: var(--font-sans);
+  font-size: 1.5rem; /* 24px - text-2xl */
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--primary-foreground);  /* 使用主色前景色变量 */
+  letter-spacing: -0.02em;
+}
+
+/* 响应式文字大小 */
+@media (min-width: 640px) {
+  .hero-title,
+  .hero-title-light {
+    font-size: 1.875rem; /* 30px - text-3xl */
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-title,
+  .hero-title-light {
+    font-size: 2.25rem; /* 36px - text-4xl */
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-title,
+  .hero-title-light {
+    font-size: 2.25rem; /* 36px */
+  }
+}

@@ -1,0 +1,706 @@
+[
+  {
+    "name": ".aider.conf.yml",
+    "path": ".aider.conf.yml",
+    "sha": "4994bc2401f9eb320cead3dd56906786398628c6",
+    "size": 58,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.aider.conf.yml?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/.aider.conf.yml",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/4994bc2401f9eb320cead3dd56906786398628c6",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/.aider.conf.yml",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.aider.conf.yml?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/4994bc2401f9eb320cead3dd56906786398628c6",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/.aider.conf.yml"
+    }
+  },
+  {
+    "name": ".amazonq",
+    "path": ".amazonq",
+    "sha": "bd439316c45a63ac0c5312c06187e3c916387db2",
+    "size": 0,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.amazonq?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.amazonq",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/bd439316c45a63ac0c5312c06187e3c916387db2",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.amazonq?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/bd439316c45a63ac0c5312c06187e3c916387db2",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.amazonq"
+    }
+  },
+  {
+    "name": ".augment",
+    "path": ".augment",
+    "sha": "93350d973d15af810cde517a05225baa3e2bcabc",
+    "size": 0,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.augment?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.augment",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/93350d973d15af810cde517a05225baa3e2bcabc",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.augment?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/93350d973d15af810cde517a05225baa3e2bcabc",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.augment"
+    }
+  },
+  {
+    "name": ".claude",
+    "path": ".claude",
+    "sha": "f714e0485460000bdb3d8fbaedf4333af9fe2d82",
+    "size": 0,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.claude?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.claude",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/f714e0485460000bdb3d8fbaedf4333af9fe2d82",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.claude?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/f714e0485460000bdb3d8fbaedf4333af9fe2d82",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.claude"
+    }
+  },
+  {
+    "name": ".cline",
+    "path": ".cline",
+    "sha": "ff2e5963d128dc0022bf2de64d4190cea9c41116",
+    "size": 0,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.cline?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.cline",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/ff2e5963d128dc0022bf2de64d4190cea9c41116",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.cline?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/ff2e5963d128dc0022bf2de64d4190cea9c41116",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.cline"
+    }
+  },
+  {
+    "name": ".clinerules",
+    "path": ".clinerules",
+    "sha": "8a9cb3fcadfadf53781c46d1dac88206bcdf65a2",
+    "size": 7203,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.clinerules?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/.clinerules",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/8a9cb3fcadfadf53781c46d1dac88206bcdf65a2",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/.clinerules",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.clinerules?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/8a9cb3fcadfadf53781c46d1dac88206bcdf65a2",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/.clinerules"
+    }
+  },
+  {
+    "name": ".codex",
+    "path": ".codex",
+    "sha": "f714e0485460000bdb3d8fbaedf4333af9fe2d82",
+    "size": 0,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.codex?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.codex",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/f714e0485460000bdb3d8fbaedf4333af9fe2d82",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.codex?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/f714e0485460000bdb3d8fbaedf4333af9fe2d82",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.codex"
+    }
+  },
+  {
+    "name": ".continue",
+    "path": ".continue",
+    "sha": "a2242372dc479a04e272cad03c87646ce73c18a1",
+    "size": 0,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.continue?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.continue",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/a2242372dc479a04e272cad03c87646ce73c18a1",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.continue?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/a2242372dc479a04e272cad03c87646ce73c18a1",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.continue"
+    }
+  },
+  {
+    "name": ".cursor",
+    "path": ".cursor",
+    "sha": "6a3eb2baea504c91deea4321447d696d92a587a2",
+    "size": 0,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.cursor?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.cursor",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/6a3eb2baea504c91deea4321447d696d92a587a2",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.cursor?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/6a3eb2baea504c91deea4321447d696d92a587a2",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.cursor"
+    }
+  },
+  {
+    "name": ".dockerignore",
+    "path": ".dockerignore",
+    "sha": "6f4507bd1eec25a40e705af8653d6a7c964eb5ac",
+    "size": 748,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.dockerignore?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/.dockerignore",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/6f4507bd1eec25a40e705af8653d6a7c964eb5ac",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/.dockerignore",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.dockerignore?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/6f4507bd1eec25a40e705af8653d6a7c964eb5ac",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/.dockerignore"
+    }
+  },
+  {
+    "name": ".gemini",
+    "path": ".gemini",
+    "sha": "282838adaa38f63fb574d4008f7ce1e91f3b4ddd",
+    "size": 0,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.gemini?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.gemini",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/282838adaa38f63fb574d4008f7ce1e91f3b4ddd",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.gemini?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/282838adaa38f63fb574d4008f7ce1e91f3b4ddd",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.gemini"
+    }
+  },
+  {
+    "name": ".gitattributes",
+    "path": ".gitattributes",
+    "sha": "50ce17932e8b91b386387a5109b4c49b582b2811",
+    "size": 228,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.gitattributes?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/.gitattributes",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/50ce17932e8b91b386387a5109b4c49b582b2811",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/.gitattributes",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.gitattributes?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/50ce17932e8b91b386387a5109b4c49b582b2811",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/.gitattributes"
+    }
+  },
+  {
+    "name": ".github",
+    "path": ".github",
+    "sha": "dd902da71d4007c7ec514f3fee976f70d1e8eccc",
+    "size": 0,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.github?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.github",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/dd902da71d4007c7ec514f3fee976f70d1e8eccc",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.github?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/dd902da71d4007c7ec514f3fee976f70d1e8eccc",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.github"
+    }
+  },
+  {
+    "name": ".gitignore",
+    "path": ".gitignore",
+    "sha": "5967111b4e0f787df1346a3d23cd1acaef9e828b",
+    "size": 539,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.gitignore?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/.gitignore",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/5967111b4e0f787df1346a3d23cd1acaef9e828b",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/.gitignore",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.gitignore?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/5967111b4e0f787df1346a3d23cd1acaef9e828b",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/.gitignore"
+    }
+  },
+  {
+    "name": ".kiro",
+    "path": ".kiro",
+    "sha": "f714e0485460000bdb3d8fbaedf4333af9fe2d82",
+    "size": 0,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.kiro?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.kiro",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/f714e0485460000bdb3d8fbaedf4333af9fe2d82",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.kiro?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/f714e0485460000bdb3d8fbaedf4333af9fe2d82",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.kiro"
+    }
+  },
+  {
+    "name": ".nvmrc",
+    "path": ".nvmrc",
+    "sha": "a45fd52cc5891570d6299fab38643103c3955474",
+    "size": 3,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.nvmrc?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/.nvmrc",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/a45fd52cc5891570d6299fab38643103c3955474",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/.nvmrc",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.nvmrc?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/a45fd52cc5891570d6299fab38643103c3955474",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/.nvmrc"
+    }
+  },
+  {
+    "name": ".opencode",
+    "path": ".opencode",
+    "sha": "cfab71c18b540186c00d10c16cc9064c1a1e5756",
+    "size": 0,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.opencode?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.opencode",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/cfab71c18b540186c00d10c16cc9064c1a1e5756",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.opencode?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/cfab71c18b540186c00d10c16cc9064c1a1e5756",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.opencode"
+    }
+  },
+  {
+    "name": ".roo",
+    "path": ".roo",
+    "sha": "4394f3d6744f08f7e09d45c4ac9a6feead55c595",
+    "size": 0,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.roo?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.roo",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/4394f3d6744f08f7e09d45c4ac9a6feead55c595",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.roo?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/4394f3d6744f08f7e09d45c4ac9a6feead55c595",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.roo"
+    }
+  },
+  {
+    "name": ".windsurf",
+    "path": ".windsurf",
+    "sha": "18a1500a13a7d389cdb5f4cfc57fcec431ec6393",
+    "size": 0,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.windsurf?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.windsurf",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/18a1500a13a7d389cdb5f4cfc57fcec431ec6393",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.windsurf?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/18a1500a13a7d389cdb5f4cfc57fcec431ec6393",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/.windsurf"
+    }
+  },
+  {
+    "name": ".windsurfrules",
+    "path": ".windsurfrules",
+    "sha": "dcc3e11038efc9c8512cffec9ce60ec6c7fa1d2c",
+    "size": 178,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.windsurfrules?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/.windsurfrules",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/dcc3e11038efc9c8512cffec9ce60ec6c7fa1d2c",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/.windsurfrules",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/.windsurfrules?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/dcc3e11038efc9c8512cffec9ce60ec6c7fa1d2c",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/.windsurfrules"
+    }
+  },
+  {
+    "name": "AGENTS.md",
+    "path": "AGENTS.md",
+    "sha": "d6120607c60919bccbd598c3bc8f6a9e37eef1ad",
+    "size": 3389,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/AGENTS.md?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/AGENTS.md",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/d6120607c60919bccbd598c3bc8f6a9e37eef1ad",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/AGENTS.md",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/AGENTS.md?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/d6120607c60919bccbd598c3bc8f6a9e37eef1ad",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/AGENTS.md"
+    }
+  },
+  {
+    "name": "CHANGELOG.md",
+    "path": "CHANGELOG.md",
+    "sha": "95b3aeb3a3a7b807f73193b9f5efe6d21e5951c8",
+    "size": 5668,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/CHANGELOG.md?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/CHANGELOG.md",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/95b3aeb3a3a7b807f73193b9f5efe6d21e5951c8",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/CHANGELOG.md",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/CHANGELOG.md?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/95b3aeb3a3a7b807f73193b9f5efe6d21e5951c8",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/CHANGELOG.md"
+    }
+  },
+  {
+    "name": "CLAUDE.md",
+    "path": "CLAUDE.md",
+    "sha": "43c994c2d3617f947bcb5adf1933e21dabe46bb5",
+    "size": 11,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/CLAUDE.md?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/CLAUDE.md",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/43c994c2d3617f947bcb5adf1933e21dabe46bb5",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/CLAUDE.md",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/CLAUDE.md?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/43c994c2d3617f947bcb5adf1933e21dabe46bb5",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/CLAUDE.md"
+    }
+  },
+  {
+    "name": "CONTRIBUTING.md",
+    "path": "CONTRIBUTING.md",
+    "sha": "91513bc8c74283377c306503b9b0fded63fe793d",
+    "size": 3122,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/CONTRIBUTING.md?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/CONTRIBUTING.md",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/91513bc8c74283377c306503b9b0fded63fe793d",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/CONTRIBUTING.md",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/CONTRIBUTING.md?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/91513bc8c74283377c306503b9b0fded63fe793d",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/CONTRIBUTING.md"
+    }
+  },
+  {
+    "name": "Dockerfile",
+    "path": "Dockerfile",
+    "sha": "91da1fa8cb560460c8854942af8bf84257e4f131",
+    "size": 3985,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/Dockerfile?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/Dockerfile",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/91da1fa8cb560460c8854942af8bf84257e4f131",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/Dockerfile",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/Dockerfile?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/91da1fa8cb560460c8854942af8bf84257e4f131",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/Dockerfile"
+    }
+  },
+  {
+    "name": "Dockerfile.dev",
+    "path": "Dockerfile.dev",
+    "sha": "90dc6822ddbd3134fe17cd081b54f4e9af7e95a7",
+    "size": 252,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/Dockerfile.dev?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/Dockerfile.dev",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/90dc6822ddbd3134fe17cd081b54f4e9af7e95a7",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/Dockerfile.dev",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/Dockerfile.dev?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/90dc6822ddbd3134fe17cd081b54f4e9af7e95a7",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/Dockerfile.dev"
+    }
+  },
+  {
+    "name": "GEMINI.md",
+    "path": "GEMINI.md",
+    "sha": "43c994c2d3617f947bcb5adf1933e21dabe46bb5",
+    "size": 11,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/GEMINI.md?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/GEMINI.md",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/43c994c2d3617f947bcb5adf1933e21dabe46bb5",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/GEMINI.md",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/GEMINI.md?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/43c994c2d3617f947bcb5adf1933e21dabe46bb5",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/GEMINI.md"
+    }
+  },
+  {
+    "name": "LICENSE",
+    "path": "LICENSE",
+    "sha": "285e414fc5acbcd7861355a53567d5c25ada8053",
+    "size": 1067,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/LICENSE?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/LICENSE",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/285e414fc5acbcd7861355a53567d5c25ada8053",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/LICENSE",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/LICENSE?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/285e414fc5acbcd7861355a53567d5c25ada8053",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/LICENSE"
+    }
+  },
+  {
+    "name": "README.ja.md",
+    "path": "README.ja.md",
+    "sha": "eb05bbb06410965bbc403a1b296b2b7f2d9db5e2",
+    "size": 12543,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/README.ja.md?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/README.ja.md",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/eb05bbb06410965bbc403a1b296b2b7f2d9db5e2",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/README.ja.md",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/README.ja.md?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/eb05bbb06410965bbc403a1b296b2b7f2d9db5e2",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/README.ja.md"
+    }
+  },
+  {
+    "name": "README.md",
+    "path": "README.md",
+    "sha": "e79202c7c65d34772e3a7205f83af0743a49a759",
+    "size": 10438,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/README.md?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/README.md",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/e79202c7c65d34772e3a7205f83af0743a49a759",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/README.md",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/README.md?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/e79202c7c65d34772e3a7205f83af0743a49a759",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/README.md"
+    }
+  },
+  {
+    "name": "README.zh-CN.md",
+    "path": "README.zh-CN.md",
+    "sha": "297907e56d6ddf65c1bccbf336b2ae0b3ed29f32",
+    "size": 9979,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/README.zh-CN.md?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/README.zh-CN.md",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/297907e56d6ddf65c1bccbf336b2ae0b3ed29f32",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/README.zh-CN.md",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/README.zh-CN.md?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/297907e56d6ddf65c1bccbf336b2ae0b3ed29f32",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/README.zh-CN.md"
+    }
+  },
+  {
+    "name": "SECURITY.md",
+    "path": "SECURITY.md",
+    "sha": "07d337426847ce6c7809c517c2f5a79f3f566400",
+    "size": 1998,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/SECURITY.md?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/SECURITY.md",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/07d337426847ce6c7809c517c2f5a79f3f566400",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/SECURITY.md",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/SECURITY.md?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/07d337426847ce6c7809c517c2f5a79f3f566400",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/SECURITY.md"
+    }
+  },
+  {
+    "name": "components.json",
+    "path": "components.json",
+    "sha": "8d886db5756307e013bc8ae97c05220fb7b6ab7a",
+    "size": 520,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/components.json?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/components.json",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/8d886db5756307e013bc8ae97c05220fb7b6ab7a",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/components.json",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/components.json?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/8d886db5756307e013bc8ae97c05220fb7b6ab7a",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/components.json"
+    }
+  },
+  {
+    "name": "docker-compose.yml",
+    "path": "docker-compose.yml",
+    "sha": "39fc6f9c81ba5d8caf8a71d41476708237dcc5cf",
+    "size": 1235,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/docker-compose.yml?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/docker-compose.yml",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/39fc6f9c81ba5d8caf8a71d41476708237dcc5cf",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/docker-compose.yml",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/docker-compose.yml?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/39fc6f9c81ba5d8caf8a71d41476708237dcc5cf",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/docker-compose.yml"
+    }
+  },
+  {
+    "name": "docs",
+    "path": "docs",
+    "sha": "8f8f1adac35ccddfbbecb3ebb573349cc0cd3fb9",
+    "size": 0,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/docs?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/docs",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/8f8f1adac35ccddfbbecb3ebb573349cc0cd3fb9",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/docs?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/8f8f1adac35ccddfbbecb3ebb573349cc0cd3fb9",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/docs"
+    }
+  },
+  {
+    "name": "eslint.config.mjs",
+    "path": "eslint.config.mjs",
+    "sha": "05e726d1b4201bc8c7716d2b058279676582e8c0",
+    "size": 465,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/eslint.config.mjs?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/eslint.config.mjs",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/05e726d1b4201bc8c7716d2b058279676582e8c0",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/eslint.config.mjs",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/eslint.config.mjs?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/05e726d1b4201bc8c7716d2b058279676582e8c0",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/eslint.config.mjs"
+    }
+  },
+  {
+    "name": "next.config.ts",
+    "path": "next.config.ts",
+    "sha": "ed2357811acccd014f486a7fadf3f23c462bcc78",
+    "size": 157,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/next.config.ts?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/next.config.ts",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/ed2357811acccd014f486a7fadf3f23c462bcc78",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/next.config.ts",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/next.config.ts?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/ed2357811acccd014f486a7fadf3f23c462bcc78",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/next.config.ts"
+    }
+  },
+  {
+    "name": "package-lock.json",
+    "path": "package-lock.json",
+    "sha": "88f8c9d141accc4aab81e06fe5cdc2ee265f1918",
+    "size": 351445,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/package-lock.json?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/package-lock.json",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/88f8c9d141accc4aab81e06fe5cdc2ee265f1918",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/package-lock.json",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/package-lock.json?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/88f8c9d141accc4aab81e06fe5cdc2ee265f1918",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/package-lock.json"
+    }
+  },
+  {
+    "name": "package.json",
+    "path": "package.json",
+    "sha": "4bed5fa1597f93adcefff41065bfb7c023d82086",
+    "size": 1492,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/package.json?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/package.json",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/4bed5fa1597f93adcefff41065bfb7c023d82086",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/package.json",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/package.json?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/4bed5fa1597f93adcefff41065bfb7c023d82086",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/package.json"
+    }
+  },
+  {
+    "name": "postcss.config.mjs",
+    "path": "postcss.config.mjs",
+    "sha": "61e36849cf7cfa9f1f71b4a3964a4953e3e243d3",
+    "size": 94,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/postcss.config.mjs?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/postcss.config.mjs",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/61e36849cf7cfa9f1f71b4a3964a4953e3e243d3",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/postcss.config.mjs",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/postcss.config.mjs?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/61e36849cf7cfa9f1f71b4a3964a4953e3e243d3",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/postcss.config.mjs"
+    }
+  },
+  {
+    "name": "public",
+    "path": "public",
+    "sha": "da07820aecaeb1fdc19f43e9dbd82937d9dc3e5e",
+    "size": 0,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/public?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/public",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/da07820aecaeb1fdc19f43e9dbd82937d9dc3e5e",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/public?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/da07820aecaeb1fdc19f43e9dbd82937d9dc3e5e",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/public"
+    }
+  },
+  {
+    "name": "scripts",
+    "path": "scripts",
+    "sha": "0325a0f150388d90a8aee8cc6de1f56ab7ee8736",
+    "size": 0,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/scripts?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/scripts",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/0325a0f150388d90a8aee8cc6de1f56ab7ee8736",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/scripts?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/0325a0f150388d90a8aee8cc6de1f56ab7ee8736",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/scripts"
+    }
+  },
+  {
+    "name": "src",
+    "path": "src",
+    "sha": "4cb5ee0a490d251aaf83c254c08adc52077005f2",
+    "size": 0,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/src?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/src",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/4cb5ee0a490d251aaf83c254c08adc52077005f2",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/src?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/trees/4cb5ee0a490d251aaf83c254c08adc52077005f2",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/tree/master/src"
+    }
+  },
+  {
+    "name": "tsconfig.json",
+    "path": "tsconfig.json",
+    "sha": "cf9c65d3e0676a0169374d827f7abb97497789ef",
+    "size": 670,
+    "url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/tsconfig.json?ref=master",
+    "html_url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/tsconfig.json",
+    "git_url": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/cf9c65d3e0676a0169374d827f7abb97497789ef",
+    "download_url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/tsconfig.json",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/contents/tsconfig.json?ref=master",
+      "git": "https://api.github.com/repos/JCodesMore/ai-website-cloner-template/git/blobs/cf9c65d3e0676a0169374d827f7abb97497789ef",
+      "html": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/tsconfig.json"
+    }
+  }
+]

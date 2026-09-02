@@ -1,0 +1,172 @@
+{
+  "metadata": {
+    "title": "NeonLights AI - Sua Ferramenta Criativa para Todas as Ocasiões",
+  "description": "Transforme sua visão criativa em realidade com o NeonLights AI. Crie imagens, vídeos e animações com nossa plataforma criativa com IA.",
+    "keywords": ""
+  },
+  "user": {
+    "sign_in": "Entrar",
+    "sign_out": "Sair",
+    "credits": "Créditos",
+    "api_keys": "Chaves de API",
+    "my_orders": "Meus Pedidos",
+    "user_center": "Centro do Usuário",
+    "admin_system": "Sistema Admin"
+  },
+  "sign_modal": {
+    "sign_in_title": "Entrar",
+    "sign_in_description": "Acesse sua conta",
+    "sign_up_title": "Cadastrar",
+    "sign_up_description": "Crie uma conta",
+    "email_title": "Email",
+    "email_placeholder": "Digite seu email",
+    "password_title": "Senha",
+    "password_placeholder": "Digite sua senha",
+    "forgot_password": "Esqueceu a senha?",
+    "or": "Ou",
+    "continue": "Continuar",
+    "no_account": "Não tem uma conta?",
+    "email_sign_in": "Entrar com Email",
+    "google_sign_in": "Entrar com Google",
+    "github_sign_in": "Entrar com GitHub",
+    "close_title": "Fechar",
+    "cancel_title": "Cancelar"
+  },
+  "my_orders": {
+    "title": "Meus Pedidos",
+    "description": "pedidos pagos com NeonLights AI.",
+    "no_orders": "Nenhum pedido encontrado",
+    "tip": "",
+    "activate_order": "Ativar Pedido",
+    "actived": "Ativado",
+    "join_discord": "Entrar no Discord",
+    "read_docs": "Ler Docs",
+    "subscription_status": "Status da Assinatura",
+    "current_subscription": "Assinatura Atual",
+    "next_billing_date": "Próxima Cobrança",
+    "manage_subscription": "Gerenciar Assinatura",
+    "subscription_cancelled": "Assinatura Cancelada",
+    "subscription_cancelled_notice": "Sua assinatura será cancelada ao final do período atual",
+    "no_subscription": "Sem assinatura",
+    "table": {
+      "order_no": "Nº do Pedido",
+      "email": "Email",
+      "product_name": "Produto",
+      "amount": "Valor",
+      "paid_at": "Pago Em",
+      "github_username": "Usuário GitHub",
+      "status": "Status",
+      "manage_billing": "Gerenciar Cobrança",
+      "interval": "Intervalo",
+      "interval_month": "Mensal",
+      "interval_year": "Anual",
+      "interval_one_time": "Única Vez"
+    }
+  },
+  "my_credits": {
+    "title": "Meus Créditos",
+    "left_tip": "créditos restantes: {left_credits}",
+    "no_credits": "Sem registros de créditos",
+    "recharge": "Recarregar",
+    "table": {
+      "trans_no": "Nº Trans",
+      "trans_type": "Tipo",
+      "credits": "Créditos",
+      "updated_at": "Atualizado Em",
+      "status": "Status",
+      "expired_at": "Expira Em",
+      "created_at": "Criado Em"
+    }
+  },
+  "api_keys": {
+    "title": "Chaves de API",
+    "tip": "Mantenha sua chave segura para evitar vazamentos",
+    "no_api_keys": "Sem chaves de API",
+    "create_api_key": "Criar Chave de API",
+    "table": {
+      "name": "Nome",
+      "key": "Chave",
+      "created_at": "Criado Em"
+    },
+    "form": {
+      "name": "Nome",
+      "name_placeholder": "Nome da chave",
+      "submit": "Enviar"
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "description": "Notícias, recursos e atualizações do NeonLights AI",
+    "read_more_text": "Ler mais"
+  },
+  "my_invites": {
+    "title": "Minhas Indicações",
+    "description": "Veja seus registros de convite",
+    "no_invites": "Nenhum convite encontrado",
+    "my_invite_link": "Meu link de convite",
+    "edit_invite_link": "Editar link de convite",
+    "copy_invite_link": "Copiar link de convite",
+    "invite_code": "Código de convite",
+    "invite_tip": "Convide 1 amigo para comprar NeonLights AI, ganhe $50.",
+    "invite_balance": "Saldo de Indicação",
+    "total_invite_count": "Convites Totais",
+    "total_paid_count": "Pagos Totais",
+    "total_award_amount": "Prêmio Total",
+    "update_invite_code": "Definir código",
+    "update_invite_code_tip": "Digite seu código personalizado",
+    "update_invite_button": "Salvar",
+    "no_orders": "Você não pode convidar antes de comprar NeonLights AI",
+    "no_affiliates": "Você não pode convidar, contate-nos para solicitar permissão.",
+    "table": {
+      "invite_time": "Hora do Convite",
+      "invite_user": "Usuário Convidado",
+      "status": "Status",
+      "reward_percent": "Percentual",
+      "reward_amount": "Valor",
+      "pending": "Pendente",
+      "completed": "Concluído"
+    }
+  },
+  "feedback": {
+    "title": "Feedback",
+    "description": "Conte-nos o que funcionou bem ou como melhorar.",
+    "submit": "Enviar",
+    "loading": "Enviando...",
+    "contact_tip": "Outras formas de contato",
+    "rating_tip": "Como você se sente sobre o NeonLights AI?",
+    "placeholder": "Deixe seu comentário aqui..."
+  },
+  "user_generation_records": {
+    "title": "Registros de Geração",
+    "description": "Veja seu histórico de geração de IA",
+    "table": {
+      "id": "ID",
+      "type": "Tipo",
+      "prompt": "Prompt",
+      "status": "Status",
+      "created_at": "Criado Em",
+      "credits_used": "Créditos Usados",
+      "actions": "Ações",
+      "download": "Baixar",
+      "failed": "Falhou",
+      "expired": "Expirado (7 dias)"
+    },
+    "refresh": "Atualizar",
+    "no_records": "Nenhum registro encontrado"
+  },
+  "home": {
+    "title": "Bem-vindo ao NeonLights AI",
+    "description": "Seu centro de ferramentas criativas com IA",
+    "welcome_message": "Bem-vindo de volta! Escolha abaixo para começar sua jornada criativa.",
+    "quick_access": "Acesso Rápido",
+    "tools": {
+      "video_ai": "Vídeo IA",
+      "image_ai": "Imagem IA",
+      "my_generations": "Minhas Gerações"
+    },
+    "get_started": "Começar",
+    "learn_more": "Saiba Mais"
+  }
+}
+
+

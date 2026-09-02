@@ -1,0 +1,189 @@
+{
+  "metadata": {
+    "title": "Video Transcriber — Convert audio and video to text",
+    "description": "Video Transcriber converts speech in audio and video into searchable text. Upload a file, paste a link, or record. Copy, download, or share.",
+    "keywords": ""
+  },
+  "user": {
+    "sign_in": "Sign In",
+    "sign_out": "Sign Out",
+    "credits": "Credits",
+    "api_keys": "API Keys",
+    "my_orders": "My Orders",
+    "user_center": "User Center",
+    "admin_system": "Admin System"
+  },
+  "sign_modal": {
+    "sign_in_title": "Sign In",
+    "sign_in_description": "Access your account",
+    "sign_up_title": "Sign Up",
+    "sign_up_description": "Create an account",
+    "email_title": "Email",
+    "email_placeholder": "Enter your email",
+    "password_title": "Password",
+    "password_placeholder": "Enter your password",
+    "forgot_password": "Forgot password?",
+    "or": "Or",
+    "continue": "Continue",
+    "no_account": "Don't have an account?",
+    "email_sign_in": "Sign In with Email",
+    "google_sign_in": "Sign In with Google",
+    "github_sign_in": "Sign In with GitHub",
+    "close_title": "Close",
+    "cancel_title": "Cancel"
+  },
+  "my_orders": {
+    "title": "My Orders",
+    "description": "paid orders with Face Rating.",
+    "no_orders": "No orders found",
+    "tip": "",
+    "activate_order": "Activate Order",
+    "actived": "Activated",
+    "join_discord": "Join Discord",
+    "read_docs": "Read Docs",
+    "subscription_status": "Subscription Status",
+    "current_subscription": "Current Subscription",
+    "next_billing_date": "Next Billing Date",
+    "manage_subscription": "Manage Subscription",
+    "subscription_cancelled": "Subscription Cancelled",
+    "subscription_cancelled_notice": "Your subscription will be cancelled at the end of the current period",
+    "no_subscription": "No subscription",
+    "table": {
+      "order_no": "Order No.",
+      "email": "Email",
+      "product_name": "Product",
+      "amount": "Amount",
+      "paid_at": "Paid At",
+      "github_username": "GitHub Username",
+      "status": "Status",
+      "manage_billing": "Manage Billing",
+      "interval": "Interval",
+      "interval_month": "Monthly",
+      "interval_year": "Yearly",
+      "interval_one_time": "One Time"
+    }
+  },
+  "my_credits": {
+    "title": "My Credits",
+    "left_tip": "credits remaining: {left_credits}",
+    "no_credits": "No credit records",
+    "recharge": "Recharge",
+    "table": {
+      "trans_no": "Trans No.",
+      "trans_type": "Type",
+      "credits": "Credits",
+      "updated_at": "Updated At",
+      "status": "Status",
+      "expired_at": "Expires At",
+      "created_at": "Created At"
+    }
+  },
+  "api_keys": {
+    "title": "API Keys",
+    "tip": "Keep your key secure to prevent leaks",
+    "no_api_keys": "No API keys",
+    "create_api_key": "Create API Key",
+    "table": {
+      "name": "Name",
+      "key": "Key",
+      "created_at": "Created At"
+    },
+    "form": {
+      "name": "Name",
+      "name_placeholder": "Key name",
+      "submit": "Submit"
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "description": "News, features, and updates from Face Rating",
+    "read_more_text": "Read more"
+  },
+  "my_invites": {
+    "title": "My Invites",
+    "description": "View your invite records",
+    "no_invites": "No invites found",
+    "my_invite_link": "My invite link",
+    "edit_invite_link": "Edit invite link",
+    "copy_invite_link": "Copy invite link",
+    "invite_code": "Invite code",
+    "invite_tip": "Invite 1 friend to purchase AI Photo Restoration, earn $50.",
+    "invite_balance": "Invite Balance",
+    "total_invite_count": "Total Invites",
+    "total_paid_count": "Total Paid",
+    "total_award_amount": "Total Award",
+    "update_invite_code": "Set code",
+    "update_invite_code_tip": "Enter your custom code",
+    "update_invite_button": "Save",
+    "no_orders": "You cannot invite before purchasing AI Photo Restoration",
+    "no_affiliates": "You cannot invite, contact us to request permission.",
+    "table": {
+      "invite_time": "Invite Time",
+      "invite_user": "Invited User",
+      "status": "Status",
+      "reward_percent": "Percent",
+      "reward_amount": "Amount",
+      "pending": "Pending",
+      "completed": "Completed"
+    }
+  },
+  "feedback": {
+    "title": "Feedback",
+    "description": "Tell us what worked well or how to improve.",
+    "submit": "Submit",
+    "loading": "Submitting...",
+    "contact_tip": "Other ways to contact",
+    "rating_tip": "How do you feel about AI Photo Restoration?",
+    "placeholder": "Leave your comment here..."
+  },
+  "user_generation_records": {
+    "title": "Generation Records",
+    "description": "View your AI generation history",
+    "table": {
+      "id": "ID",
+      "type": "Type",
+      "prompt": "Prompt",
+      "status": "Status",
+      "created_at": "Created At",
+      "credits_used": "Credits Used",
+      "actions": "Actions",
+      "download": "Download",
+      "failed": "Failed",
+      "expired": "Expired (7 days)"
+    },
+    "refresh": "Refresh",
+    "no_records": "No records found"
+  },
+  "home": {
+    "title": "Welcome to AI Photo Restoration",
+    "description": "Your AI-powered photo restoration center",
+    "welcome_message": "Welcome back! Choose below to start your restoration journey.",
+    "quick_access": "Quick Access",
+    "tools": {
+      "video_ai": "Video AI",
+      "image_ai": "Image AI",
+      "my_generations": "My Generations"
+    },
+    "get_started": "Get Started",
+    "learn_more": "Learn More"
+  },
+  "testimonial": {
+    "ctaButton": "Rate my face — free"
+  },
+  "memoryCards": {
+    "card1": {
+      "title": "Score your face with real metrics",
+      "description": "Get a 0–100 face score plus symmetry, proportions, and face-shape signals you can actually understand."
+    },
+    "card2": {
+      "title": "Find your highest-leverage area",
+      "description": "See which feature already works for you — and which change is most likely to improve your look first."
+    },
+    "card3": {
+      "title": "Style guidance matched to your face",
+      "description": "Turn analysis into action with face-shape hairstyle ideas, grooming direction, and a clear next-step plan."
+    }
+  }
+}
+
+

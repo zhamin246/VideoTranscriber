@@ -1,0 +1,4 @@
+# Single-package workspace (required when this file exists).
+# Missing `packages` makes `pnpm run` fail with: packages field missing or empty
+packages:
+  - "."

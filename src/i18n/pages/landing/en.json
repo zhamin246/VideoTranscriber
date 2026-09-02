@@ -1,0 +1,681 @@
+{
+  "template": "face rating",
+  "theme": "light",
+  "header": {
+    "brand": {
+      "title": "Face Rating",
+      "logo": {
+        "src": "/web-app-manifest-192x192.png",
+        "alt": "Face Rating — Free AI Face Analyzer & Facial Beauty Report"
+      },
+      "url": "/#hero"
+    },
+    "nav": {
+      "items": [
+        {
+          "title": "Rate My Face",
+          "url": "/#analyze",
+          "icon": "RiUserSmileLine",
+          "style": "text-lg text-foreground hover:text-foreground/80 transition-colors"
+        },
+        {
+          "title": "How it works",
+          "url": "/#how-it-works",
+          "icon": "RiListCheck2",
+          "style": "text-lg text-foreground hover:text-foreground/80 transition-colors"
+        },
+        {
+          "title": "Free Tests",
+          "url": "/#free-tests",
+          "icon": "RiFlaskLine",
+          "style": "text-lg text-foreground hover:text-foreground/80 transition-colors"
+        },
+        {
+          "title": "Pricing",
+          "url": "/pricing",
+          "icon": "RiPriceTagLine",
+          "style": "text-lg text-foreground hover:text-foreground/80 transition-colors"
+        }
+      ]
+    },
+    "buttons": [
+      {
+        "title": "Create my Face Report",
+        "url": "/pricing",
+        "target": "_self",
+        "variant": "default"
+      }
+    ],
+    "show_sign": true,
+    "show_theme": true,
+    "show_locale": true
+  },
+  "hero": {
+    "title": "Your face, decoded",
+    "highlight_text": "decoded",
+    "description": "Get your 0–100 face score, see your best feature, and find your highest-leverage area — all in seconds. Free, private, and built for real facial analysis.",
+    "status_badge": {
+      "label": "FREE",
+      "text": "FREE · PRIVATE · INSTANT"
+    },
+    "show_happy_users": false,
+    "show_badge": true
+  },
+  "trust_bar": {
+    "name": "trust_bar",
+    "disabled": false,
+    "items": [
+      {
+        "title": "healthline",
+        "image": {
+          "src": "/landingpage/TrustBar/healthline.png",
+          "alt": "Healthline",
+          "width": 120,
+          "height": 40
+        }
+      },
+      {
+        "title": "BUSINESS INSIDER",
+        "image": {
+          "src": "/landingpage/TrustBar/insider.png",
+          "alt": "Business Insider",
+          "width": 120,
+          "height": 40
+        }
+      },
+      {
+        "title": "The New York Times",
+        "image": {
+          "src": "/landingpage/TrustBar/nyt.png",
+          "alt": "The New York Times",
+          "width": 120,
+          "height": 40
+        }
+      },
+      {
+        "title": "BBC",
+        "image": {
+          "src": "/landingpage/TrustBar/bbc.png",
+          "alt": "BBC",
+          "width": 120,
+          "height": 40
+        }
+      },
+      {
+        "title": "0–100 face score in seconds",
+        "icon": "zap"
+      },
+      {
+        "title": "No signup required to try",
+        "icon": "check"
+      },
+      {
+        "title": "Private scans — photos auto-deleted",
+        "icon": "heart"
+      }
+    ]
+  },
+  "feature_grid": {
+    "name": "feature_grid",
+    "title": "Check your face for free",
+    "description": "Run focused facial tests in seconds — symmetry, proportions, face shape, and more. Start free, then unlock the full Face Rating report when you want deeper insights.",
+    "items": [
+      {
+        "title": "Attractiveness Score",
+        "description": "Get a 0–100 face score from symmetry and proportions, with separate jawline and face-shape signals.",
+        "icon": "RiStarLine",
+        "image": {
+          "src": "/landingpage/feature-gri/1.webp",
+          "alt": "Attractiveness score face rating"
+        }
+      },
+      {
+        "title": "Golden Ratio Analysis",
+        "description": "Measure how closely your facial proportions match the golden ratio and classic harmony standards.",
+        "icon": "RiCompass3Line",
+        "image": {
+          "src": "/landingpage/feature-gri/3.webp",
+          "alt": "Golden ratio face analysis"
+        }
+      },
+      {
+        "title": "Symmetry Test",
+        "description": "Left vs. right breakdown across eyes, nose, mouth, and jaw — with a clear symmetry score.",
+        "icon": "RiLayoutColumnLine",
+        "image": {
+          "src": "/landingpage/feature-gri/4.webp",
+          "alt": "Facial symmetry test"
+        }
+      },
+      {
+        "title": "Jawline Rating",
+        "description": "Score jaw definition, taper, and balance so you know how much your jawline drives your overall look.",
+        "icon": "RiScanLine",
+        "image": {
+          "src": "/landingpage/feature-gri/5.webp",
+          "alt": "Jawline rating analysis"
+        }
+      },
+      {
+        "title": "Facial Ratios Report",
+        "description": "FWHR, midface ratio, facial thirds, fifths, and more key ratios that shape perceived attractiveness.",
+        "icon": "RiRulerLine",
+        "image": {
+          "src": "/landingpage/feature-gri/6.webp",
+          "alt": "Facial ratios report"
+        }
+      }
+    ]
+  },
+  "feature_highlights": {
+    "name": "feature_highlights",
+    "title": "Know what suits your face — and what to do next",
+    "description": "Turn one private scan into a complete Face Rating report: measurements, visual guidance, and a plan ordered around your highest-leverage area.",
+    "items": [
+      {
+        "title": "Understand what drives your score",
+        "description": "See how symmetry, golden ratio, facial thirds, eyes, jaw, and proportions contribute to your result — not just a single number.",
+        "features": [
+          "0–100 overall face score",
+          "Multi-region breakdown",
+          "Clear explanations for each metric"
+        ],
+        "image": {
+          "src": "/landingpage/FeatureHighlights/1.webp",
+          "alt": "Understand your Face Rating score breakdown"
+        }
+      },
+      {
+        "title": "See styling on your own face",
+        "description": "Preview hairstyles, grooming, and style concepts matched to your face shape and features — visualized on your photo.",
+        "features": [
+          "Face-shape matched guidance",
+          "Styling concept previews",
+          "Before/after visual ideas"
+        ],
+        "image": {
+          "src": "/landingpage/FeatureHighlights/2.webp",
+          "alt": "See styling concepts for your face"
+        }
+      },
+      {
+        "title": "Act on your highest-leverage area",
+        "description": "Get prioritized first steps and a practical improvement plan so you know what to change first for the biggest visual impact.",
+        "features": [
+          "Highest-leverage focus area",
+          "Prioritized action list",
+          "4-week improvement plan"
+        ],
+        "image": {
+          "src": "/landingpage/FeatureHighlights/3.webp",
+          "alt": "Act on highest-leverage face improvements"
+        }
+      },
+      {
+        "title": "Private by design",
+        "description": "Your photos are used only for analysis. Free scans stay private, and paid report photos are not sold or used for AI training.",
+        "features": [
+          "Private face analysis",
+          "Photos auto-deleted after processing",
+          "Never sold or used for training"
+        ],
+        "image": {
+          "src": "/landingpage/FeatureHighlights/4.webp",
+          "alt": "Private Face Rating analysis"
+        }
+      }
+    ]
+  },
+  "use_cases": {
+    "name": "use_cases",
+    "title": "Who uses Face Rating?",
+    "description": "From curiosity self-checks to serious glow-up planning — Face Rating helps you understand your face with data.",
+    "buttons": [
+      { "id": "self", "label": "Self-improvement" },
+      { "id": "style", "label": "Style & grooming" },
+      { "id": "content", "label": "Content creators" },
+      { "id": "consult", "label": "Beauty consultants" }
+    ],
+    "cards": [
+      {
+        "id": "self",
+        "title": "Self-improvement seekers",
+        "description": "Want an honest baseline before you change hair, skincare, or fitness? Face Rating gives you a clear score, strengths, and the one area with the highest payoff.",
+        "image": "/landingpage/usecase/1.webp",
+        "alt": "Face Rating for self-improvement"
+      },
+      {
+        "id": "style",
+        "title": "Style & grooming planners",
+        "description": "Stop guessing which haircut or frames will work. Match recommendations to your face shape, proportions, and feature balance.",
+        "image": "/landingpage/usecase/2.webp",
+        "alt": "Face Rating for style and grooming"
+      },
+      {
+        "id": "content",
+        "title": "Creators & social users",
+        "description": "Share face score challenges, symmetry tests, and glow-up journeys with analysis that looks precise and trustworthy.",
+        "image": "/landingpage/usecase/3.webp",
+        "alt": "Face Rating for content creators"
+      },
+      {
+        "id": "consult",
+        "title": "Consultants & coaches",
+        "description": "Use structured facial metrics as a conversation starter for styling, skincare, or non-medical lookmax guidance.",
+        "image": "/landingpage/usecase/4.webp",
+        "alt": "Face Rating for consultants"
+      }
+    ]
+  },
+  "scenarios": {
+    "name": "scenarios",
+    "title": "When Face Rating helps most",
+    "description": "Use Face Rating whenever you want clarity — not opinions — about your facial balance.",
+    "cards": [
+      {
+        "id": "baseline",
+        "title": "Get your baseline score",
+        "description": "Upload a front-facing photo and receive a 0–100 face score with core harmony metrics in seconds.",
+        "image": "/landingpage/scenarios-grid/1.webp",
+        "alt": "Get your Face Rating baseline score"
+      },
+      {
+        "id": "haircut",
+        "title": "Before a new haircut",
+        "description": "Confirm face shape and proportions so your next cut frames your features instead of fighting them.",
+        "image": "/landingpage/scenarios-grid/2.webp",
+        "alt": "Face Rating before a haircut"
+      },
+      {
+        "id": "glowup",
+        "title": "Plan a glow-up",
+        "description": "Identify the highest-leverage area first — jaw, eyes, skin presentation, or proportions — so effort compounds.",
+        "image": "/landingpage/scenarios-grid/3.webp",
+        "alt": "Face Rating for glow-up planning"
+      },
+      {
+        "id": "symmetry",
+        "title": "Check facial symmetry",
+        "description": "See left-right balance across eyes, nose, mouth, and jaw with a breakdown you can actually understand.",
+        "image": "/landingpage/scenarios-grid/4.webp",
+        "alt": "Face Rating symmetry check"
+      },
+      {
+        "id": "compare",
+        "title": "Track progress over time",
+        "description": "Retest after grooming, skincare, or fitness changes and compare how your score and regions shift.",
+        "image": "/landingpage/scenarios-grid/5.webp",
+        "alt": "Track Face Rating progress over time"
+      },
+      {
+        "id": "share",
+        "title": "Share a clean report",
+        "description": "Send a polished face analysis summary to a stylist, friend, or coach without awkward screenshots.",
+        "image": "/landingpage/scenarios-grid/6.webp",
+        "alt": "Share your Face Rating report"
+      }
+    ]
+  },
+  "branding": {
+    "title": "Built for precision facial analysis",
+    "items": [
+      { "title": "Next.js", "image": { "src": "/imgs/logos/nextjs.svg", "alt": "Next.js" } },
+      { "title": "React", "image": { "src": "/imgs/logos/react.svg", "alt": "React" } },
+      { "title": "TailwindCSS", "image": { "src": "/imgs/logos/tailwindcss.svg", "alt": "TailwindCSS" } },
+      { "title": "Shadcn/UI", "image": { "src": "/imgs/logos/shadcn.svg", "alt": "Shadcn/UI" } },
+      { "title": "Vercel", "image": { "src": "/imgs/logos/vercel.svg", "alt": "Vercel" } }
+    ]
+  },
+  "introduce": {
+    "name": "introduce",
+    "title": "What is Face Rating?",
+    "label": "Introduce",
+    "description": "Face Rating is an AI face analyzer that scores attractiveness, symmetry, proportions, and face shape — then explains what to improve first.",
+    "image": { "src": "/imgs/features/1.png" },
+    "items": [
+      {
+        "title": "AI face analysis",
+        "description": "Map facial landmarks and score proportions, symmetry, and harmony across key regions of your face.",
+        "icon": "RiScan2Line"
+      },
+      {
+        "title": "Actionable insights",
+        "description": "Go beyond a vanity score: see your best feature and the highest-leverage area to work on next.",
+        "icon": "RiLightbulbLine"
+      },
+      {
+        "title": "Fast & private",
+        "description": "Get results in seconds. Your photos are used only for analysis and handled with privacy-first defaults.",
+        "icon": "RiShieldCheckLine"
+      }
+    ]
+  },
+  "usage": {
+    "name": "usage",
+    "title": "Three steps to your full analysis",
+    "description": "From selfie to Face Rating report — clear, private, and ready in seconds.",
+    "image": {
+      "src": "/imgs/features/1.png",
+      "alt": "How Face Rating analysis works in three steps"
+    },
+    "image_position": "left",
+    "text_align": "center",
+    "items": [
+      {
+        "title": "1. Upload a photo",
+        "description": "Snap or upload a clear, front-facing photo with even lighting. Used only for your analysis — free scans are processed privately.",
+        "image": {
+          "src": "/landingpage/how-to-use/1.webp",
+          "alt": "Upload a photo for Face Rating"
+        }
+      },
+      {
+        "title": "2. AI analyzes your face",
+        "description": "Facial landmarks are mapped, then scored into measurements across key regions — proportions, symmetry, shape, and harmony.",
+        "image": {
+          "src": "/landingpage/how-to-use/2.webp",
+          "alt": "AI analyzes your face for Face Rating"
+        }
+      },
+      {
+        "title": "3. Get your results",
+        "description": "Receive your 0–100 face score, face shape, symmetry insights, golden-ratio signals, and personalized next steps.",
+        "image": {
+          "src": "/landingpage/how-to-use/3.webp",
+          "alt": "Get your Face Rating results"
+        }
+      }
+    ]
+  },
+  "stats": {
+    "name": "stats",
+    "label": "Stats",
+    "title": "Analysis people actually use",
+    "description": "Fast scores, clear breakdowns, and privacy people can trust.",
+    "icon": "FaRegHeart",
+    "items": [
+      {
+        "title": "Analyses completed",
+        "label": "22,000+",
+        "description": "Face scans run in the last 30 days by people checking scores, symmetry, and style fit."
+      },
+      {
+        "title": "Core measurements",
+        "label": "40+",
+        "description": "Proportions, symmetry, ratios, and regional scores in the full Face Rating report."
+      },
+      {
+        "title": "Result speed",
+        "label": "Seconds",
+        "description": "Upload a front-facing photo and get your face score without waiting around."
+      }
+    ]
+  },
+  "testimonial": {
+    "name": "testimonial",
+    "label": "Testimonials",
+    "title": "What users say about Face Rating",
+    "description": "Real feedback from people who wanted more than a random number — they wanted clarity.",
+    "trustBarText": "Trusted by thousands of face analysis users",
+    "ctaButton": "Rate my face — free",
+    "icon": "GoThumbsup",
+    "items": [
+      {
+        "title": "Alex M.",
+        "label": "Self-improvement",
+        "description": "Finally a face score that explains itself. I could see my strongest feature and the one area that actually moves the needle.",
+        "image": {
+          "src": "/landingpage/users/1.webp",
+          "alt": "Alex M. Face Rating testimonial"
+        }
+      },
+      {
+        "title": "Jordan K.",
+        "label": "Content creator",
+        "description": "The symmetry and face-shape breakdown made better content than a plain attractiveness number. Super shareable.",
+        "image": {
+          "src": "/landingpage/users/2.webp",
+          "alt": "Jordan K. Face Rating testimonial"
+        }
+      },
+      {
+        "title": "Sam R.",
+        "label": "Grooming enthusiast",
+        "description": "I used Face Rating before changing my haircut. Matching style to face shape was the missing piece.",
+        "image": {
+          "src": "/landingpage/users/3.webp",
+          "alt": "Sam R. Face Rating testimonial"
+        }
+      },
+      {
+        "title": "Chris L.",
+        "label": "Lookmax beginner",
+        "description": "Highest-leverage area is such a better framing than ‘just gym and mewing.’ Clear priorities.",
+        "image": {
+          "src": "/landingpage/users/4.webp",
+          "alt": "Chris L. Face Rating testimonial"
+        }
+      },
+      {
+        "title": "Taylor P.",
+        "label": "Style coach",
+        "description": "I recommend Face Rating to clients as a baseline. It starts the conversation with data, not vibes.",
+        "image": {
+          "src": "/landingpage/users/5.webp",
+          "alt": "Taylor P. Face Rating testimonial"
+        }
+      },
+      {
+        "title": "Morgan S.",
+        "label": "Privacy-conscious user",
+        "description": "I only tried it because it felt private and fast. Got my score, saved the insights, done.",
+        "image": {
+          "src": "/landingpage/users/6.webp",
+          "alt": "Morgan S. Face Rating testimonial"
+        }
+      },
+      {
+        "title": "Riley T.",
+        "label": "Student",
+        "description": "Golden ratio + thirds + symmetry in one place. Way more useful than random filter apps.",
+        "image": {
+          "src": "/landingpage/users/7.webp",
+          "alt": "Riley T. Face Rating testimonial"
+        }
+      },
+      {
+        "title": "Casey W.",
+        "label": "Fitness lifestyle",
+        "description": "Tracking face score after body-fat changes is motivating. The report language is clean and direct.",
+        "image": {
+          "src": "/landingpage/users/8.webp",
+          "alt": "Casey W. Face Rating testimonial"
+        }
+      },
+      {
+        "title": "Jamie H.",
+        "label": "First-time user",
+        "description": "Uploaded one selfie and understood my face better in under a minute. Instant value.",
+        "image": {
+          "src": "/landingpage/users/9.webp",
+          "alt": "Jamie H. Face Rating testimonial"
+        }
+      }
+    ]
+  },
+  "faq": {
+    "name": "faq",
+    "label": "FAQ",
+    "title": "Frequently asked questions",
+    "description": "Everything you need to know about Face Rating and AI face analysis.",
+    "items": [
+      {
+        "title": "What is Face Rating?",
+        "description": "Face Rating is an AI face analyzer that scores your attractiveness on a 0–100 scale, detects face shape, measures symmetry and proportions, and highlights your best feature plus your highest-leverage improvement area."
+      },
+      {
+        "title": "Is Face Rating free?",
+        "description": "Yes. You can run a free face score and core analysis without creating an account. Deeper reports, detailed plans, and premium add-ons may require a one-time purchase or credits."
+      },
+      {
+        "title": "Is my photo private?",
+        "description": "Privacy is a priority. Photos are used only for your analysis, transferred securely, and not sold or used to train public AI models. Free scans are handled with short retention defaults."
+      },
+      {
+        "title": "What photo works best?",
+        "description": "Use a clear, front-facing photo with even lighting, a neutral expression, and no heavy filters. Avoid extreme angles, sunglasses, or hair covering major facial landmarks."
+      },
+      {
+        "title": "What does the face score mean?",
+        "description": "Your 0–100 score reflects proportional balance, symmetry, and harmony signals from your photo. It is an analysis aid — not a medical diagnosis or a verdict on your worth."
+      },
+      {
+        "title": "What is the “highest-leverage area”?",
+        "description": "It is the facial region or presentation factor where improvement is most likely to raise perceived balance first — for example jaw definition, eye region balance, or overall proportions."
+      },
+      {
+        "title": "How long does analysis take?",
+        "description": "Most Face Rating scans complete in seconds after upload, depending on image size and network speed."
+      },
+      {
+        "title": "Can Face Rating recommend hairstyles?",
+        "description": "Yes. Face shape detection and proportion insights are designed to support hairstyle, frame, and styling guidance matched to your features."
+      }
+    ]
+  },
+  "related_tools": {
+    "name": "related_tools",
+    "title": "Related tools",
+    "description": "Explore Face Rating tools for scoring, shape, and style guidance",
+    "items": [
+      {
+        "title": "Face Rating",
+        "description": "Get your 0–100 face score, symmetry insights, face shape, and highest-leverage improvement area — free to start.",
+        "url": "/#hero",
+        "icon": "RiUserSmileLine",
+        "iconColor": "bg-blue-100 text-blue-600",
+        "features": [
+          "0–100 attractiveness score",
+          "Symmetry & proportion analysis",
+          "Face shape detection",
+          "Free to try, private by default"
+        ]
+      }
+    ]
+  },
+  "memory_cards": {
+    "name": "memory_cards",
+    "items": [
+      {
+        "title": "Score your face with real metrics",
+        "description": "Get a 0–100 face score plus symmetry, proportions, and face-shape signals you can actually understand.",
+        "image": {
+          "src": "/landingpage/memory-cards/1.webp",
+          "alt": "Face Rating metrics and face score"
+        },
+        "bgColor": "#124337"
+      },
+      {
+        "title": "Find your highest-leverage area",
+        "description": "See which feature already works for you — and which change is most likely to improve your look first.",
+        "image": {
+          "src": "/landingpage/memory-cards/2.webp",
+          "alt": "Highest-leverage face improvement area"
+        },
+        "bgColor": "#ffde45"
+      },
+      {
+        "title": "Style guidance matched to your face",
+        "description": "Turn analysis into action with face-shape hairstyle ideas, grooming direction, and a clear next-step plan.",
+        "image": {
+          "src": "/landingpage/memory-cards/3.webp",
+          "alt": "Face shape style guidance from Face Rating"
+        },
+        "bgColor": "#114337"
+      }
+    ]
+  },
+  "cta": {
+    "name": "cta",
+    "title": "Ready to decode your face?",
+    "description": "Get your 0–100 face score, best feature, and highest-leverage area in seconds. Free to start — no complicated setup.",
+    "image": {
+      "src": "/landingpage/cta/1.png",
+      "alt": "Face Rating CTA — rate your face free"
+    },
+    "buttons": [
+      {
+        "title": "Rate my face — free",
+        "url": "#hero",
+        "target": "_self",
+        "icon": "RiArrowRightLine",
+        "variant": "default"
+      }
+    ]
+  },
+  "footer": {
+    "name": "footer",
+    "brand": {
+      "title": "Face Rating",
+      "description": "AI face analyzer for attractiveness scores, symmetry, proportions, face shape, and actionable style insights — free, private, and instant.",
+      "logo": {
+        "src": "/web-app-manifest-192x192.png",
+        "alt": "Face Rating logo"
+      },
+      "url": "/"
+    },
+    "copyright": "© 2026 • Face Rating All rights reserved.",
+    "nav": {
+      "items": [
+        {
+          "title": "Product",
+          "children": [
+            { "title": "Free face score" },
+            { "title": "Symmetry analysis" },
+            { "title": "Face shape" },
+            { "title": "Private by default" }
+          ]
+        },
+        {
+          "title": "Tools",
+          "children": [
+            { "title": "Rate My Face", "url": "/#hero" },
+            { "title": "How it works", "url": "/#how-it-works" },
+            { "title": "Free tests", "url": "/#free-tests" }
+          ]
+        },
+        {
+          "title": "Company",
+          "children": [
+            { "title": "Pricing", "url": "/pricing", "target": "_self" },
+            { "title": "Privacy Policy", "url": "/privacy-policy", "target": "_self" },
+            { "title": "Terms of Service", "url": "/terms-of-service", "target": "_self" },
+            { "title": "Refund Policy", "url": "/refund-policy", "target": "_self" }
+          ]
+        }
+      ]
+    },
+    "social": {
+      "items": [
+        {
+          "title": "X",
+          "icon": "RiTwitterXFill",
+          "url": "https://x.com/",
+          "target": "_blank"
+        },
+        {
+          "title": "Email",
+          "icon": "RiMailLine",
+          "url": "mailto:support@facerating.com",
+          "target": "_self"
+        }
+      ]
+    },
+    "agreement": {
+      "items": [
+        { "title": "Privacy Policy", "url": "/privacy-policy" },
+        { "title": "Terms of Service", "url": "/terms-of-service" }
+      ]
+    }
+  }
+}

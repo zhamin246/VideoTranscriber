@@ -1,0 +1,3 @@
+-- Deprecated: do not run this against the shared Face Rating database.
+-- That project already owns public.*.
+-- Use scripts/init-imagetocad-schema.sql instead.

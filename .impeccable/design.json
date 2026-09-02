@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-14T00:00:00.000Z",
+  "title": "Design System: Face Rating",
+  "extensions": {
+    "colorMeta": {
+      "accent": { "role": "primary", "displayName": "Report Burgundy", "canonical": "#9F1239" },
+      "accent-soft": { "role": "secondary", "displayName": "Mesh Rose", "canonical": "#FB7185" },
+      "ink": { "role": "neutral", "displayName": "Zinc Well", "canonical": "#18181B" },
+      "background": { "role": "neutral", "displayName": "Paper", "canonical": "#FFFFFF" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero H1 Inter Black" },
+      "italic-accent": { "displayName": "Italic accent", "purpose": "One Instrument Serif word" }
+    },
+    "motion": [
+      { "name": "color", "value": "200ms ease", "purpose": "Buttons and nav" }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Burgundy pill CTA",
+      "html": "<button class=\"ds-btn-primary\">Unlock full report</button>",
+      "css": ".ds-btn-primary { background: #9F1239; color: #fff; padding: 16px 32px; border: 0; border-radius: 9999px; font-weight: 600; font-size: 15px; } .ds-btn-primary:hover { background: #881337; }"
+    },
+    {
+      "name": "Ghost Dark Button",
+      "kind": "button",
+      "refersTo": "button-ghost-dark",
+      "description": "Outline pill on charcoal",
+      "html": "<button class=\"ds-btn-ghost\">Rate my face — free</button>",
+      "css": ".ds-btn-ghost { background: transparent; color: rgba(255,255,255,0.9); padding: 16px 32px; border: 1px solid rgba(255,255,255,0.3); border-radius: 9999px; font-weight: 600; } .ds-btn-ghost:hover { border-color: rgba(255,255,255,0.5); color: #fff; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The measured face plate",
+    "overview": "Face Rating sits in the same visual category as The Face Report: frosted header, near-black hero, Inter Black, one rose italic.",
+    "keyCharacteristics": [
+      "Near-black #18181B + white paper",
+      "Burgundy #9F1239 CTAs",
+      "One Instrument Serif italic word"
+    ],
+    "rules": [
+      { "name": "The One Accent Rule", "body": "Burgundy/rose only.", "section": "colors" },
+      { "name": "The One Italic Rule", "body": "At most one italic serif word per heading.", "section": "typography" }
+    ],
+    "dos": [
+      "Do keep the four hero proof lines verbatim.",
+      "Do leave the left-face animation untouched."
+    ],
+    "donts": [
+      "Don't reintroduce gold paper or lightbox/LED experiments.",
+      "Don't invent user scores or user counts."
+    ]
+  }
+}
