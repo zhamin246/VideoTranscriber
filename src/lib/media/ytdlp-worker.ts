@@ -1,7 +1,7 @@
 const MAX_AUDIO_BYTES = 80 * 1024 * 1024;
 
 function workerBase() {
-  const raw = process.env.YTDLP_WORKER_URL || "";
+  const raw = process.env.YTDLP_WORKER_URL || "https://ytdlp.creatview.ai";
   return raw.replace(/\/+$/, "");
 }
 
