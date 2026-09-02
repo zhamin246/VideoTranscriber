@@ -43,7 +43,7 @@ function ReviewColumn({
   msPerPixel,
   className = "",
 }: {
-  reviews: typeof content.usersSay.items;
+  reviews: ReadonlyArray<(typeof content.usersSay.items)[number]>;
   msPerPixel: number;
   className?: string;
 }) {
