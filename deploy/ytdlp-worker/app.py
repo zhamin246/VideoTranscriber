@@ -52,6 +52,8 @@ def extract():
         "yt-dlp",
         "--no-playlist",
         "--no-progress",
+        "--extractor-args",
+        "youtube:player_client=tv,web_safari",
         "-f",
         "ba/b",
         "-x",
