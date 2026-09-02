@@ -1,0 +1,13 @@
+# Dokploy → Compose → Provider: Raw. Pulls the GitHub-built image (no build on the 2C4G box).
+services:
+  ytdlp-api:
+    image: ghcr.io/zhamin246/videotranscriber/ytdlp-worker:latest
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      # - COOKIE_PATH=/data/cookies.txt
+      # - YTDLP_TOKEN=
+    mem_limit: 1g
+    cpus: "1.0"
