@@ -6,6 +6,7 @@ services:
     restart: always
     environment:
       - PORT=8000
+      - YTDLP_IMPERSONATE=chrome
       # Optional. Same idea as Cobalt COOKIE_PATH.
       - COOKIE_PATH=/data/cookies.txt
       # Optional. If set, Next must send: Authorization: Bearer <token>

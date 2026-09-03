@@ -7,6 +7,8 @@ services:
       - "8000:8000"
     environment:
       - PORT=8000
+      # TikTok and some sites need curl_cffi in the image + this flag (default in Dockerfile).
+      - YTDLP_IMPERSONATE=chrome
       # - COOKIE_PATH=/data/cookies.txt
       # - YTDLP_TOKEN=
     mem_limit: 1g

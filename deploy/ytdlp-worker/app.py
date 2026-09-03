@@ -18,6 +18,7 @@ MAX_BYTES = 80 * 1024 * 1024
 TIMEOUT = 180
 COOKIE_PATH = os.environ.get("COOKIE_PATH", "").strip()
 TOKEN = os.environ.get("YTDLP_TOKEN", "").strip()
+IMPERSONATE = os.environ.get("YTDLP_IMPERSONATE", "chrome").strip()
 
 URL_OK = re.compile(r"^https://", re.I)
 
@@ -48,28 +49,32 @@ def extract():
 
     tmp = tempfile.mkdtemp(prefix="ytdlp-")
     out_tpl = str(Path(tmp) / "audio.%(ext)s")
-    cmd = [
-        "yt-dlp",
-        "--no-playlist",
-        "--no-progress",
-        "--extractor-args",
-        "youtube:player_client=tv,web_safari",
-        "-f",
-        "ba/b",
-        "-x",
-        "--audio-format",
-        "mp3",
-        "--audio-quality",
-        "5",
-        "--max-filesize",
-        "80m",
-        "-o",
-        out_tpl,
-        "--restrict-filenames",
-        url,
-    ]
+    cmd = ["yt-dlp"]
     if COOKIE_PATH and Path(COOKIE_PATH).is_file():
-        cmd[1:1] = ["--cookies", COOKIE_PATH]
+        cmd.extend(["--cookies", COOKIE_PATH])
+    if IMPERSONATE:
+        cmd.extend(["--impersonate", IMPERSONATE])
+    cmd.extend(
+        [
+            "--no-playlist",
+            "--no-progress",
+            "--extractor-args",
+            "youtube:player_client=tv,web_safari",
+            "-f",
+            "ba/b",
+            "-x",
+            "--audio-format",
+            "mp3",
+            "--audio-quality",
+            "5",
+            "--max-filesize",
+            "80m",
+            "-o",
+            out_tpl,
+            "--restrict-filenames",
+            url,
+        ]
+    )
 
     try:
         proc = subprocess.run(
@@ -115,8 +120,10 @@ def extract():
 
 def _friendly(log: str) -> str:
     low = log.lower()
+    if "no impersonate target" in low or "impersonation" in low and "not available" in low:
+        return "Worker is missing browser impersonation (curl_cffi). Redeploy the yt-dlp worker image."
     if "sign in" in low or "login" in low or "not a bot" in low:
-        return "YouTube asked for login. Add cookies.txt on the worker and retry."
+        return "This platform blocked automated access from the server. Try again later or upload the file."
     if "private" in low or "unavailable" in low:
         return "This video is private or unavailable."
     if "unsupported url" in low:
