@@ -1,13 +1,14 @@
-# Dokploy → Compose → Provider: Raw. Pulls the GitHub-built image (no build on the 2C4G box).
+# Dokploy → Compose → Provider: Raw. Pulls the GitHub Actions-built image (no build on the 2C4G box).
+# If pull fails with "unauthorized", add ghcr.io registry credentials in Dokploy or make the GHCR package public.
 services:
   ytdlp-api:
     image: ghcr.io/zhamin246/videotranscriber/ytdlp-worker:latest
+    pull_policy: always
     restart: always
     ports:
       - "8000:8000"
     environment:
       - PORT=8000
-      # TikTok and some sites need curl_cffi in the image + this flag (default in Dockerfile).
       - YTDLP_IMPERSONATE=chrome
       # - COOKIE_PATH=/data/cookies.txt
       # - YTDLP_TOKEN=
