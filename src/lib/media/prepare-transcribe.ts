@@ -96,7 +96,7 @@ async function fetchSocialAudio(sourceUrl: string) {
     return {
       buf: file.buf,
       contentType: file.contentType,
-      filename: resolved.filename || file.filename || "audio.mp3",
+      filename: resolved.filename || "audio.mp3",
     };
   } catch (e) {
     lastError = e;
@@ -120,7 +120,7 @@ async function fetchSocialVideo(sourceUrl: string) {
     return {
       buf: file.buf,
       contentType: file.contentType,
-      filename: resolved.filename || file.filename || "video.mp4",
+      filename: resolved.filename || "video.mp4",
     };
   } catch (e) {
     console.warn("[prepare] cobalt video failed, trying Replicate:", e);
