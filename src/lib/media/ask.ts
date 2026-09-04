@@ -21,6 +21,52 @@ export type AskSseEvent =
   | { type: "done" }
   | { type: "error"; message: string };
 
+const MAX_ASK_MESSAGES = 80;
+const MAX_ASK_CONTENT = 20_000;
+
+export function parseAskMessages(
+  raw: string | null | undefined,
+): AskMessage[] {
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .map((row) => {
+        const m = row as Partial<AskMessage>;
+        const role = m.role === "assistant" ? "assistant" : "user";
+        return {
+          id: String(m.id || "").slice(0, 64) || `m${Date.now()}`,
+          role,
+          content: String(m.content || "").slice(0, MAX_ASK_CONTENT),
+          createdAt: Number(m.createdAt) || Date.now(),
+        };
+      })
+      .filter((m) => m.content.trim() || m.role === "assistant")
+      .slice(-MAX_ASK_MESSAGES);
+  } catch {
+    return [];
+  }
+}
+
+export function serializeAskMessages(messages: unknown): string {
+  const list = Array.isArray(messages) ? messages : [];
+  const normalized = list
+    .map((row) => {
+      const m = row as Partial<AskMessage>;
+      const role = m.role === "assistant" ? "assistant" : "user";
+      return {
+        id: String(m.id || "").slice(0, 64),
+        role,
+        content: String(m.content || "").slice(0, MAX_ASK_CONTENT),
+        createdAt: Number(m.createdAt) || Date.now(),
+      };
+    })
+    .filter((m) => m.id && m.content.trim())
+    .slice(-MAX_ASK_MESSAGES);
+  return JSON.stringify(normalized);
+}
+
 export const ASK_SUGGESTIONS = [
   {
     emoji: "💡",
