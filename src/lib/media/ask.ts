@@ -32,9 +32,10 @@ export function parseAskMessages(
     const parsed = JSON.parse(raw) as unknown;
     if (!Array.isArray(parsed)) return [];
     return parsed
-      .map((row) => {
+      .map((row): AskMessage => {
         const m = row as Partial<AskMessage>;
-        const role = m.role === "assistant" ? "assistant" : "user";
+        const role: AskMessage["role"] =
+          m.role === "assistant" ? "assistant" : "user";
         return {
           id: String(m.id || "").slice(0, 64) || `m${Date.now()}`,
           role,
@@ -54,7 +55,8 @@ export function serializeAskMessages(messages: unknown): string {
   const normalized = list
     .map((row) => {
       const m = row as Partial<AskMessage>;
-      const role = m.role === "assistant" ? "assistant" : "user";
+      const role: AskMessage["role"] =
+        m.role === "assistant" ? "assistant" : "user";
       return {
         id: String(m.id || "").slice(0, 64),
         role,
