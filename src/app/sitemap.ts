@@ -9,20 +9,14 @@ function siteOrigin() {
 }
 
 /**
- * Public indexable routes for imagetocad.
- * Auth, dashboard, and Face Rating leftovers stay out.
+ * Public indexable routes only.
+ * Pricing, legal pages, and workspace stay out of the sitemap.
  */
 const STATIC_PATHS: {
   path: string;
   changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
   priority: number;
-}[] = [
-  { path: "/", changeFrequency: "weekly", priority: 1 },
-  { path: "/pricing", changeFrequency: "monthly", priority: 0.9 },
-  { path: "/privacy-policy", changeFrequency: "yearly", priority: 0.4 },
-  { path: "/terms-of-service", changeFrequency: "yearly", priority: 0.4 },
-  { path: "/refund-policy", changeFrequency: "yearly", priority: 0.4 },
-];
+}[] = [{ path: "/", changeFrequency: "weekly", priority: 1 }];
 
 function absoluteUrl(path: string, locale: string): string {
   const base = siteOrigin();

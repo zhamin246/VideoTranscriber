@@ -97,7 +97,10 @@ WORKDIR /app
 RUN addgroup --system --gid 1001 nodejs \
     && adduser --system --uid 1001 nextjs \
     && mkdir .next \
-    && chown nextjs:nodejs .next
+    && chown nextjs:nodejs .next \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./

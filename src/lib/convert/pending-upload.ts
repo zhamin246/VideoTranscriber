@@ -1,8 +1,24 @@
 export const CONVERT_HREF = "/";
 export const CONVERT_DRAFT_KEY = "imagetocad:convert-draft";
-export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
-export const ACCEPT_UPLOAD =
-  "image/jpeg,image/png,image/webp,image/heic,image/heif,image/avif,.jpg,.jpeg,.png,.webp,.heic,.heif,.avif";
+/** Client-side cap for audio/video uploads (paid tiers can raise later). */
+export const MAX_UPLOAD_BYTES = 2 * 1024 * 1024 * 1024;
+
+const AUDIO_EXTS =
+  "mp3,wav,m4a,aac,ogg,oga,flac,wma,opus,aiff,aif,amr,caf";
+const VIDEO_EXTS =
+  "mp4,mov,webm,mkv,avi,wmv,flv,m4v,mpeg,mpg,3gp,ts";
+
+export const ACCEPT_UPLOAD = [
+  "audio/*",
+  "video/*",
+  ...AUDIO_EXTS.split(",").map((e) => `.${e}`),
+  ...VIDEO_EXTS.split(",").map((e) => `.${e}`),
+].join(",");
+
+const MEDIA_EXT_RE = new RegExp(
+  `\\.(${AUDIO_EXTS.replace(/,/g, "|")}|${VIDEO_EXTS.replace(/,/g, "|")})$`,
+  "i",
+);
 
 export type ConvertDraft = {
   dataUrl: string;
@@ -15,10 +31,14 @@ export type ConvertDraft = {
 let memoryFile: File | null = null;
 
 export function isAcceptedUpload(file: File) {
-  return (
-    /image\/(jpeg|png|webp|heic|heif|avif)/i.test(file.type) ||
-    /\.(jpe?g|png|webp|heic|heif|avif)$/i.test(file.name)
-  );
+  if (/^(audio|video)\//i.test(file.type)) return true;
+  return MEDIA_EXT_RE.test(file.name);
+}
+
+export function formatMaxUploadLabel() {
+  const gb = MAX_UPLOAD_BYTES / (1024 * 1024 * 1024);
+  if (gb >= 1) return `${gb % 1 === 0 ? gb : gb.toFixed(1)} GB`;
+  return `${Math.round(MAX_UPLOAD_BYTES / (1024 * 1024))} MB`;
 }
 
 export function stashPendingFile(file: File) {

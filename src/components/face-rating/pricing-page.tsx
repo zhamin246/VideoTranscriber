@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Loader } from "lucide-react";
 import { toast } from "sonner";
+import { useAppContext } from "@/contexts/app";
 import FaceRatingSiteHeader from "./site-header";
 import FaceRatingSiteFooter from "./site-footer";
 import { V } from "./visual";
@@ -49,28 +50,28 @@ function Check() {
 
 const FAQS = [
   {
-    q: "What does one credit buy?",
-    a: "One credit converts one photo into DXF, SVG, and PDF. Retries use another credit. Failed jobs are refunded automatically.",
+    q: "How do minutes work?",
+    a: "Paid plans include a monthly pool of transcription minutes. Audio length counts 1:1 when we run Whisper. When a video already has captions, we prefer that path and may charge little or nothing against your pool.",
   },
   {
-    q: "Should I subscribe or buy a pack?",
-    a: "Subscribe if you convert regularly — the unit price is lower than any pack, and yearly billing saves two months. Buy a pack if you do not want a recurring plan. Pack credits cost more per conversion and expire after 12 months.",
+    q: "What is the Free plan?",
+    a: "Free includes 90 minutes per month, up to 3 files per day, and 30 minutes per file. No card required. Upgrade anytime if you need more volume or AI features.",
   },
   {
-    q: "Do unused credits roll over?",
-    a: "Monthly credits expire 30 days after they arrive. Yearly plans are billed once a year; credits arrive each month and expire 12 months after they arrive. Pack credits expire 12 months after purchase.",
+    q: "Should I subscribe or buy a minute pack?",
+    a: "Subscribe if you transcribe regularly — the per-minute rate is lower. Buy a pack to top up any paid plan or if you prefer not to subscribe. Pack minutes expire 12 months after purchase.",
   },
   {
-    q: "Can I use the drawings commercially?",
-    a: "Yes. You own the files you download — CAD, laser, vinyl, or print.",
+    q: "Do unused minutes roll over?",
+    a: "Monthly plan minutes expire at the end of the billing month. Yearly plans are billed once a year; minutes refresh each month. Pack minutes expire 12 months after purchase.",
   },
   {
-    q: "Do I need a card to try it?",
-    a: "No. New accounts get 3 free conversions. Sign in with email or Google.",
+    q: "What happens if I run out of minutes?",
+    a: "You can buy a minute pack anytime ($5 / 500 min, $10 / 1,000 min, or $25 / 3,000 min). We do not offer true unlimited Whisper — that keeps pricing sustainable.",
   },
   {
     q: "Can I cancel a subscription?",
-    a: "Yes. Cancel anytime. You keep the remaining allowance until the period ends. You can still buy a pack if you run out mid-cycle.",
+    a: "Yes. Cancel anytime. You keep remaining minutes until the period ends. You can still buy a pack if you need more mid-cycle.",
   },
 ];
 
@@ -78,6 +79,7 @@ export default function FaceRatingPricingPage() {
   const params = useParams();
   const locale = (params?.locale as string) || "en";
   const { data: session, status: sessionStatus } = useSession();
+  const { setShowSignModal } = useAppContext();
   const loggedIn = sessionStatus === "authenticated" && Boolean(session?.user?.email);
 
   const [tab, setTab] = useState<Tab>("subscription");
@@ -94,17 +96,28 @@ export default function FaceRatingPricingPage() {
     () => CONVERT_PRICING_ITEMS.filter((item) => item.group === "credits"),
     []
   );
+  const freePlan = useMemo(
+    () => CONVERT_PRICING_ITEMS.find((item) => item.product_id === "free"),
+    []
+  );
   const subs = useMemo(
     () =>
       CONVERT_PRICING_ITEMS.filter(
-        (item) => item.group === "subscription" && item.interval === subInterval
+        (item) =>
+          item.group === "subscription" &&
+          item.product_id !== "free" &&
+          item.interval === subInterval
       ),
     [subInterval]
   );
 
   async function checkout(item: PricingItem) {
+    if (item.product_id === "free" || !item.amount) {
+      window.location.href = "/";
+      return;
+    }
     if (!loggedIn) {
-      window.location.href = `/auth/signin?callbackUrl=${encodeURIComponent("/pricing")}`;
+      setShowSignModal(true, "/pricing");
       return;
     }
     try {
@@ -120,7 +133,7 @@ export default function FaceRatingPricingPage() {
         }),
       });
       if (response.status === 401) {
-        window.location.href = `/auth/signin?callbackUrl=${encodeURIComponent("/pricing")}`;
+        setShowSignModal(true, "/pricing");
         return;
       }
       const { code, message, data } = await response.json();
@@ -140,7 +153,7 @@ export default function FaceRatingPricingPage() {
     }
   }
 
-  const cards = tab === "packs" ? packs : subs;
+  const cards = tab === "packs" ? packs : freePlan ? [freePlan, ...subs] : subs;
 
   return (
     <div
@@ -165,9 +178,9 @@ export default function FaceRatingPricingPage() {
               letterSpacing: "-0.03em",
             }}
           >
-            One credit, one{" "}
+            Simple plans by the{" "}
             <span className="font-serif font-normal italic" style={{ color: V.accentItalic }}>
-              conversion
+              minute
             </span>
             .
           </h1>
@@ -175,9 +188,8 @@ export default function FaceRatingPricingPage() {
             className="mx-auto mt-4 max-w-xl text-[16px] leading-relaxed sm:text-[17px]"
             style={{ color: V.muted }}
           >
-            New accounts start with 3 free credits, no card needed. Subscribe
-            for a lower rate per conversion, or buy a pack if you only convert
-            now and then.
+            Start free with 90 minutes. Upgrade for more volume, speaker labels,
+            and AI notes. Yearly billing saves about a third.
           </p>
 
           <div
@@ -185,15 +197,15 @@ export default function FaceRatingPricingPage() {
             style={{ backgroundColor: V.accentTint }}
           >
             {[
-              { value: "3 free", label: "conversions to start" },
-              { value: "1 credit", label: "per convert · DXF, SVG, PDF" },
-              { value: "Yearly", label: "two months free" },
+              { value: "90 free", label: "minutes every month" },
+              { value: "1 min", label: "≈ 1 Whisper minute" },
+              { value: "Yearly", label: "save ~33%" },
             ].map((s, i) => (
               <div
                 key={s.label}
                 className="px-3 py-5 sm:px-6 sm:py-6"
                 style={{
-                  borderLeft: i === 0 ? undefined : "1px solid rgba(159,18,57,0.12)",
+                  borderLeft: i === 0 ? undefined : "1px solid rgba(136,130,245,0.18)",
                 }}
               >
                 <p
@@ -212,8 +224,8 @@ export default function FaceRatingPricingPage() {
           <div className="mx-auto mt-10 inline-flex rounded-full p-1" style={{ backgroundColor: V.surfaceAlt }}>
             {(
               [
-                ["subscription", "Subscription"],
-                ["packs", "Credit packs"],
+                ["subscription", "Plans"],
+                ["packs", "Minute packs"],
               ] as const
             ).map(([id, label]) => (
               <button
@@ -233,8 +245,8 @@ export default function FaceRatingPricingPage() {
           </div>
           <p className="mt-3 text-[13px]" style={{ color: V.muted }}>
             {tab === "packs"
-              ? "No subscription. Credits expire after 12 months."
-              : "Lower price per conversion than packs. Monthly credits expire after 30 days; yearly credits arrive each month."}
+              ? "Top up any paid plan. Pack minutes expire after 12 months."
+              : "Minute pools refresh monthly. Captions-first when available."}
           </p>
 
           {tab === "subscription" ? (
@@ -262,8 +274,11 @@ export default function FaceRatingPricingPage() {
                 }
               >
                 Yearly
-                <span className="ml-1.5 text-[11px] font-medium" style={{ color: subInterval === "year" ? "#FECACA" : V.accent }}>
-                  2 months free
+                <span
+                  className="ml-1.5 text-[11px] font-medium"
+                  style={{ color: subInterval === "year" ? "#C4B5FD" : V.accent }}
+                >
+                  Save ~33%
                 </span>
               </button>
             </div>
@@ -273,13 +288,14 @@ export default function FaceRatingPricingPage() {
         <section className="mx-auto mt-8 max-w-[1152px] px-5 sm:px-8">
           <div
             className={`grid gap-4 ${
-              cards.length === 4
+              cards.length >= 4
                 ? "md:grid-cols-2 xl:grid-cols-4"
                 : "md:grid-cols-3"
             }`}
           >
             {cards.map((item) => {
               const featured = item.is_featured;
+              const isFree = item.product_id === "free";
               const save = item.group === "credits" ? savePercentVsStarter(item) : null;
               const busy = loadingId === item.product_id;
               return (
@@ -303,10 +319,12 @@ export default function FaceRatingPricingPage() {
                     <h2 className="text-[18px] font-bold tracking-tight">{item.title}</h2>
                     <p className="mt-1 text-[13px]" style={{ color: V.muted }}>
                       {item.group === "credits"
-                        ? `${item.credits} credits · use within 12 months`
-                        : item.interval === "year"
-                          ? `${item.credits} credits / month · expire after 12 months`
-                          : `${item.credits} credits / month · expire after 30 days`}
+                        ? `${item.credits.toLocaleString()} minutes · use within 12 months`
+                        : isFree
+                          ? "90 minutes / month · no card"
+                          : item.interval === "year"
+                            ? `${item.credits.toLocaleString()} minutes / month · billed yearly`
+                            : `${item.credits.toLocaleString()} minutes / month`}
                     </p>
                     <div className="mt-4 flex items-end gap-1.5">
                       {item.original_price ? (
@@ -328,26 +346,41 @@ export default function FaceRatingPricingPage() {
                       </span>
                     </div>
                     <p className="mt-1 text-[13px]" style={{ color: V.muted }}>
-                      {perCreditLabel(item)} per conversion
+                      {isFree
+                        ? "Try before you upgrade"
+                        : `${perCreditLabel(item)} per minute`}
                       {save ? ` · save ${save}%` : ""}
                       {item.interval === "year" && item.tip ? ` · ${item.tip}` : ""}
                     </p>
 
-                    <button
-                      type="button"
-                      disabled={busy || Boolean(loadingId)}
-                      onClick={() => checkout(item)}
-                      className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-full text-[14px] font-semibold text-white transition-colors hover:bg-[#881337] disabled:opacity-60"
-                      style={{ backgroundColor: V.accent }}
-                    >
-                      {busy ? (
-                        <Loader className="h-4 w-4 animate-spin" />
-                      ) : item.group === "credits" ? (
-                        `Buy now · ${item.price}`
-                      ) : (
-                        `Subscribe · ${item.price}`
-                      )}
-                    </button>
+                    {isFree ? (
+                      <Link
+                        href="/"
+                        className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-full text-[14px] font-semibold transition-colors"
+                        style={{
+                          backgroundColor: V.surfaceAlt,
+                          color: V.ink,
+                        }}
+                      >
+                        Get started free
+                      </Link>
+                    ) : (
+                      <button
+                        type="button"
+                        disabled={busy || Boolean(loadingId)}
+                        onClick={() => checkout(item)}
+                        className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-full text-[14px] font-semibold text-white transition-colors hover:opacity-90 disabled:opacity-60"
+                        style={{ backgroundColor: V.accent }}
+                      >
+                        {busy ? (
+                          <Loader className="h-4 w-4 animate-spin" />
+                        ) : item.group === "credits" ? (
+                          `Buy now · ${item.price}`
+                        ) : (
+                          `Subscribe · ${item.price}`
+                        )}
+                      </button>
+                    )}
 
                     <ul className="mt-5 space-y-2.5">
                       {item.features.map((line) => (
@@ -377,19 +410,19 @@ export default function FaceRatingPricingPage() {
                 Try it free
               </p>
               <h2 className="mt-2 text-[22px] font-black tracking-tight sm:text-[24px]">
-                Convert 3 photos free — no card
+                90 minutes free every month — no card
               </h2>
               <p className="mt-2 max-w-xl text-[14px] leading-relaxed" style={{ color: V.muted }}>
-                Sign in with email or Google. Each conversion uses 1 credit and
-                returns DXF, SVG, and PDF.
+                Paste a link or upload a file. Captions-first when available;
+                Whisper when you need a full transcript.
               </p>
             </div>
             <Link
               href="/"
-              className="inline-flex h-11 shrink-0 items-center justify-center rounded-full px-6 text-[14px] font-semibold text-white transition-colors hover:bg-[#881337]"
+              className="inline-flex h-11 shrink-0 items-center justify-center rounded-full px-6 text-[14px] font-semibold text-white transition-colors hover:opacity-90"
               style={{ backgroundColor: V.accent }}
             >
-              Upload a photo
+              Start transcribing
             </Link>
           </div>
         </section>

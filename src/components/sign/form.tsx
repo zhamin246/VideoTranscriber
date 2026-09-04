@@ -27,9 +27,21 @@ function GoogleMark() {
   );
 }
 
-export default function SignForm() {
+export default function SignForm({
+  callbackUrl: callbackUrlProp,
+  compact = false,
+  onSuccess,
+}: {
+  callbackUrl?: string;
+  compact?: boolean;
+  onSuccess?: () => void;
+} = {}) {
   const search = useSearchParams();
-  const callbackUrl = search.get("callbackUrl") || "/";
+  const fromQuery = search.get("callbackUrl") || "/";
+  const callbackUrl =
+    (callbackUrlProp && callbackUrlProp.startsWith("/")
+      ? callbackUrlProp
+      : null) || (fromQuery.startsWith("/") ? fromQuery : "/");
   const googleEnabled = process.env.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED === "true";
 
   const [email, setEmail] = useState("");
@@ -38,9 +50,7 @@ export default function SignForm() {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const nextUrl = `/auth/onboarding?next=${encodeURIComponent(
-    callbackUrl.startsWith("/") ? callbackUrl : "/"
-  )}`;
+  const nextUrl = callbackUrl.startsWith("/") ? callbackUrl : "/";
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -71,27 +81,31 @@ export default function SignForm() {
 
   if (sent) {
     return (
-      <div className="w-full max-w-md text-center" style={{ color: "#0a0a0a" }}>
-        <h1 className="text-[40px] font-bold tracking-tight">Success!</h1>
-        <p className="mt-2 text-[17px] text-[#525252]">
+      <div className="w-full text-center" style={{ color: "#0a0a0a" }}>
+        <h2
+          className={`font-bold tracking-tight ${compact ? "text-[24px]" : "text-[40px]"}`}
+        >
+          Success!
+        </h2>
+        <p className="mt-2 text-[15px] text-[#525252]">
           Check your email for the link to sign in
         </p>
         <div
-          className="mt-8 overflow-hidden rounded-[24px] bg-white p-[2px] shadow-sm"
+          className="mt-6 overflow-hidden rounded-[24px] bg-white p-[2px] shadow-sm"
           style={{
             background:
               "linear-gradient(90deg,#34d399 0%,#fbbf24 40%,#fb923c 70%,#fb7185 100%)",
           }}
         >
-          <div className="rounded-[22px] bg-white px-8 py-12">
-            <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-[#FFF1F2]">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <div className="rounded-[22px] bg-white px-6 py-10">
+            <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-[#FFF1F2]">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
                 <rect x="3" y="5" width="18" height="14" rx="2" stroke="#9F1239" strokeWidth="1.8" />
                 <path d="M4 7l8 6 8-6" stroke="#9F1239" strokeWidth="1.8" strokeLinejoin="round" />
               </svg>
             </div>
-            <p className="mt-5 text-[15px] leading-relaxed text-[#525252]">
-              No email? Check your spam folder or{" "}
+            <p className="mt-4 text-[14px] leading-relaxed text-[#525252]">
+              No email? Check spam or{" "}
               <button
                 type="button"
                 className="font-medium hover:underline"
@@ -113,14 +127,18 @@ export default function SignForm() {
 
   return (
     <div
-      className="w-full max-w-[640px]"
+      className={`w-full ${compact ? "" : "max-w-[640px]"}`}
       style={{ color: "#0a0a0a", colorScheme: "light" }}
     >
-      <h1 className="whitespace-nowrap text-center text-[28px] font-bold leading-tight tracking-tight sm:text-[32px]">
+      <h2
+        className={`text-center font-bold leading-tight tracking-tight ${
+          compact ? "text-[22px] sm:text-[24px]" : "text-[28px] sm:text-[32px]"
+        }`}
+      >
         Create an account or sign in
-      </h1>
+      </h2>
       <p
-        className="mt-3 text-center text-[16px] leading-relaxed"
+        className={`mt-2 text-center leading-relaxed ${compact ? "text-[14px]" : "text-[16px]"}`}
         style={{ color: "#525252" }}
       >
         Continue with Google or your email
@@ -128,14 +146,14 @@ export default function SignForm() {
         No password required
       </p>
       <div
-        className="mx-auto mt-8 max-w-[440px] overflow-hidden rounded-[24px] p-[2px] shadow-sm"
+        className={`mx-auto mt-6 overflow-hidden rounded-[24px] p-[2px] shadow-sm ${compact ? "max-w-none" : "max-w-[440px]"}`}
         style={{
           background:
             "linear-gradient(90deg,#34d399 0%,#fbbf24 40%,#fb923c 70%,#fb7185 100%)",
         }}
       >
         <div
-          className="rounded-[22px] px-7 py-8 sm:px-8"
+          className={`rounded-[22px] ${compact ? "px-5 py-6" : "px-7 py-8 sm:px-8"}`}
           style={{ backgroundColor: "#ffffff" }}
         >
           {googleEnabled ? (
@@ -172,14 +190,14 @@ export default function SignForm() {
           <form onSubmit={onSubmit} className="grid gap-4">
             <div className="grid gap-2">
               <label
-                htmlFor="email"
+                htmlFor="sign-email"
                 className="text-[15px] font-medium"
                 style={{ color: "#0a0a0a" }}
               >
                 Email
               </label>
               <input
-                id="email"
+                id="sign-email"
                 type="email"
                 autoComplete="email"
                 inputMode="email"
@@ -217,7 +235,7 @@ export default function SignForm() {
       </div>
 
       <p
-        className="mt-5 text-balance text-center text-xs leading-relaxed"
+        className="mt-4 text-balance text-center text-xs leading-relaxed"
         style={{ color: "#737373" }}
       >
         There&apos;s no separate sign-up — your account is created when you

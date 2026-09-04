@@ -11,9 +11,9 @@ export default defineConfig({
   out: "./src/db/migrations",
   schema: "./src/db/schema.ts",
   dialect: "postgresql",
-  schemaFilter: ["imagetocad"],
+  schemaFilter: ["videotranscriber"],
   migrations: {
-    schema: "imagetocad",
+    schema: "videotranscriber",
     table: "__drizzle_migrations",
   },
   dbCredentials: {

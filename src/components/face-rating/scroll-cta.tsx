@@ -19,7 +19,7 @@ export default function ScrollCta() {
   }, []);
 
   return (
-    <div className="pointer-events-none fixed bottom-0 left-0 right-0 z-50 flex h-0 items-end justify-center md:left-14">
+    <div className="pointer-events-none fixed bottom-0 left-0 right-0 z-40 flex h-0 items-end justify-center md:left-14">
       <div
         className="w-full bg-gradient-to-b from-transparent to-[#a0a0a0] p-[10px] pb-6"
         style={{

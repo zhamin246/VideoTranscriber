@@ -3,25 +3,57 @@ import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import { NextAuthConfig } from "next-auth";
 import { Provider } from "next-auth/providers/index";
-import { User } from "@/types/user";
-import { getClientIp } from "@/lib/ip";
-import { getIsoTimestr } from "@/lib/time";
-import { getUuid } from "@/lib/hash";
-import { saveUser } from "@/services/user";
 import { handleSignInUser } from "./handler";
 import {
   isMagicLinkAuthEnabled,
   verifyMagicLinkToken,
 } from "@/lib/auth/magic-link";
+import { verifyPassword } from "@/lib/auth/password";
+import { findUserByEmailAndProvider } from "@/models/user";
 
 let providers: Provider[] = [];
 
-// Email magic link (passwordless) — competitor-style one-click login
+// Email + password (primary email auth)
+providers.push(
+  CredentialsProvider({
+    id: "credentials",
+    name: "Email",
+    credentials: {
+      email: { type: "email" },
+      password: { type: "password" },
+      rememberMe: { type: "text" },
+    },
+    async authorize(credentials) {
+      const email = String(credentials?.email || "")
+        .trim()
+        .toLowerCase();
+      const password = String(credentials?.password || "");
+      const rememberMe = String(credentials?.rememberMe || "true") !== "false";
+      if (!email || !password) return null;
+
+      const user = await findUserByEmailAndProvider(email, "credentials");
+      if (!user?.password_hash) return null;
+      const ok = await verifyPassword(password, user.password_hash);
+      if (!ok) return null;
+
+      return {
+        id: user.uuid,
+        email: user.email,
+        name: user.nickname || email.split("@")[0] || "user",
+        image: user.avatar_url || null,
+        emailVerified: new Date(),
+        rememberMe,
+      };
+    },
+  }),
+);
+
+// Legacy magic-link verify (kept for old emails in inbox)
 if (isMagicLinkAuthEnabled()) {
   providers.push(
     CredentialsProvider({
       id: "email-magic-link",
-      name: "Email",
+      name: "Email link",
       credentials: {
         token: { type: "text" },
       },
@@ -43,11 +75,10 @@ if (isMagicLinkAuthEnabled()) {
           emailVerified: new Date(),
         };
       },
-    })
+    }),
   );
 }
 
-// Google One Tap Auth
 if (
   process.env.NEXT_PUBLIC_AUTH_GOOGLE_ONE_TAP_ENABLED === "true" &&
   process.env.NEXT_PUBLIC_AUTH_GOOGLE_ID
@@ -56,33 +87,21 @@ if (
     CredentialsProvider({
       id: "google-one-tap",
       name: "google-one-tap",
-
       credentials: {
         credential: { type: "text" },
       },
-
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         const googleClientId = process.env.NEXT_PUBLIC_AUTH_GOOGLE_ID;
-        if (!googleClientId) {
-          console.log("invalid google auth config");
-          return null;
-        }
+        if (!googleClientId) return null;
 
         const token = credentials!.credential;
-
         const response = await fetch(
-          "https://oauth2.googleapis.com/tokeninfo?id_token=" + token
+          "https://oauth2.googleapis.com/tokeninfo?id_token=" + token,
         );
-        if (!response.ok) {
-          console.log("Failed to verify token");
-          return null;
-        }
+        if (!response.ok) return null;
 
         const payload = await response.json();
-        if (!payload) {
-          console.log("invalid payload from token");
-          return null;
-        }
+        if (!payload?.email) return null;
 
         const {
           email,
@@ -92,26 +111,19 @@ if (
           email_verified,
           picture: image,
         } = payload;
-        if (!email) {
-          console.log("invalid email in payload");
-          return null;
-        }
 
-        const user = {
+        return {
           id: sub,
           name: [given_name, family_name].join(" "),
           email,
           image,
           emailVerified: email_verified ? new Date() : null,
         };
-
-        return user;
       },
-    })
+    }),
   );
 }
 
-// Google Auth
 if (
   process.env.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED === "true" &&
   process.env.AUTH_GOOGLE_ID &&
@@ -123,16 +135,15 @@ if (
       clientSecret: process.env.AUTH_GOOGLE_SECRET,
       authorization: {
         params: {
-          prompt: "consent", // 强制显示授权页面
+          prompt: "consent",
           access_type: "offline",
-          response_type: "code"
-        }
-      }
-    })
+          response_type: "code",
+        },
+      },
+    }),
   );
 }
 
-// Github Auth
 if (
   process.env.NEXT_PUBLIC_AUTH_GITHUB_ENABLED === "true" &&
   process.env.AUTH_GITHUB_ID &&
@@ -142,7 +153,7 @@ if (
     GitHubProvider({
       clientId: process.env.AUTH_GITHUB_ID,
       clientSecret: process.env.AUTH_GITHUB_SECRET,
-    })
+    }),
   );
 }
 
@@ -151,13 +162,14 @@ export const providerMap = providers
     if (typeof provider === "function") {
       const providerData = provider();
       return { id: providerData.id, name: providerData.name };
-    } else {
-      return { id: provider.id, name: provider.name };
     }
+    return { id: provider.id, name: provider.name };
   })
   .filter(
     (provider) =>
-      provider.id !== "google-one-tap" && provider.id !== "email-magic-link"
+      provider.id !== "google-one-tap" &&
+      provider.id !== "email-magic-link" &&
+      provider.id !== "credentials",
   );
 
 export const authOptions: NextAuthConfig = {
@@ -166,22 +178,12 @@ export const authOptions: NextAuthConfig = {
     signIn: "/auth/signin",
   },
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
-      const isAllowedToSignIn = true;
-      if (isAllowedToSignIn) {
-        return true;
-      } else {
-        // Return false to display a default error message
-        return false;
-        // Or you can return a URL to redirect to:
-        // return '/unauthorized'
-      }
+    async signIn() {
+      return true;
     },
     async redirect({ url, baseUrl }) {
-      // Allows relative callback URLs
       if (url.startsWith("/")) return `${baseUrl}${url}`;
-      // Allows callback URLs on the same origin
-      else if (new URL(url).origin === baseUrl) return url;
+      if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     },
     async session({ session, token }) {
@@ -205,6 +207,11 @@ export const authOptions: NextAuthConfig = {
         if (!user || !account) {
           return token;
         }
+
+        const rememberMe =
+          (user as { rememberMe?: boolean }).rememberMe !== false;
+        const maxAgeSec = rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60;
+        token.exp = Math.floor(Date.now() / 1000) + maxAgeSec;
 
         const userInfo = await handleSignInUser(user, account);
         if (!userInfo) {

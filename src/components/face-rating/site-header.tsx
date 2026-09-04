@@ -5,6 +5,7 @@ import { usePathname } from "@/i18n/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
+import { useAppContext } from "@/contexts/app";
 import { content, CONVERT_HREF, FREE_TEST_HREF, FULL_REPORT_HREF } from "./data";
 import { btnPrimary, V } from "./visual";
 
@@ -197,6 +198,7 @@ export default function FaceRatingSiteHeader({
   // next-intl pathname is without locale prefix
   const pathname = usePathname() || "";
   const { data: session, status } = useSession();
+  const { setShowSignModal } = useAppContext();
   const sessionEmail =
     (session?.user as { email?: string } | undefined)?.email ||
     session?.user?.email ||
@@ -329,13 +331,14 @@ export default function FaceRatingSiteHeader({
           {isLoggedIn ? (
             <AccountMenu name={greetingName(session)} />
           ) : (
-            <Link
-              href="/auth/signin"
+            <button
+              type="button"
+              onClick={() => setShowSignModal(true)}
               className="hidden hover:opacity-70 sm:inline"
               style={{ fontSize: 16, fontWeight: 400, lineHeight: "24px", color: "#000" }}
             >
               {nav.login.label}
-            </Link>
+            </button>
           )}
           <button
             type="button"
@@ -404,14 +407,17 @@ export default function FaceRatingSiteHeader({
                 </button>
               </>
             ) : (
-              <Link
-                href="/auth/signin"
-                onClick={() => setOpen(false)}
-                className="rounded-[10px] px-3 py-3 text-[15px] font-medium"
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  setShowSignModal(true);
+                }}
+                className="rounded-[10px] px-3 py-3 text-left text-[15px] font-medium"
                 style={{ color: V.ink }}
               >
                 {nav.login.label}
-              </Link>
+              </button>
             )}
             <Link
               href={CONVERT_HREF}

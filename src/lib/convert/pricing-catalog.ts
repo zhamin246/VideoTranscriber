@@ -3,17 +3,17 @@ import type { PricingPage } from "@/types/pages/landing";
 
 const USD = "USD";
 
-const PACK_FEATURES = [
-  "Use within 12 months · unused credits expire",
-  "DXF, SVG and PDF on every convert",
-  "Commercial use",
-  "No plan to cancel",
+const COMMON_FEATURES = [
+  "63+ languages",
+  "TXT, SRT, VTT, PDF export",
+  "YouTube / TikTok / link transcription",
+  "Cancel anytime",
 ];
 
 function packItem(input: {
   title: string;
   product_id: string;
-  credits: number;
+  minutes: number;
   amount: number;
   price: string;
   featured?: boolean;
@@ -21,14 +21,17 @@ function packItem(input: {
 }): PricingItem {
   return {
     title: input.title,
-    description: `${input.credits} conversion credits. Use within 12 months.`,
+    description: `${input.minutes.toLocaleString()} transcription minutes. Use within 12 months.`,
     features_title: "Includes",
     features: [
-      `${(input.amount / 100 / input.credits).toLocaleString("en-US", {
+      `${(input.amount / 100 / input.minutes).toLocaleString("en-US", {
         style: "currency",
         currency: "USD",
-      })} per conversion`,
-      ...PACK_FEATURES,
+        maximumFractionDigits: 3,
+      })} per minute`,
+      "Add-on minutes for any paid plan",
+      "Use within 12 months · unused minutes expire",
+      "No plan to cancel",
     ],
     interval: "one-time",
     amount: input.amount,
@@ -39,8 +42,8 @@ function packItem(input: {
     tip: input.tip,
     button: { title: "Buy now", url: "/pricing", icon: "" },
     product_id: input.product_id,
-    product_name: `${input.title} · ${input.credits} credits`,
-    credits: input.credits,
+    product_name: `${input.title} · ${input.minutes} minutes`,
+    credits: input.minutes,
     valid_months: 12,
     group: "credits",
     stripe_price_id: `\${process.env.STRIPE_${input.product_id.toUpperCase()}_PRICE_ID}`,
@@ -51,33 +54,26 @@ function subItem(input: {
   title: string;
   product_id: string;
   interval: "month" | "year";
-  monthlyCredits: number;
+  monthlyMinutes: number;
   amount: number;
   price: string;
   original_price?: string;
   featured?: boolean;
   tip?: string;
-  extraFeatures?: string[];
+  description?: string;
+  features: string[];
 }): PricingItem {
-  const credits = input.monthlyCredits;
+  const minutes = input.monthlyMinutes;
   const period = input.interval === "year" ? "12 months" : "month";
   return {
     title: input.title,
     description:
-      input.interval === "year"
-        ? `${credits} credits each month. Each month’s credits expire after 12 months.`
-        : `${credits} credits each month. Unused credits expire after 30 days.`,
+      input.description ||
+      (input.interval === "year"
+        ? `${minutes.toLocaleString()} minutes each month. Billed yearly.`
+        : `${minutes.toLocaleString()} minutes each month.`),
     features_title: "Includes",
-    features: [
-      input.interval === "year"
-        ? `${credits} credits / month · expire after 12 months`
-        : `${credits} credits / month · unused expire after 30 days`,
-      "DXF, SVG and PDF on every convert",
-      "Conversion history",
-      "Commercial use",
-      "Cancel anytime",
-      ...(input.extraFeatures || []),
-    ],
+    features: input.features,
     interval: input.interval,
     amount: input.amount,
     currency: USD,
@@ -89,104 +85,160 @@ function subItem(input: {
     button: { title: "Subscribe", url: "/pricing", icon: "" },
     product_id: input.product_id,
     product_name: `${input.title} ${period}`,
-    credits,
+    credits: minutes,
     valid_months: input.interval === "year" ? 12 : 1,
     group: "subscription",
     stripe_price_id: `\${process.env.STRIPE_${input.product_id.toUpperCase()}_PRICE_ID}`,
   };
 }
 
+const FREE_FEATURES = [
+  "90 minutes / month",
+  "Up to 3 files per day",
+  "Each file up to 30 minutes",
+  "Captions-first when available",
+  "Basic AI summary",
+  ...COMMON_FEATURES.slice(0, 2),
+  "Email support",
+];
+
+const BASIC_FEATURES = [
+  "1,200 minutes / month",
+  "$5 per 500 extra minutes",
+  "No daily file limit",
+  "Each file up to 5 hours",
+  "Speaker identification",
+  "AI Summary & Notes",
+  ...COMMON_FEATURES,
+  "Priority email support",
+];
+
+const PRO_FEATURES = [
+  "4,000 minutes / month",
+  "$10 per 1,000 extra minutes",
+  "Everything in Basic",
+  "Higher priority processing",
+  "Bulk transcription",
+  "Enhanced AI insights",
+  ...COMMON_FEATURES,
+  "Priority email support",
+];
+
+const STUDIO_FEATURES = [
+  "10,000 minutes / month",
+  "Everything in Pro",
+  "3–5 team seats",
+  "Shared workspace for teams",
+  "Priority support",
+  ...COMMON_FEATURES,
+];
+
 export const CONVERT_PRICING_ITEMS: PricingItem[] = [
-  packItem({
-    title: "Starter",
-    product_id: "starter_pack",
-    credits: 5,
-    amount: 999,
-    price: "$9.99",
-    tip: "Occasional use",
-  }),
-  packItem({
-    title: "Popular",
-    product_id: "popular_pack",
-    credits: 20,
-    amount: 2499,
-    price: "$24.99",
-    featured: true,
-    tip: "Most popular",
-  }),
-  packItem({
-    title: "Plus",
-    product_id: "plus_pack",
-    credits: 50,
-    amount: 4999,
-    price: "$49.99",
-  }),
-  packItem({
-    title: "Bulk",
-    product_id: "bulk_pack",
-    credits: 100,
-    amount: 8999,
-    price: "$89.99",
-  }),
-  subItem({
-    title: "Hobby",
-    product_id: "hobby_monthly",
+  {
+    title: "Free",
+    description: "Try Video Transcriber — no card required.",
+    features_title: "Includes",
+    features: FREE_FEATURES,
     interval: "month",
-    monthlyCredits: 20,
-    amount: 1500,
-    price: "$15",
+    amount: 0,
+    currency: USD,
+    price: "$0",
+    unit: "/ month",
+    is_featured: false,
+    tip: "No card needed",
+    button: { title: "Get started", url: "/", icon: "" },
+    product_id: "free",
+    product_name: "Free",
+    credits: 90,
+    valid_months: 1,
+    group: "subscription",
+  },
+  packItem({
+    title: "500 minutes",
+    product_id: "minutes_500",
+    minutes: 500,
+    amount: 500,
+    price: "$5",
+    tip: "Top-up pack",
+  }),
+  packItem({
+    title: "1,000 minutes",
+    product_id: "minutes_1000",
+    minutes: 1000,
+    amount: 1000,
+    price: "$10",
+    featured: true,
+    tip: "Best top-up",
+  }),
+  packItem({
+    title: "3,000 minutes",
+    product_id: "minutes_3000",
+    minutes: 3000,
+    amount: 2500,
+    price: "$25",
+    tip: "Heavy users",
   }),
   subItem({
-    title: "Hobby",
-    product_id: "hobby_yearly",
+    title: "Basic",
+    product_id: "basic_monthly",
+    interval: "month",
+    monthlyMinutes: 1200,
+    amount: 900,
+    price: "$9",
+    features: BASIC_FEATURES,
+  }),
+  subItem({
+    title: "Basic",
+    product_id: "basic_yearly",
     interval: "year",
-    monthlyCredits: 20,
-    amount: 15000,
-    price: "$12.50",
-    original_price: "$15",
-    tip: "$150 billed yearly",
+    monthlyMinutes: 1200,
+    amount: 7200,
+    price: "$6",
+    original_price: "$9",
+    tip: "$72 billed yearly",
+    features: BASIC_FEATURES,
   }),
   subItem({
     title: "Pro",
     product_id: "pro_monthly",
     interval: "month",
-    monthlyCredits: 60,
-    amount: 2900,
-    price: "$29",
+    monthlyMinutes: 4000,
+    amount: 1900,
+    price: "$19",
     featured: true,
-    extraFeatures: ["Priority processing", "Email support"],
+    features: PRO_FEATURES,
   }),
   subItem({
     title: "Pro",
     product_id: "pro_yearly",
     interval: "year",
-    monthlyCredits: 60,
-    amount: 29000,
-    price: "$24.17",
-    original_price: "$29",
+    monthlyMinutes: 4000,
+    amount: 14400,
+    price: "$12",
+    original_price: "$19",
     featured: true,
-    tip: "$290 billed yearly",
-    extraFeatures: ["Priority processing", "Email support"],
+    tip: "$144 billed yearly",
+    features: PRO_FEATURES,
   }),
   subItem({
     title: "Studio",
     product_id: "studio_monthly",
     interval: "month",
-    monthlyCredits: 200,
-    amount: 7900,
-    price: "$79",
-    extraFeatures: ["Priority processing", "Email support", "Priority support"],
+    monthlyMinutes: 10000,
+    amount: 3900,
+    price: "$39",
+    features: STUDIO_FEATURES,
   }),
   subItem({
     title: "Studio",
     product_id: "studio_yearly",
     interval: "year",
-    monthlyCredits: 200,
-    amount: 79000,
-    price: "$65.83",
-    original_price: "$79",
-    tip: "$790 billed yearly",
-    extraFeatures: ["Priority processing", "Email support", "Priority support"],
+    monthlyMinutes: 10000,
+    amount: 28800,
+    price: "$24",
+    original_price: "$39",
+    tip: "$288 billed yearly",
+    features: STUDIO_FEATURES,
   }),
 ];
 
@@ -194,10 +246,10 @@ export const convertPricing: Pricing = {
   name: "pricing",
   title: "Pricing",
   description:
-    "One credit, one conversion. Subscribe for a lower rate, or buy a pack that expires in 12 months.",
+    "Minute-based plans for video and audio transcription. Captions-first when available; Whisper minutes when you need them.",
   groups: [
     { name: "subscription", title: "Subscriptions", label: "Best value" },
-    { name: "credits", title: "Credit packs", label: "No subscription" },
+    { name: "credits", title: "Minute packs", label: "Top-ups" },
   ],
   items: CONVERT_PRICING_ITEMS,
 };
@@ -210,17 +262,19 @@ export function getConvertPricingPage(): PricingPage {
   };
 }
 
-/** Credits billed in the paid period. Yearly is granted monthly but priced for 12 months. */
+/** Minutes billed in the paid period. Yearly is granted monthly but priced for 12 months. */
 export function billedCreditCount(item: PricingItem): number {
   if (item.interval === "year") return item.credits * 12;
   return item.credits;
 }
 
 export function perCreditLabel(item: PricingItem): string {
+  if (!item.amount || !item.credits) return "$0";
   const dollars = item.amount / 100 / billedCreditCount(item);
   return dollars.toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
+    maximumFractionDigits: 3,
   });
 }
 
@@ -234,8 +288,12 @@ export function monthlyCreditsForProduct(
 }
 
 export function savePercentVsStarter(item: PricingItem): number | null {
-  const starter = CONVERT_PRICING_ITEMS.find((p) => p.product_id === "starter_pack");
-  if (!starter || item.product_id === "starter_pack") return null;
+  const starter = CONVERT_PRICING_ITEMS.find(
+    (p) => p.product_id === "minutes_500"
+  );
+  if (!starter || item.product_id === "minutes_500" || !item.credits) {
+    return null;
+  }
   const starterUnit = starter.amount / starter.credits;
   const unit = item.amount / item.credits;
   if (unit >= starterUnit) return null;

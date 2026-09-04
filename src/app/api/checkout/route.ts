@@ -13,12 +13,11 @@ import { Order } from "@/types/order";
 import { newCreemClient } from "@/integrations/creem";
 
 const PRICE_IDS: Record<string, string | undefined> = {
-  starter_pack: process.env.STRIPE_STARTER_PACK_PRICE_ID,
-  popular_pack: process.env.STRIPE_POPULAR_PACK_PRICE_ID,
-  plus_pack: process.env.STRIPE_PLUS_PACK_PRICE_ID,
-  bulk_pack: process.env.STRIPE_BULK_PACK_PRICE_ID,
-  hobby_monthly: process.env.STRIPE_HOBBY_MONTHLY_PRICE_ID,
-  hobby_yearly: process.env.STRIPE_HOBBY_YEARLY_PRICE_ID,
+  minutes_500: process.env.STRIPE_MINUTES_500_PRICE_ID,
+  minutes_1000: process.env.STRIPE_MINUTES_1000_PRICE_ID,
+  minutes_3000: process.env.STRIPE_MINUTES_3000_PRICE_ID,
+  basic_monthly: process.env.STRIPE_BASIC_MONTHLY_PRICE_ID,
+  basic_yearly: process.env.STRIPE_BASIC_YEARLY_PRICE_ID,
   pro_monthly: process.env.STRIPE_PRO_MONTHLY_PRICE_ID,
   pro_yearly: process.env.STRIPE_PRO_YEARLY_PRICE_ID,
   studio_monthly: process.env.STRIPE_STUDIO_MONTHLY_PRICE_ID,

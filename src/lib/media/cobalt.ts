@@ -41,6 +41,22 @@ export function mapCobaltError(code?: string) {
 }
 
 export async function resolveCobaltAudio(sourceUrl: string): Promise<CobaltOk> {
+  return resolveCobalt(sourceUrl, "audio");
+}
+
+/** Prefer a playable video/audio URL for metadata probing. */
+export async function resolveCobaltMedia(sourceUrl: string): Promise<CobaltOk> {
+  try {
+    return await resolveCobalt(sourceUrl, "auto");
+  } catch {
+    return resolveCobalt(sourceUrl, "audio");
+  }
+}
+
+async function resolveCobalt(
+  sourceUrl: string,
+  downloadMode: "audio" | "auto",
+): Promise<CobaltOk> {
   let res: Response;
   try {
     res = await fetch(`${cobaltBase()}/`, {
@@ -52,8 +68,8 @@ export async function resolveCobaltAudio(sourceUrl: string): Promise<CobaltOk> {
       },
       body: JSON.stringify({
         url: sourceUrl,
-        downloadMode: "audio",
-        audioFormat: "mp3",
+        downloadMode,
+        audioFormat: downloadMode === "audio" ? "mp3" : undefined,
         alwaysProxy: true,
         localProcessing: "disabled",
       }),
@@ -74,7 +90,7 @@ export async function resolveCobaltAudio(sourceUrl: string): Promise<CobaltOk> {
     throw new Error(mapCobaltError(data.error?.code));
   }
 
-  const filename = data.filename || data.output?.filename || "audio.mp3";
+  const filename = data.filename || data.output?.filename || "media.bin";
 
   if ((data.status === "tunnel" || data.status === "redirect") && data.url) {
     return { url: data.url, filename };

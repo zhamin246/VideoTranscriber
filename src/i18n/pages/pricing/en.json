@@ -2,6 +2,6 @@
   "pricing": {
     "name": "pricing",
     "title": "Pricing",
-    "description": "Catalog lives in src/lib/convert/pricing-catalog.ts — this file is unused by checkout."
+    "description": "Catalog lives in src/lib/convert/pricing-catalog.ts"
   }
 }

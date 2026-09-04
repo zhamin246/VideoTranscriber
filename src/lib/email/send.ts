@@ -329,6 +329,49 @@ export function buildMagicLinkEmail(opts: {
   return { subject, html, text };
 }
 
+export function buildPasswordResetEmail(opts: {
+  resetUrl: string;
+  email: string;
+}): { subject: string; html: string; text: string } {
+  const brand = process.env.NEXT_PUBLIC_PROJECT_NAME || "Video Transcriber";
+  const subject = `Reset your ${brand} password`;
+  const text = [
+    `Reset your ${brand} password`,
+    ``,
+    `Use the link below to choose a new password. It expires in 30 minutes.`,
+    opts.resetUrl,
+    ``,
+    `If you didn't request this, you can safely ignore this email.`,
+  ].join("\n");
+  const html = `<!DOCTYPE html>
+<html>
+<body style="margin:0;padding:0;background:#f4f5f7;font-family:Inter,system-ui,-apple-system,sans-serif;color:#0a0a0a;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:48px 16px;">
+    <tr><td align="center">
+      <table width="100%" style="max-width:520px;background:#ffffff;border-radius:16px;padding:48px 40px;">
+        <tr><td align="center">
+          <p style="margin:0 0 20px;font-size:18px;font-weight:600;color:#0a0a0a;">${brand}</p>
+          <h1 style="margin:0 0 12px;font-size:28px;line-height:1.15;font-weight:800;color:#0a0a0a;">Reset your password</h1>
+          <p style="margin:0 0 28px;font-size:16px;line-height:1.5;color:#525252;">
+            Choose a new password with the secure link below. This link expires in 30 minutes.
+          </p>
+          <a href="${opts.resetUrl}"
+             style="display:inline-block;background:#4C6EF5;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:14px 28px;border-radius:10px;">
+            Reset password
+          </a>
+          <hr style="margin:32px 0 20px;border:none;border-top:1px solid #ececec;" />
+          <p style="margin:0;font-size:13px;line-height:1.6;color:#a3a3a3;">
+            If you didn’t request this email, you can safely ignore it.
+          </p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+  return { subject, html, text };
+}
+
 export function buildPaidReportEmail(opts: {
   email: string;
   reportUrl: string;

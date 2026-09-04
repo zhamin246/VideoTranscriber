@@ -7,7 +7,7 @@ const isCloudflareWorker =
 let dbInstance: ReturnType<typeof drizzle> | null = null;
 
 function clientConfig() {
-  const schema = process.env.DATABASE_SCHEMA || "imagetocad";
+  const schema = process.env.DATABASE_SCHEMA || "videotranscriber";
   return {
     prepare: false as const,
     connection: {

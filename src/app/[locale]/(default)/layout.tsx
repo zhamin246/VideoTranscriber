@@ -28,8 +28,10 @@ function isFaceRatingShellPath(pathname: string, locale: string) {
     clean.includes("/tools/full-analysis") ||
     clean.includes("/results/") ||
     clean.includes("/report/") ||
+    clean.includes("/workspace/") ||
     clean.includes("/dashboard") ||
     clean.includes("/pricing") ||
+    clean.includes("/my-assets") ||
     clean.includes("/auth/") ||
     clean.includes("/my-orders") ||
     clean.includes("/my-credits") ||

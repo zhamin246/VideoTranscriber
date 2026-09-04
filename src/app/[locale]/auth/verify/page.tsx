@@ -44,10 +44,7 @@ export default function MagicLinkVerifyPage() {
           return;
         }
         const next = callbackUrl.startsWith("/") ? callbackUrl : "/";
-        const onboarding = next.startsWith("/auth/onboarding")
-          ? next
-          : `/auth/onboarding?next=${encodeURIComponent(next)}`;
-        window.location.href = onboarding;
+        window.location.href = next;
       } catch {
         if (!cancelled) {
           setStatus("error");

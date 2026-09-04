@@ -14,9 +14,9 @@ export async function generateMetadata({
     canonicalUrl = `${process.env.NEXT_PUBLIC_WEB_URL}/${locale}/pricing`;
   }
 
-  const title = "Pricing — Credits & plans | image to cad";
+  const title = "Pricing — Video Transcriber";
   const description =
-    "One credit, one conversion. 3 free credits to start. Subscribe from $12.50/month, or buy a pack from $9.99. DXF, SVG and PDF.";
+    "Free 90 minutes/month. Basic from $6/mo (yearly) for 1,200 minutes. Pro and Studio for creators and teams. Minute packs from $5.";
 
   return {
     title,
@@ -28,7 +28,7 @@ export async function generateMetadata({
       title,
       description,
       url: canonicalUrl,
-      siteName: "image to cad",
+      siteName: "Video Transcriber",
       type: "website",
     },
     twitter: {
@@ -37,14 +37,11 @@ export async function generateMetadata({
       description,
     },
     robots: {
-      index: true,
-      follow: true,
+      index: false,
+      follow: false,
       googleBot: {
-        index: true,
-        follow: true,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
+        index: false,
+        follow: false,
       },
     },
   };

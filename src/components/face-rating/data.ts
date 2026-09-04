@@ -48,8 +48,8 @@ export const content = {
       {
         label: "Tools",
         items: [
+          { label: "My Assets", href: "/my-assets" },
           { label: "Transcribe", href: CONVERT_HREF },
-          { label: "History", href: "/dashboard" },
         ],
       },
       {
@@ -63,8 +63,8 @@ export const content = {
     tools: {
       label: "Tools",
       items: [
+        { label: "My Assets", href: "/my-assets" },
         { label: "Transcribe", href: CONVERT_HREF },
-        { label: "History", href: "/dashboard" },
       ],
     },
     items: [

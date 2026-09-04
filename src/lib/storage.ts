@@ -19,9 +19,15 @@ export class Storage {
   constructor(config?: StorageConfig) {
     this.endpoint = config?.endpoint || process.env.STORAGE_ENDPOINT || "";
     this.accessKeyId =
-      config?.accessKey || process.env.STORAGE_ACCESS_KEY_ID || "";
+      config?.accessKey ||
+      process.env.STORAGE_ACCESS_KEY_ID ||
+      process.env.STORAGE_ACCESS_KEY ||
+      "";
     this.secretAccessKey =
-      config?.secretKey || process.env.STORAGE_SECRET_ACCESS_KEY || "";
+      config?.secretKey ||
+      process.env.STORAGE_SECRET_ACCESS_KEY ||
+      process.env.STORAGE_SECRET_KEY ||
+      "";
     this.bucket = process.env.STORAGE_BUCKET || "";
     this.region = config?.region || process.env.STORAGE_REGION || "auto";
   }

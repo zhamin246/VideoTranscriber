@@ -9,21 +9,53 @@ export function ytdlpWorkerConfigured() {
   return Boolean(workerBase());
 }
 
+function workerHeaders(): Record<string, string> {
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  const token = process.env.YTDLP_TOKEN?.trim();
+  if (token) headers.Authorization = `Bearer ${token}`;
+  return headers;
+}
+
+export type YtdlpMediaInfo = {
+  title?: string;
+  duration?: number | null;
+  thumbnail?: string;
+  extractor?: string;
+};
+
+/** Metadata only — no media download. Best-effort; returns null on failure. */
+export async function fetchMediaInfoViaYtdlp(
+  sourceUrl: string,
+): Promise<YtdlpMediaInfo | null> {
+  const base = workerBase();
+  if (!base) return null;
+  try {
+    const res = await fetch(`${base}/info`, {
+      method: "POST",
+      headers: workerHeaders(),
+      body: JSON.stringify({ url: sourceUrl }),
+      signal: AbortSignal.timeout(45_000),
+    });
+    if (!res.ok) return null;
+    const data = (await res.json()) as YtdlpMediaInfo & { error?: string };
+    if (data.error) return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
 export async function extractAudioViaYtdlp(sourceUrl: string) {
   const base = workerBase();
   if (!base) {
     throw new Error("YTDLP_WORKER_URL is not set.");
   }
 
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
-  const token = process.env.YTDLP_TOKEN?.trim();
-  if (token) headers.Authorization = `Bearer ${token}`;
-
   let res: Response;
   try {
     res = await fetch(`${base}/extract`, {
       method: "POST",
-      headers,
+      headers: workerHeaders(),
       body: JSON.stringify({ url: sourceUrl }),
     });
   } catch {
@@ -43,7 +75,8 @@ export async function extractAudioViaYtdlp(sourceUrl: string) {
   if (buf.byteLength > MAX_AUDIO_BYTES) {
     throw new Error("That file is too large to process here.");
   }
-  const filename = filenameFromDisposition(res.headers.get("content-disposition")) || "audio.mp3";
+  const filename =
+    filenameFromDisposition(res.headers.get("content-disposition")) || "audio.mp3";
   const contentType = res.headers.get("content-type") || "audio/mpeg";
   return { buf, contentType, filename };
 }

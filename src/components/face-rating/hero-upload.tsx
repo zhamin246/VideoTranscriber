@@ -1,25 +1,118 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
-import { useRouter } from "@/i18n/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   AudioLines,
+  CheckCircle2,
+  Captions,
   FileText,
   Info,
   Link2,
+  Loader2,
   Mic,
+  Trash2,
   Upload,
   Video,
 } from "lucide-react";
 import {
   ACCEPT_UPLOAD,
+  formatMaxUploadLabel,
   isAcceptedUpload,
+  MAX_UPLOAD_BYTES,
   stashPendingFile,
 } from "@/lib/convert/pending-upload";
-import { CONVERT_HREF } from "./data";
+import { formatDuration, formatFileSize, type MediaPreview } from "@/lib/media/preview-types";
+import { NOTE_MODE_PRESETS } from "@/lib/media/notes";
+import { OPEN_MEDIA_EVENT, saveRecentMedia, startTranscribeJob, updateTranscribeJob, finishTranscribeJob, simulatedTranscribePercent } from "@/lib/media/recent-media";
+import {
+  createWorkspaceId,
+  persistWorkspace,
+  saveWorkspace,
+  type WorkspacePayload,
+} from "@/lib/media/workspace-store";
+import { extractYoutubeId } from "@/lib/media/youtube-id";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+type LocalFilePreview = {
+  file: File;
+  objectUrl: string;
+  kind: "audio" | "video";
+  durationSeconds: number | null;
+  thumbnailUrl: string;
+};
 
-function BrandIcon({ name }: { name: string }) {
-  const cls = "h-2.5 w-2.5";
+function mediaKindOf(file: File): "audio" | "video" {
+  if (file.type.startsWith("audio/")) return "audio";
+  if (file.type.startsWith("video/")) return "video";
+  // .webm / .ogg are used for both; prefer audio when MIME is missing
+  if (/\.ogv$/i.test(file.name)) return "video";
+  if (/\.(webm|ogg|oga)$/i.test(file.name)) return "audio";
+  if (/\.(mp4|mov|mkv|avi|wmv|flv|m4v|mpeg|mpg|3gp|ts)$/i.test(file.name)) {
+    return "video";
+  }
+  return "audio";
+}
+
+function probeLocalMedia(
+  file: File,
+  objectUrl: string,
+): Promise<Pick<LocalFilePreview, "kind" | "durationSeconds" | "thumbnailUrl">> {
+  const kind = mediaKindOf(file);
+  return new Promise((resolve) => {
+    const el = document.createElement(kind);
+    el.preload = "metadata";
+    el.muted = true;
+    el.src = objectUrl;
+    let settled = false;
+    const finish = (durationSeconds: number | null, thumbnailUrl = "") => {
+      if (settled) return;
+      settled = true;
+      el.removeAttribute("src");
+      el.load();
+      resolve({ kind, durationSeconds, thumbnailUrl });
+    };
+    el.onloadedmetadata = () => {
+      const dur = Number.isFinite(el.duration) ? el.duration : null;
+      if (kind === "video" && el instanceof HTMLVideoElement && el.videoWidth > 0) {
+        const onSeeked = () => {
+          try {
+            const canvas = document.createElement("canvas");
+            canvas.width = el.videoWidth;
+            canvas.height = el.videoHeight;
+            const ctx = canvas.getContext("2d");
+            if (ctx) {
+              ctx.drawImage(el, 0, 0);
+              finish(dur, canvas.toDataURL("image/jpeg", 0.72));
+              return;
+            }
+          } catch {
+            /* ignore */
+          }
+          finish(dur);
+        };
+        el.addEventListener("seeked", onSeeked, { once: true });
+        try {
+          el.currentTime = Math.min(1, Math.max(0.1, (dur || 2) * 0.05));
+        } catch {
+          finish(dur);
+        }
+        window.setTimeout(() => finish(dur), 2000);
+        return;
+      }
+      finish(dur);
+    };
+    el.onerror = () => finish(null);
+    window.setTimeout(() => finish(null), 4000);
+  });
+}
+
+function BrandIcon({ name, className }: { name: string; className?: string }) {
+  const cls = className || "h-2.5 w-2.5";
   if (name === "YouTube") {
     return (
       <svg viewBox="0 0 24 24" fill="currentColor" className={cls} aria-hidden>
@@ -67,36 +160,206 @@ function BrandIcon({ name }: { name: string }) {
 
 const PLATFORMS = ["YouTube", "TikTok", "Instagram", "Facebook", "X", "Apple Podcasts", "Many other links"];
 
+const SOURCE_LANGUAGES = [
+  { value: "auto", label: "Auto Detect" },
+  { value: "en", label: "English" },
+  { value: "zh", label: "中文" },
+  { value: "hi", label: "हिन्दी" },
+  { value: "es", label: "Español" },
+  { value: "ar", label: "العربية" },
+  { value: "bn", label: "বাংলা" },
+  { value: "pt", label: "Português" },
+  { value: "ru", label: "Русский" },
+  { value: "ur", label: "اردو" },
+  { value: "id", label: "Bahasa Indonesia" },
+  { value: "fr", label: "Français" },
+  { value: "pa", label: "ਪੰਜਾਬੀ" },
+  { value: "de", label: "Deutsch" },
+  { value: "ja", label: "日本語" },
+  { value: "sw", label: "Kiswahili" },
+  { value: "mr", label: "मराठी" },
+  { value: "te", label: "తెలుగు" },
+  { value: "tr", label: "Türkçe" },
+  { value: "ta", label: "தமிழ்" },
+  { value: "vi", label: "Tiếng Việt" },
+  { value: "ko", label: "한국어" },
+  { value: "fa", label: "فارسی" },
+  { value: "it", label: "Italiano" },
+  { value: "th", label: "ไทย" },
+  { value: "gu", label: "ગુજરાતી" },
+  { value: "pl", label: "Polski" },
+  { value: "uk", label: "Українська" },
+  { value: "ml", label: "മലയാളം" },
+  { value: "ro", label: "Română" },
+  { value: "nl", label: "Nederlands" },
+  { value: "ha", label: "Hausa" },
+  { value: "yo", label: "Yorùbá" },
+  { value: "am", label: "አማርኛ" },
+  { value: "az", label: "Azərbaycan" },
+  { value: "my", label: "မြန်မာ" },
+  { value: "ne", label: "नेपाली" },
+  { value: "kk", label: "Қазақ" },
+  { value: "sr", label: "Српски" },
+  { value: "hu", label: "Magyar" },
+  { value: "el", label: "Ελληνικά" },
+  { value: "cs", label: "Čeština" },
+  { value: "sv", label: "Svenska" },
+  { value: "sk", label: "Slovenčina" },
+  { value: "fi", label: "Suomi" },
+  { value: "da", label: "Dansk" },
+  { value: "he", label: "עברית" },
+  { value: "lt", label: "Lietuvių" },
+  { value: "sl", label: "Slovenščina" },
+  { value: "lv", label: "Latviešu" },
+  { value: "et", label: "Eesti" },
+  { value: "is", label: "Íslenska" },
+  { value: "mt", label: "Malti" },
+  { value: "cy", label: "Cymraeg" },
+  { value: "yue", label: "粵語" },
+  { value: "bo", label: "བོད་སྐད་" },
+  { value: "jw", label: "Basa Jawa" },
+  { value: "su", label: "Basa Sunda" },
+  { value: "ps", label: "پښتو" },
+  { value: "sd", label: "سنڌي" },
+  { value: "sn", label: "ChiShona" },
+  { value: "so", label: "Soomaali" },
+  { value: "si", label: "සිංහල" },
+  { value: "tt", label: "Татарча" },
+  { value: "mn", label: "Монгол" },
+  { value: "ka", label: "ქართული" },
+  { value: "tg", label: "Тоҷикӣ" },
+  { value: "tk", label: "Türkmen" },
+  { value: "br", label: "Brezhoneg" },
+  { value: "ba", label: "Башҡорт" },
+  { value: "be", label: "Беларуская" },
+  { value: "as", label: "অসমীয়া" },
+  { value: "fo", label: "Føroyskt" },
+  { value: "gl", label: "Galego" },
+  { value: "ht", label: "Kreyòl Ayisyen" },
+  { value: "haw", label: "ʻŌlelo Hawaiʻi" },
+  { value: "yi", label: "ייִדיש" },
+] as const;
+
+const NOTE_MODES = NOTE_MODE_PRESETS.map((m) => ({
+  value: m.value,
+  label: m.label,
+}));
+
+
 export default function HeroUpload() {
-  const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [tab, setTab] = useState<"upload" | "link" | "record">("upload");
   const [drag, setDrag] = useState(false);
   const [error, setError] = useState("");
   const [url, setUrl] = useState("");
   const [linkBusy, setLinkBusy] = useState(false);
+  const [transcribeBusy, setTranscribeBusy] = useState(false);
   const [linkOk, setLinkOk] = useState("");
+  const [preview, setPreview] = useState<MediaPreview | null>(null);
+  const [filePreview, setFilePreview] = useState<LocalFilePreview | null>(null);
+  const [sourceLanguage, setSourceLanguage] = useState("auto");
+  const [separateSpeaker, setSeparateSpeaker] = useState(false);
+  const [noteMode, setNoteMode] = useState("smart_summary");
   const [recording, setRecording] = useState(false);
+  const [recordElapsed, setRecordElapsed] = useState(0);
+  const [convertingRecording, setConvertingRecording] = useState(false);
   const mediaRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<Blob[]>([]);
+  const filePreviewUrlRef = useRef<string | null>(null);
+  const recordStartedAtRef = useRef<number>(0);
+  const progressStopRef = useRef<(() => void) | null>(null);
+
+  const revokeFilePreview = useCallback(() => {
+    if (filePreviewUrlRef.current) {
+      URL.revokeObjectURL(filePreviewUrlRef.current);
+      filePreviewUrlRef.current = null;
+    }
+    setFilePreview(null);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (filePreviewUrlRef.current) {
+        URL.revokeObjectURL(filePreviewUrlRef.current);
+      }
+      progressStopRef.current?.();
+      progressStopRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    const onOpen = (event: Event) => {
+      const detail = (event as CustomEvent<MediaPreview>).detail;
+      if (!detail?.url) return;
+      revokeFilePreview();
+      setTab("link");
+      setUrl(detail.url);
+      setPreview(detail);
+      setError("");
+      setLinkOk("");
+    };
+    window.addEventListener(OPEN_MEDIA_EVENT, onOpen);
+    return () => window.removeEventListener(OPEN_MEDIA_EVENT, onOpen);
+  }, [revokeFilePreview]);
+
+  useEffect(() => {
+    if (!recording) {
+      setRecordElapsed(0);
+      return;
+    }
+    const tick = () => {
+      setRecordElapsed(Math.max(0, (Date.now() - recordStartedAtRef.current) / 1000));
+    };
+    tick();
+    const id = window.setInterval(tick, 250);
+    return () => window.clearInterval(id);
+  }, [recording]);
+
+  const adoptLocalFile = useCallback(async (file: File) => {
+    setError("");
+    setLinkOk("");
+    setPreview(null);
+    if (filePreviewUrlRef.current) {
+      URL.revokeObjectURL(filePreviewUrlRef.current);
+    }
+    const objectUrl = URL.createObjectURL(file);
+    filePreviewUrlRef.current = objectUrl;
+    stashPendingFile(file);
+    const meta = await probeLocalMedia(file, objectUrl);
+    setFilePreview({
+      file,
+      objectUrl,
+      kind: meta.kind,
+      durationSeconds: meta.durationSeconds,
+      thumbnailUrl: meta.thumbnailUrl,
+    });
+  }, []);
 
   const go = useCallback(
-    (file: File) => {
+    async (file: File) => {
       if (!isAcceptedUpload(file)) {
-        setError("Use JPEG, PNG, WebP, HEIC, AVIF, or PDF under 10 MB.");
+        setError(
+          "Upload an audio or video file (MP3, WAV, M4A, MP4, MOV, WebM, and 20+ other formats).",
+        );
         return;
       }
-      if (file.size > 10 * 1024 * 1024) {
-        setError("File is over 10 MB.");
+      if (file.size > MAX_UPLOAD_BYTES) {
+        setError(`File is over ${formatMaxUploadLabel()}.`);
         return;
       }
-      setError("");
-      stashPendingFile(file);
-      router.push(CONVERT_HREF);
+      await adoptLocalFile(file);
     },
-    [router],
+    [adoptLocalFile],
   );
+
+  const clearPreview = () => {
+    setPreview(null);
+    setLinkOk("");
+    setError("");
+    revokeFilePreview();
+    if (inputRef.current) inputRef.current.value = "";
+  };
 
   const submitUrl = async () => {
     const next = url.trim();
@@ -106,57 +369,420 @@ export default function HeroUpload() {
     }
     setError("");
     setLinkOk("");
+    setPreview(null);
+    revokeFilePreview();
     setLinkBusy(true);
     try {
-      const res = await fetch("/api/media/from-link", {
+      const res = await fetch("/api/media/preview", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: next }),
       });
-      const type = res.headers.get("content-type") || "";
-      if (type.includes("application/json")) {
-        const json = (await res.json()) as { message?: string };
-        setError(json.message || "Could not fetch audio from that link.");
+      const json = (await res.json()) as {
+        code?: number;
+        message?: string;
+        data?: MediaPreview;
+      };
+      if (!res.ok || json.code !== 0 || !json.data?.title) {
+        setError(json.message || "Could not load that link preview.");
         return;
       }
-      if (!res.ok) {
-        setError("Could not fetch audio from that link.");
-        return;
-      }
-      const blob = await res.blob();
-      const filename = res.headers.get("X-Media-Filename") || "audio.mp3";
-      const href = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = href;
-      a.download = filename;
-      a.click();
-      URL.revokeObjectURL(href);
-      setLinkOk(`Audio ready: ${filename}`);
+      setPreview(json.data);
     } catch {
-      setError("Could not fetch audio from that link.");
+      setError("Could not load that link preview.");
     } finally {
       setLinkBusy(false);
     }
   };
 
+  const finishTranscription = async (payload: {
+    url: string;
+    playbackUrl?: string | null;
+    title: string;
+    thumbnailUrl: string;
+    durationSeconds: number | null;
+    platform: string;
+    youtubeId: string | null;
+    mediaKind?: "audio" | "video" | null;
+    transcript?: { startSeconds: number; text: string }[];
+    transcriptText?: string;
+    detectedLanguage?: string | null;
+    /** When set, upload this file to R2 via /api/workspaces */
+    file?: File | null;
+    /** Prefer this id (e.g. already used for R2 resolve key) */
+    workspaceId?: string;
+  }) => {
+    setError("");
+    try {
+      const id = payload.workspaceId || createWorkspaceId();
+      const stored: WorkspacePayload = {
+        id,
+        url: payload.url,
+        playbackUrl: payload.playbackUrl ?? null,
+        title: payload.title,
+        thumbnailUrl: payload.thumbnailUrl,
+        durationSeconds: payload.durationSeconds,
+        platform: payload.platform,
+        youtubeId: payload.youtubeId,
+        mediaKind: payload.mediaKind ?? null,
+        sourceLanguage,
+        noteMode,
+        separateSpeaker,
+        createdAt: Date.now(),
+        transcript: payload.transcript,
+        transcriptText: payload.transcriptText,
+        detectedLanguage: payload.detectedLanguage ?? null,
+      };
+      saveWorkspace(stored);
+      updateTranscribeJob(id, { percent: 100, status: "done" });
+      saveRecentMedia({
+        url: payload.url,
+        title: payload.title,
+        thumbnailUrl: payload.thumbnailUrl,
+        durationSeconds: payload.durationSeconds,
+        platform: payload.platform,
+        workspaceId: id,
+      });
+      finishTranscribeJob(id);
+
+      const persisted = await persistWorkspace(stored, payload.file);
+      if (persisted?.playbackUrl && persisted.playbackUrl !== stored.playbackUrl) {
+        saveWorkspace({ ...stored, playbackUrl: persisted.playbackUrl });
+      }
+
+      // Clear upload UI; keep blob URL alive for workspace in this session
+      setPreview(null);
+      setFilePreview(null);
+      setUrl("");
+      setLinkOk("");
+      filePreviewUrlRef.current = null;
+      if (inputRef.current) inputRef.current.value = "";
+      setTranscribeBusy(false);
+    } catch {
+      if (payload.workspaceId) finishTranscribeJob(payload.workspaceId);
+      setError("Could not save transcription.");
+      setTranscribeBusy(false);
+    }
+  };
+
+  const beginProgressJob = (input: {
+    id: string;
+    title: string;
+    platform: string;
+    thumbnailUrl?: string;
+  }) => {
+    progressStopRef.current?.();
+    startTranscribeJob(input);
+    const startedAt = Date.now();
+    const timer = window.setInterval(() => {
+      updateTranscribeJob(input.id, {
+        percent: simulatedTranscribePercent(Date.now() - startedAt),
+      });
+    }, 400);
+    const stop = () => {
+      window.clearInterval(timer);
+      if (progressStopRef.current === stop) progressStopRef.current = null;
+    };
+    progressStopRef.current = stop;
+    return stop;
+  };
+
+  /** Competitor timing: keep faded Transcribe UI ~3s, then show My files card + reset composer. */
+  const revealProgressCard = (
+    input: {
+      id: string;
+      title: string;
+      platform: string;
+      thumbnailUrl?: string;
+    },
+    delayMs = 2800,
+  ) => {
+    let stopProgress: (() => void) | null = null;
+    let revealed = false;
+    const reveal = () => {
+      if (revealed) return;
+      revealed = true;
+      stopProgress = beginProgressJob(input);
+      resetComposerAfterStart();
+      // Ensure My files strip is in view
+      window.setTimeout(() => {
+        document
+          .getElementById("my-files-strip")
+          ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }, 50);
+    };
+    const timer = window.setTimeout(reveal, delayMs);
+    return {
+      revealNow: () => {
+        window.clearTimeout(timer);
+        reveal();
+      },
+      cancelReveal: () => {
+        window.clearTimeout(timer);
+      },
+      stopProgress: () => stopProgress?.(),
+      wasRevealed: () => revealed,
+    };
+  };
+
+  const resetComposerAfterStart = () => {
+    setPreview(null);
+    setFilePreview(null);
+    setUrl("");
+    setLinkOk("");
+    setError("");
+    if (inputRef.current) inputRef.current.value = "";
+  };
+
+  const transcribeLink = async () => {
+    if (!preview?.url) return;
+    setError("");
+    setLinkOk("");
+    setTranscribeBusy(true);
+    const workspaceId = createWorkspaceId();
+    const title = preview.title;
+    const platform = preview.platform;
+    const thumbnailUrl = preview.thumbnailUrl;
+    const durationSeconds = preview.durationSeconds;
+    const sourceUrl = preview.url;
+    const progress = revealProgressCard({
+      id: workspaceId,
+      title,
+      platform,
+      thumbnailUrl,
+    });
+    try {
+      const res = await fetch("/api/media/transcribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sourceUrl,
+          workspaceId,
+          language: sourceLanguage,
+          separateSpeaker,
+        }),
+      });
+      const json = (await res.json()) as {
+        code?: number;
+        message?: string;
+        data?: {
+          text?: string;
+          segments?: { startSeconds: number; text: string }[];
+          language?: string | null;
+          playbackUrl?: string | null;
+          audioUrl?: string | null;
+          mediaKind?: "audio" | "video" | null;
+          workspaceId?: string;
+        };
+      };
+      // Ensure card is visible before completing / failing
+      progress.revealNow();
+      progress.stopProgress();
+      if (!res.ok || json.code !== 0 || !json.data) {
+        finishTranscribeJob(workspaceId);
+        setError(json.message || "Transcription failed");
+        setTranscribeBusy(false);
+        return;
+      }
+
+      await finishTranscription({
+        url: sourceUrl,
+        playbackUrl: json.data.playbackUrl ?? null,
+        title,
+        thumbnailUrl,
+        durationSeconds,
+        platform,
+        youtubeId: extractYoutubeId(sourceUrl),
+        mediaKind: json.data.mediaKind ?? null,
+        transcript: json.data.segments,
+        transcriptText: json.data.text,
+        detectedLanguage: json.data.language,
+        workspaceId: json.data.workspaceId || workspaceId,
+      });
+    } catch {
+      progress.revealNow();
+      progress.stopProgress();
+      finishTranscribeJob(workspaceId);
+      setError("Could not transcribe that link.");
+      setTranscribeBusy(false);
+    }
+  };
+
+  const transcribeFile = async () => {
+    if (!filePreview) return;
+    setError("");
+    setLinkOk("");
+    setTranscribeBusy(true);
+    const file = filePreview.file;
+    const title = file.name;
+    const durationSeconds = filePreview.durationSeconds;
+    const thumbnailUrl = filePreview.thumbnailUrl;
+    const mediaKind = filePreview.kind;
+    const objectUrl = filePreview.objectUrl;
+    stashPendingFile(file);
+    const workspaceId = createWorkspaceId();
+    const progress = revealProgressCard({
+      id: workspaceId,
+      title,
+      platform: "Upload",
+      thumbnailUrl,
+    });
+    try {
+      const form = new FormData();
+      form.append("file", file, file.name);
+      form.append("workspaceId", workspaceId);
+      form.append("language", sourceLanguage);
+      form.append("separateSpeaker", separateSpeaker ? "true" : "false");
+
+      const res = await fetch("/api/media/transcribe", {
+        method: "POST",
+        body: form,
+      });
+      const json = (await res.json()) as {
+        code?: number;
+        message?: string;
+        data?: {
+          text?: string;
+          segments?: { startSeconds: number; text: string }[];
+          language?: string | null;
+          playbackUrl?: string | null;
+          audioUrl?: string | null;
+          mediaKind?: "audio" | "video" | null;
+          workspaceId?: string;
+        };
+      };
+      progress.revealNow();
+      progress.stopProgress();
+      if (!res.ok || json.code !== 0 || !json.data) {
+        finishTranscribeJob(workspaceId);
+        setError(json.message || "Transcription failed");
+        setTranscribeBusy(false);
+        return;
+      }
+
+      await finishTranscription({
+        url: json.data.playbackUrl || objectUrl,
+        playbackUrl: json.data.playbackUrl ?? null,
+        title,
+        thumbnailUrl,
+        durationSeconds,
+        platform: "Upload",
+        youtubeId: null,
+        mediaKind: json.data.mediaKind || mediaKind,
+        transcript: json.data.segments,
+        transcriptText: json.data.text,
+        detectedLanguage: json.data.language,
+        workspaceId: json.data.workspaceId || workspaceId,
+        file: null,
+      });
+      if (filePreviewUrlRef.current === objectUrl) {
+        filePreviewUrlRef.current = null;
+      }
+    } catch {
+      progress.revealNow();
+      progress.stopProgress();
+      finishTranscribeJob(workspaceId);
+      setError("Could not transcribe that file.");
+      setTranscribeBusy(false);
+    }
+  };
+
+  const convertBlobToMp3 = async (blob: Blob, rawName: string) => {
+    const form = new FormData();
+    form.append("file", blob, rawName);
+    const res = await fetch("/api/media/to-mp3", { method: "POST", body: form });
+    if (!res.ok) {
+      const json = (await res.json().catch(() => null)) as {
+        message?: string;
+      } | null;
+      throw new Error(json?.message || "Could not convert recording to mp3");
+    }
+    const buf = await res.arrayBuffer();
+    const outName =
+      res.headers.get("X-Filename") ||
+      rawName.replace(/\.[^.]+$/i, "") + ".mp3";
+    return new File([buf], outName, { type: "audio/mpeg" });
+  };
+
   const toggleRecord = async () => {
     if (recording) {
-      mediaRef.current?.stop();
-      streamRef.current?.getTracks().forEach((t) => t.stop());
-      mediaRef.current = null;
-      streamRef.current = null;
-      setRecording(false);
+      const rec = mediaRef.current;
+      if (!rec) {
+        setRecording(false);
+        return;
+      }
+      rec.onstop = () => {
+        streamRef.current?.getTracks().forEach((t) => t.stop());
+        streamRef.current = null;
+        mediaRef.current = null;
+        setRecording(false);
+        const elapsed = Math.max(0, (Date.now() - recordStartedAtRef.current) / 1000);
+        const mime = rec.mimeType || "audio/webm";
+        const blob = new Blob(chunksRef.current, { type: mime });
+        chunksRef.current = [];
+        if (!blob.size) {
+          setError("Recording was empty. Try again.");
+          return;
+        }
+        const ext = mime.includes("mp4")
+          ? "m4a"
+          : mime.includes("ogg")
+            ? "ogg"
+            : "webm";
+        const rawName = `recording-${Date.now()}.${ext}`;
+
+        void (async () => {
+          setConvertingRecording(true);
+          setError("");
+          try {
+            // Browsers can only MediaRecorder → webm/ogg/mp4; convert to mp3 for Whisper.
+            const file = await convertBlobToMp3(blob, rawName);
+            await adoptLocalFile(file);
+            setFilePreview((prev) =>
+              prev && (prev.durationSeconds == null || prev.durationSeconds <= 0)
+                ? { ...prev, durationSeconds: elapsed }
+                : prev,
+            );
+          } catch (e) {
+            setError(
+              e instanceof Error
+                ? e.message
+                : "Could not convert recording to mp3.",
+            );
+          } finally {
+            setConvertingRecording(false);
+          }
+        })();
+      };
+      try {
+        rec.stop();
+      } catch {
+        setRecording(false);
+        setError("Could not stop recording.");
+      }
       return;
     }
     try {
+      revokeFilePreview();
+      if (inputRef.current) inputRef.current.value = "";
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
-      const rec = new MediaRecorder(stream);
+      const mimeCandidates = [
+        "audio/webm;codecs=opus",
+        "audio/webm",
+        "audio/mp4",
+        "audio/ogg",
+      ];
+      const mimeType = mimeCandidates.find((m) => MediaRecorder.isTypeSupported(m));
+      const rec = mimeType
+        ? new MediaRecorder(stream, { mimeType })
+        : new MediaRecorder(stream);
       chunksRef.current = [];
       rec.ondataavailable = (e) => {
         if (e.data.size) chunksRef.current.push(e.data);
       };
-      rec.start();
+      recordStartedAtRef.current = Date.now();
+      rec.start(250);
       mediaRef.current = rec;
       setRecording(true);
       setError("");
@@ -172,6 +798,161 @@ export default function HeroUpload() {
     border: drag ? "1.6px dashed rgba(255,255,255,0.85)" : "1.6px dashed rgb(107, 103, 167)",
     backgroundColor: drag ? "rgba(136, 130, 245, 0.16)" : "rgba(136, 130, 245, 0.08)",
   } as const;
+
+  const optionsAndTranscribe = (onTranscribe: () => void) => (
+    <>
+      <div
+        className="mt-6 flex flex-col gap-3 border-t pt-5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6 sm:gap-y-3"
+        style={{ borderColor: "rgba(255,255,255,0.12)" }}
+      >
+        <label
+          className="inline-flex items-center gap-2 text-sm"
+          style={{ color: "rgba(255,255,255,0.82)" }}
+        >
+          <span className="whitespace-nowrap">Source Language:</span>
+          <Select
+            value={sourceLanguage}
+            onValueChange={setSourceLanguage}
+            disabled={transcribeBusy}
+          >
+            <SelectTrigger
+              size="sm"
+              className="h-9 min-w-[9rem] border-slate-300 bg-white text-slate-900 shadow-none dark:bg-white dark:text-slate-900"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="max-h-60 border-slate-200 bg-white text-slate-900 shadow-lg dark:bg-white dark:text-slate-900">
+              {SOURCE_LANGUAGES.map((opt) => (
+                <SelectItem
+                  key={opt.value}
+                  value={opt.value}
+                  className="text-slate-900 focus:bg-slate-100 focus:text-slate-900 data-[highlighted]:bg-slate-100 data-[highlighted]:text-slate-900"
+                >
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </label>
+
+        <label
+          className="inline-flex items-center gap-2 text-sm"
+          style={{ color: "rgba(255,255,255,0.82)" }}
+        >
+          <span>Separate Speaker</span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={separateSpeaker}
+            disabled={transcribeBusy}
+            onClick={() => setSeparateSpeaker((v) => !v)}
+            className="relative h-5 w-9 rounded-full transition-colors disabled:opacity-50"
+            style={{ backgroundColor: separateSpeaker ? "#8882F5" : "rgba(255,255,255,0.28)" }}
+          >
+            <span
+              className="absolute top-0.5 h-4 w-4 rounded-full bg-white transition-all"
+              style={{ left: separateSpeaker ? "1.125rem" : "0.125rem" }}
+            />
+          </button>
+        </label>
+
+        <label
+          className="inline-flex items-center gap-2 text-sm"
+          style={{ color: "rgba(255,255,255,0.82)" }}
+        >
+          <span className="whitespace-nowrap">Note Mode:</span>
+          <Select value={noteMode} onValueChange={setNoteMode} disabled={transcribeBusy}>
+            <SelectTrigger
+              size="sm"
+              className="h-9 min-w-[10rem] border-slate-300 bg-white text-slate-900 shadow-none dark:bg-white dark:text-slate-900"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="max-h-80 border-slate-200 bg-white text-slate-900 shadow-lg dark:bg-white dark:text-slate-900">
+              {NOTE_MODES.map((opt) => (
+                <SelectItem
+                  key={opt.value}
+                  value={opt.value}
+                  className="text-slate-900 focus:bg-slate-100 focus:text-slate-900 data-[highlighted]:bg-slate-100 data-[highlighted]:text-slate-900"
+                >
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </label>
+      </div>
+
+      <button
+        type="button"
+        onClick={() => void Promise.resolve(onTranscribe())}
+        disabled={transcribeBusy}
+        className="mt-6 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-75"
+        style={{ backgroundColor: "#8882F5" }}
+      >
+        <Captions className="h-4 w-4" />
+        Transcribe
+      </button>
+    </>
+  );
+
+  const filePreviewCard = filePreview ? (
+    <div className="w-full text-left">
+      <div className="flex items-start gap-3">
+        {filePreview.thumbnailUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={filePreview.thumbnailUrl}
+            alt=""
+            className="h-16 w-28 shrink-0 rounded-md object-cover"
+          />
+        ) : (
+          <div
+            className="flex h-16 w-28 shrink-0 items-center justify-center rounded-md"
+            style={{ backgroundColor: "rgba(255,255,255,0.12)" }}
+          >
+            {filePreview.kind === "audio" ? (
+              <AudioLines className="h-6 w-6" style={{ color: "rgba(255,255,255,0.55)" }} />
+            ) : (
+              <Video className="h-6 w-6" style={{ color: "rgba(255,255,255,0.55)" }} />
+            )}
+          </div>
+        )}
+        <div className="min-w-0 flex-1">
+          <p
+            className="line-clamp-2 text-sm font-semibold leading-snug md:text-base"
+            style={{ color: "#93C5FD" }}
+            title={filePreview.file.name}
+          >
+            {filePreview.file.name}
+          </p>
+          <p className="mt-1 text-xs md:text-sm" style={{ color: "rgba(255,255,255,0.55)" }}>
+            {[
+              formatDuration(filePreview.durationSeconds),
+              formatFileSize(filePreview.file.size),
+              filePreview.kind === "audio" ? "Audio" : "Video",
+            ]
+              .filter(Boolean)
+              .join(" · ")}
+          </p>
+        </div>
+        <div className="flex shrink-0 items-center gap-1.5 pt-0.5">
+          <CheckCircle2 className="h-5 w-5" style={{ color: "#22C55E" }} aria-hidden />
+          <button
+            type="button"
+            onClick={clearPreview}
+            disabled={transcribeBusy}
+            className="rounded-md p-1 disabled:opacity-50"
+            style={{ color: "rgba(255,255,255,0.55)" }}
+            aria-label="Clear file"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+      {optionsAndTranscribe(transcribeFile)}
+    </div>
+  ) : null;
 
   return (
     <div
@@ -190,7 +971,7 @@ export default function HeroUpload() {
         className="hidden"
         onChange={(e) => {
           const f = e.target.files?.[0];
-          if (f) go(f);
+          if (f) void go(f);
         }}
       />
       <div
@@ -224,9 +1005,20 @@ export default function HeroUpload() {
                 role="tab"
                 aria-selected={active}
                 onClick={() => {
+                  if (recording && id !== "record") {
+                    void toggleRecord();
+                  }
                   setTab(id);
                   setError("");
                   setDrag(false);
+                  if (id !== "link") {
+                    setPreview(null);
+                    setLinkOk("");
+                  }
+                  if (id !== "upload" && id !== "record") {
+                    revokeFilePreview();
+                    if (inputRef.current) inputRef.current.value = "";
+                  }
                 }}
                 className="inline-flex h-10 items-center justify-center gap-1.5 rounded-lg px-2 text-sm font-semibold transition-colors sm:gap-2 sm:px-4"
                 style={
@@ -247,131 +1039,213 @@ export default function HeroUpload() {
         </div>
 
         {tab === "upload" ? (
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            onDragOver={(e) => {
-              e.preventDefault();
-              setDrag(true);
-            }}
-            onDragLeave={() => setDrag(false)}
-            onDrop={(e) => {
-              e.preventDefault();
-              setDrag(false);
-              const f = e.dataTransfer.files?.[0];
-              if (f) go(f);
-            }}
-            className="flex w-full flex-1 flex-col items-center justify-center text-center"
-            style={wellStyle}
-          >
-            <div className="mb-3 flex items-center justify-center gap-2" style={{ color: "#8882F5" }}>
-              <span
-                className="flex h-10 w-10 items-center justify-center rounded-xl"
-                style={{ backgroundColor: "rgba(136,130,245,0.18)", transform: "rotate(-10deg)" }}
+          <div className="flex w-full flex-1 flex-col items-center justify-center text-center" style={wellStyle}>
+            {!filePreview ? (
+              <button
+                type="button"
+                onClick={() => inputRef.current?.click()}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setDrag(true);
+                }}
+                onDragLeave={() => setDrag(false)}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  setDrag(false);
+                  const f = e.dataTransfer.files?.[0];
+                  if (f) void go(f);
+                }}
+                className="flex w-full flex-1 flex-col items-center justify-center text-center"
               >
-                <Mic className="h-5 w-5" />
-              </span>
-              <span
-                className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white"
-                style={{ boxShadow: "0 1px 2px rgba(136,130,245,0.12)" }}
-              >
-                <AudioLines className="h-7 w-7" />
-              </span>
-              <span
-                className="flex h-10 w-10 items-center justify-center rounded-xl"
-                style={{ backgroundColor: "rgba(136,130,245,0.18)", transform: "rotate(10deg)" }}
-              >
-                <Video className="h-5 w-5" />
-              </span>
-            </div>
-            <h2
-              className="text-base font-semibold md:text-lg"
-              style={{ color: "rgba(255,255,255,0.94)" }}
-            >
-              Click or drag & drop to upload your file
-            </h2>
-            <span
-              className="mt-3 inline-flex h-11 items-center gap-2 rounded-lg px-8 text-base font-semibold text-white"
-              style={{ backgroundColor: "#8882F5", boxShadow: "0 4px 12px rgba(136,130,245,0.28)" }}
-            >
-              <Upload className="h-4 w-4" />
-              Upload a file
-            </span>
-            <p
-              className="mt-4 inline-flex items-center gap-1.5 text-sm"
-              style={{ color: "rgba(255,255,255,0.62)" }}
-            >
-              Supports 20+ audio and video formats
-              <Info className="h-3.5 w-3.5" />
-            </p>
+                <div className="mb-3 flex items-center justify-center gap-2" style={{ color: "#8882F5" }}>
+                  <span
+                    className="flex h-10 w-10 items-center justify-center rounded-xl"
+                    style={{ backgroundColor: "rgba(136,130,245,0.18)", transform: "rotate(-10deg)" }}
+                  >
+                    <Mic className="h-5 w-5" />
+                  </span>
+                  <span
+                    className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white"
+                    style={{ boxShadow: "0 1px 2px rgba(136,130,245,0.12)" }}
+                  >
+                    <AudioLines className="h-7 w-7" />
+                  </span>
+                  <span
+                    className="flex h-10 w-10 items-center justify-center rounded-xl"
+                    style={{ backgroundColor: "rgba(136,130,245,0.18)", transform: "rotate(10deg)" }}
+                  >
+                    <Video className="h-5 w-5" />
+                  </span>
+                </div>
+                <h2
+                  className="text-base font-semibold md:text-lg"
+                  style={{ color: "rgba(255,255,255,0.94)" }}
+                >
+                  Click or drag & drop to upload your file
+                </h2>
+                <span
+                  className="mt-3 inline-flex h-11 items-center gap-2 rounded-lg px-8 text-base font-semibold text-white"
+                  style={{ backgroundColor: "#8882F5", boxShadow: "0 4px 12px rgba(136,130,245,0.28)" }}
+                >
+                  <Upload className="h-4 w-4" />
+                  Upload a file
+                </span>
+                <p
+                  className="mt-4 inline-flex items-center gap-1.5 text-sm"
+                  style={{ color: "rgba(255,255,255,0.62)" }}
+                >
+                  Supports 20+ audio and video formats
+                  <Info className="h-3.5 w-3.5" />
+                </p>
+              </button>
+            ) : (
+              filePreviewCard
+            )}
             {error ? (
               <p className="mt-4 text-sm" style={{ color: "#FECACA" }}>
                 {error}
               </p>
             ) : null}
-          </button>
+          </div>
         ) : tab === "link" ? (
           <div className="flex w-full flex-1 flex-col items-center justify-center text-center" style={wellStyle}>
-            <p className="my-4 text-sm md:text-base" style={{ color: "rgba(255,255,255,0.72)" }}>
-              Paste a media link to transcribe video or audio content.
-            </p>
-            <div className="mb-4 flex flex-col items-center gap-2">
-              <div
-                className="inline-flex items-center gap-1.5 text-xs md:text-sm"
-                style={{ color: "rgba(255,255,255,0.7)" }}
-              >
-                <Link2 className="h-3.5 w-3.5" />
-                Supported platforms
-              </div>
-              <div className="flex max-w-2xl flex-wrap justify-center gap-2">
-                {PLATFORMS.map((name) => (
-                  <span
-                    key={name}
-                    className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium"
-                    style={{
-                      border: "1px solid rgba(136,130,245,0.35)",
-                      backgroundColor: "rgba(255,255,255,0.92)",
-                      color: "#334155",
-                    }}
+            {!preview ? (
+              <>
+                <p className="my-4 text-sm md:text-base" style={{ color: "rgba(255,255,255,0.72)" }}>
+                  Paste a media link to transcribe video or audio content.
+                </p>
+                <div className="mb-4 flex flex-col items-center gap-2">
+                  <div
+                    className="inline-flex items-center gap-1.5 text-xs md:text-sm"
+                    style={{ color: "rgba(255,255,255,0.7)" }}
                   >
-                    <span
-                      className="inline-flex h-4 w-4 items-center justify-center rounded-full"
-                      style={{ backgroundColor: "rgba(136,130,245,0.12)", color: "#8882F5" }}
+                    <Link2 className="h-3.5 w-3.5" />
+                    Supported platforms
+                  </div>
+                  <div className="flex max-w-2xl flex-wrap justify-center gap-2">
+                    {PLATFORMS.map((name) => (
+                      <span
+                        key={name}
+                        className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium"
+                        style={{
+                          border: "1px solid rgba(136,130,245,0.35)",
+                          backgroundColor: "rgba(255,255,255,0.92)",
+                          color: "#334155",
+                        }}
+                      >
+                        <span
+                          className="inline-flex h-4 w-4 items-center justify-center rounded-full"
+                          style={{ backgroundColor: "rgba(136,130,245,0.12)", color: "#8882F5" }}
+                        >
+                          <BrandIcon name={name} />
+                        </span>
+                        {name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div className="mx-auto flex w-full max-w-3xl gap-2">
+                  <input
+                    type="url"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !linkBusy) void submitUrl();
+                    }}
+                    placeholder="Paste a media link"
+                    disabled={linkBusy}
+                    className="h-10 min-w-0 flex-1 rounded-md border px-3 text-sm outline-none"
+                    style={{
+                      backgroundColor: "#fff",
+                      color: "#111827",
+                      borderColor: "rgba(136,130,245,0.35)",
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => void submitUrl()}
+                    disabled={!url.trim() || linkBusy}
+                    className="h-10 shrink-0 whitespace-nowrap rounded-md px-4 text-sm font-medium text-white disabled:opacity-50"
+                    style={{ backgroundColor: "#8882F5" }}
+                  >
+                    {linkBusy ? "Loading…" : "Search"}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="w-full text-left">
+                <div className="flex items-start gap-3">
+                  {preview.thumbnailUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={preview.thumbnailUrl}
+                      alt=""
+                      className="h-16 w-28 shrink-0 rounded-md object-cover"
+                    />
+                  ) : (
+                    <div
+                      className="flex h-16 w-28 shrink-0 items-center justify-center rounded-md"
+                      style={{
+                        backgroundColor:
+                          preview.platform === "Facebook"
+                            ? "#1877F2"
+                            : preview.platform === "Instagram"
+                              ? undefined
+                              : preview.platform === "TikTok"
+                                ? "#111111"
+                                : preview.platform === "YouTube"
+                                  ? "#FF0000"
+                                  : "rgba(255,255,255,0.12)",
+                        backgroundImage:
+                          preview.platform === "Instagram"
+                            ? "radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%)"
+                            : undefined,
+                      }}
                     >
-                      <BrandIcon name={name} />
-                    </span>
-                    {name}
-                  </span>
-                ))}
+                      {preview.platform === "Facebook" ||
+                      preview.platform === "Instagram" ||
+                      preview.platform === "TikTok" ||
+                      preview.platform === "YouTube" ||
+                      preview.platform === "X" ? (
+                        <BrandIcon name={preview.platform} className="h-7 w-7 text-white" />
+                      ) : (
+                        <Video className="h-6 w-6" style={{ color: "rgba(255,255,255,0.55)" }} />
+                      )}
+                    </div>
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <p
+                      className="line-clamp-2 text-sm font-semibold leading-snug md:text-base"
+                      style={{ color: "#93C5FD" }}
+                      title={preview.title}
+                    >
+                      {preview.title}
+                    </p>
+                    <p className="mt-1 text-xs md:text-sm" style={{ color: "rgba(255,255,255,0.55)" }}>
+                      {[formatDuration(preview.durationSeconds), preview.platform]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-1.5 pt-0.5">
+                    <CheckCircle2 className="h-5 w-5" style={{ color: "#22C55E" }} aria-hidden />
+                    <button
+                      type="button"
+                      onClick={clearPreview}
+                      disabled={transcribeBusy}
+                      className="rounded-md p-1 disabled:opacity-50"
+                      style={{ color: "rgba(255,255,255,0.55)" }}
+                      aria-label="Clear preview"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+
+                {optionsAndTranscribe(() => void transcribeLink())}
               </div>
-            </div>
-            <div className="mx-auto flex w-full max-w-3xl gap-2">
-              <input
-                type="url"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !linkBusy) void submitUrl();
-                }}
-                placeholder="Paste a media link"
-                disabled={linkBusy}
-                className="h-10 min-w-0 flex-1 rounded-md border px-3 text-sm outline-none"
-                style={{
-                  backgroundColor: "#fff",
-                  color: "#111827",
-                  borderColor: "rgba(136,130,245,0.35)",
-                }}
-              />
-              <button
-                type="button"
-                onClick={() => void submitUrl()}
-                disabled={!url.trim() || linkBusy}
-                className="h-10 shrink-0 whitespace-nowrap rounded-md px-4 text-sm font-medium text-white disabled:opacity-50"
-                style={{ backgroundColor: "#8882F5" }}
-              >
-                {linkBusy ? "Fetching…" : "Search"}
-              </button>
-            </div>
+            )}
+
             {error ? (
               <p className="mt-4 text-sm" style={{ color: "#FECACA" }}>
                 {error}
@@ -385,27 +1259,62 @@ export default function HeroUpload() {
           </div>
         ) : (
           <div className="flex w-full flex-1 flex-col items-center justify-center text-center" style={wellStyle}>
-            <span
-              className="inline-flex h-16 w-16 items-center justify-center rounded-full text-white"
-              style={{ backgroundColor: "#8882F5" }}
-            >
-              <Mic className="h-8 w-8" />
-            </span>
-            <p className="mt-6 text-base md:text-lg" style={{ color: "rgba(255,255,255,0.82)" }}>
-              Click &apos;Start recording&apos; to capture your voice instantly.
-            </p>
-            <p className="mt-2 text-base md:text-lg" style={{ color: "rgba(255,255,255,0.82)" }}>
-              Record your audio directly and convert audio to text for free.
-            </p>
-            <button
-              type="button"
-              onClick={toggleRecord}
-              className="mt-8 inline-flex h-12 items-center gap-2 rounded-xl px-10 text-base font-semibold text-white"
-              style={{ backgroundColor: recording ? "#EF4444" : "#8882F5" }}
-            >
-              <Mic className="h-5 w-5" />
-              {recording ? "Stop recording" : "Start recording"}
-            </button>
+            {filePreview ? (
+              filePreviewCard
+            ) : convertingRecording ? (
+              <>
+                <span
+                  className="inline-flex h-16 w-16 items-center justify-center rounded-full text-white"
+                  style={{ backgroundColor: "#8882F5" }}
+                >
+                  <Loader2 className="h-8 w-8 animate-spin" />
+                </span>
+                <p
+                  className="mt-6 text-base md:text-lg"
+                  style={{ color: "rgba(255,255,255,0.82)" }}
+                >
+                  Converting to MP3…
+                </p>
+                <p
+                  className="mt-2 text-base md:text-lg"
+                  style={{ color: "rgba(255,255,255,0.82)" }}
+                >
+                  Preparing your recording for transcription
+                </p>
+              </>
+            ) : (
+              <>
+                <span
+                  className="inline-flex h-16 w-16 items-center justify-center rounded-full text-white"
+                  style={{
+                    backgroundColor: recording ? "#EF4444" : "#8882F5",
+                    boxShadow: recording ? "0 0 0 8px rgba(239,68,68,0.18)" : undefined,
+                  }}
+                >
+                  <Mic className="h-8 w-8" />
+                </span>
+                <p className="mt-6 text-base md:text-lg" style={{ color: "rgba(255,255,255,0.82)" }}>
+                  {recording
+                    ? `Recording… ${formatDuration(recordElapsed)}`
+                    : "Click 'Start recording' to capture your voice instantly."}
+                </p>
+                {!recording ? (
+                  <p className="mt-2 text-base md:text-lg" style={{ color: "rgba(255,255,255,0.82)" }}>
+                    Record your audio directly and convert audio to text for free.
+                  </p>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={() => void toggleRecord()}
+                  disabled={convertingRecording}
+                  className="mt-8 inline-flex h-12 items-center gap-2 rounded-xl px-10 text-base font-semibold text-white disabled:opacity-60"
+                  style={{ backgroundColor: recording ? "#EF4444" : "#8882F5" }}
+                >
+                  <Mic className="h-5 w-5" />
+                  {recording ? "Stop recording" : "Start recording"}
+                </button>
+              </>
+            )}
             {error ? (
               <p className="mt-4 text-sm" style={{ color: "#FECACA" }}>
                 {error}

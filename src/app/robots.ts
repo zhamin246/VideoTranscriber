@@ -10,23 +10,42 @@ function siteOrigin() {
 export default function robots(): MetadataRoute.Robots {
   const base = siteOrigin();
 
+  const disallow = [
+    "/pricing",
+    "/*/pricing",
+    "/privacy-policy",
+    "/*/privacy-policy",
+    "/terms-of-service",
+    "/*/terms-of-service",
+    "/refund-policy",
+    "/*/refund-policy",
+    "/workspace/",
+    "/*/workspace/",
+    "/my-assets",
+    "/*/my-assets",
+    "/admin",
+    "/api/",
+    "/auth/",
+    "/dashboard",
+    "/results/",
+    "/report/",
+    "/tools/",
+    "/my-",
+    "/api-keys",
+    "/user-generation-records",
+  ];
+
   return {
     rules: [
       {
         userAgent: "*",
         allow: "/",
-        disallow: [
-          "/admin",
-          "/api/",
-          "/auth/",
-          "/dashboard",
-          "/results/",
-          "/report/",
-          "/tools/",
-          "/my-",
-          "/api-keys",
-          "/user-generation-records",
-        ],
+        disallow,
+      },
+      {
+        userAgent: "Googlebot",
+        allow: "/",
+        disallow,
       },
     ],
     sitemap: `${base}/sitemap.xml`,

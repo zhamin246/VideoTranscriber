@@ -112,6 +112,19 @@ export async function updateUserOnboarding(
   return user;
 }
 
+export async function updateUserPasswordHash(
+  user_uuid: string,
+  password_hash: string,
+): Promise<typeof users.$inferSelect | undefined> {
+  const [user] = await db()
+    .update(users)
+    .set({ password_hash, updated_at: new Date() })
+    .where(eq(users.uuid, user_uuid))
+    .returning();
+
+  return user;
+}
+
 export async function getUsersByUuids(
   user_uuids: string[]
 ): Promise<(typeof users.$inferSelect)[] | undefined> {

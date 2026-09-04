@@ -121,7 +121,7 @@ const configWithMDX = {
   experimental: {
     mdxRs: true,
   },
-    serverExternalPackages: ["sharp", "@visioncortex/vtracer"],
+    serverExternalPackages: ["sharp", "@visioncortex/vtracer", "ffmpeg-static"],
 };
 
 export default withBundleAnalyzer(withNextIntl(withMDX(configWithMDX)));

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import subprocess
@@ -33,6 +34,72 @@ def _authorized() -> bool:
 @app.get("/health")
 def health():
     return {"ok": True}
+
+
+@app.post("/info")
+def info():
+    """Lightweight metadata (title / duration / thumbnail) without downloading media."""
+    if not _authorized():
+        return {"error": "unauthorized"}, 401
+    body = request.get_json(silent=True) or {}
+    url = str(body.get("url") or "").strip()
+    if not URL_OK.match(url) or len(url) > 2048:
+        return {"error": "Paste a full https URL."}, 400
+
+    if not LOCK.acquire(blocking=False):
+        return {"error": "Worker is busy. Try again in a moment."}, 429
+
+    cmd = ["yt-dlp"]
+    if COOKIE_PATH and Path(COOKIE_PATH).is_file():
+        cmd.extend(["--cookies", COOKIE_PATH])
+    if IMPERSONATE:
+        cmd.extend(["--impersonate", IMPERSONATE])
+    cmd.extend(
+        [
+            "--no-playlist",
+            "--no-progress",
+            "--skip-download",
+            "--dump-single-json",
+            "--no-warnings",
+            url,
+        ]
+    )
+
+    try:
+        proc = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=min(TIMEOUT, 60),
+            check=False,
+        )
+        err = (proc.stderr or "") + (proc.stdout or "")
+        if proc.returncode != 0:
+            return {"error": _friendly(err), "detail": err[-1200:]}, 422
+        data = json.loads(proc.stdout or "{}")
+        duration = data.get("duration")
+        thumb = ""
+        thumbs = data.get("thumbnails") or []
+        if isinstance(thumbs, list) and thumbs:
+            # Prefer the last (usually largest) thumbnail.
+            for item in reversed(thumbs):
+                if isinstance(item, dict) and item.get("url"):
+                    thumb = str(item["url"])
+                    break
+        if not thumb and data.get("thumbnail"):
+            thumb = str(data["thumbnail"])
+        return {
+            "title": (data.get("title") or data.get("fulltitle") or "").strip(),
+            "duration": float(duration) if isinstance(duration, (int, float)) else None,
+            "thumbnail": thumb,
+            "extractor": data.get("extractor") or data.get("extractor_key") or "",
+        }
+    except subprocess.TimeoutExpired:
+        return {"error": "Timed out fetching that link."}, 504
+    except Exception as e:
+        return {"error": str(e) or "Could not read media info."}, 500
+    finally:
+        LOCK.release()
 
 
 @app.post("/extract")

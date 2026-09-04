@@ -3,14 +3,13 @@ import Image from "next/image";
 import {
   ArrowRight,
   AudioLines,
-  Download,
-  Earth,
-  Files,
+  Crosshair,
+  Globe2,
   GraduationCap,
-  Languages,
+  Infinity,
   Mic,
   Podcast,
-  Sparkles,
+  ShieldCheck,
   Users,
   UsersRound,
   Youtube,
@@ -19,6 +18,7 @@ import FaceRatingSiteHeader from "./site-header";
 import FaceRatingFaq from "./faq";
 import FaceRatingSiteFooter from "./site-footer";
 import HeroUpload from "./hero-upload";
+import MediaFilesStrip from "./media-files-strip";
 import WorkspaceNav from "./workspace-nav";
 import PromoBanner from "./promo-banner";
 import ReviewMarquee from "./review-marquee";
@@ -153,51 +153,34 @@ export default function FaceRatingLandingPage() {
             >
               {hero.description}
             </p>
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+              {(
+                [
+                  { label: "99.9% Accuracy", icon: Crosshair, color: "#3B82F6" },
+                  { label: "200+ Languages", icon: Globe2, color: "#60A5FA" },
+                  { label: "Unlimited Minutes", icon: Infinity, color: "#38BDF8" },
+                  { label: "Speaker Recognition", icon: UsersRound, color: "#14B8A6" },
+                  { label: "Private and Secure", icon: ShieldCheck, color: "#3B82F6" },
+                ] as const
+              ).map((item) => {
+                const Icon = item.icon;
+                return (
+                  <span
+                    key={item.label}
+                    className="inline-flex items-center gap-1.5 text-sm"
+                    style={{ color: "#475569" }}
+                  >
+                    <Icon className="h-4 w-4" style={{ color: item.color }} strokeWidth={2} />
+                    {item.label}
+                  </span>
+                );
+              })}
+            </div>
           </div>
           <div className="mt-8">
             <HeroUpload />
           </div>
-          <div className="-mx-4 mt-5 overflow-x-auto px-4 md:mx-0">
-            <div className="mx-auto flex w-max flex-nowrap items-center gap-2.5">
-            {(
-              [
-                { label: "20+ Input Formats", icon: Files, bg: "rgb(232, 252, 250)", fg: "rgb(18, 145, 130)" },
-                { label: "63 Languages", icon: Earth, bg: "rgb(235, 244, 254)", fg: "rgb(7, 104, 223)" },
-                { label: "6 Export Formats", icon: Download, bg: "rgb(254, 243, 231)", fg: "rgb(235, 134, 10)" },
-                { label: "Speaker Recognition", icon: UsersRound, bg: "rgb(243, 237, 253)", fg: "rgb(126, 64, 231)" },
-                { label: "Translation", icon: Languages, bg: "rgb(253, 237, 242)", fg: "rgb(228, 37, 94)" },
-                { label: "AI Summary", icon: Sparkles, bg: "rgb(234, 250, 240)", fg: "rgb(37, 157, 81)" },
-              ] as const
-            ).map((item) => {
-              const Icon = item.icon;
-              return (
-                <div
-                  key={item.label}
-                  className="inline-flex h-12 shrink-0 items-center gap-3 rounded-full border border-slate-200/70 bg-white/95 px-4 text-sm font-semibold text-slate-800 shadow-[0_4px_12px_rgba(100,103,242,0.05)]"
-                >
-                  <span
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
-                    style={{ backgroundColor: item.bg, color: item.fg }}
-                  >
-                    <Icon className="h-5 w-5" strokeWidth={2} />
-                  </span>
-                  <span className="whitespace-nowrap leading-none">{item.label}</span>
-                </div>
-              );
-            })}
-            </div>
-          </div>
-          <p className="mx-auto mt-6 max-w-2xl text-center text-[11px] leading-5 text-slate-500/80 md:text-xs">
-            By using this site, you agree to our{" "}
-            <Link href="/terms-of-service" className="underline underline-offset-4 hover:text-slate-700">
-              Terms of Service
-            </Link>{" "}
-            and{" "}
-            <Link href="/privacy-policy" className="underline underline-offset-4 hover:text-slate-700">
-              Privacy Policy
-            </Link>
-            .
-          </p>
+          <MediaFilesStrip />
         </section>
 
         <section

@@ -29,8 +29,21 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
 
   const { data: session } = isAuthEnabled() ? useSession() : { data: null };
 
-  const [showSignModal, setShowSignModal] = useState<boolean>(false);
+  const [showSignModal, setShowSignModalState] = useState<boolean>(false);
+  const [signInCallbackUrl, setSignInCallbackUrl] = useState<string>("/");
   const [user, setUser] = useState<User | null>(null);
+
+  const setShowSignModal = (
+    open: boolean,
+    callbackUrl?: string,
+  ) => {
+    if (typeof callbackUrl === "string" && callbackUrl.startsWith("/")) {
+      setSignInCallbackUrl(callbackUrl);
+    } else if (open && typeof window !== "undefined") {
+      setSignInCallbackUrl(window.location.pathname || "/");
+    }
+    setShowSignModalState(open);
+  };
 
   const [showFeedback, setShowFeedback] = useState<boolean>(false);
 
@@ -138,6 +151,8 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
       value={{
         showSignModal,
         setShowSignModal,
+        signInCallbackUrl,
+        setSignInCallbackUrl,
         user,
         setUser,
         showFeedback,
