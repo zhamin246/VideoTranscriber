@@ -446,7 +446,7 @@ export const content = {
       },
       {
         q: "How many languages does it support?",
-        a: "Video Transcriber supports 63 languages. Pick a language when you start, or let the system work from the audio you provide.",
+        a: "Video Transcriber supports 200+ languages. Pick a language when you start, or let the system work from the audio you provide.",
       },
       {
         q: "Do I need to install software?",
@@ -481,7 +481,7 @@ export const content = {
     primaryHref: CONVERT_HREF,
     secondary: "See use cases",
     secondaryHref: "/#usecases",
-    micro: "20+ formats · 63 languages · speaker labels · translation · AI summary.",
+    micro: "20+ formats · 200+ languages · speaker labels · translation · AI summary.",
   },
 
   // Legacy keys still imported by product-mocks

@@ -42,7 +42,7 @@ const MORE_TOOLS: {
   { label: "Translation", href: CONVERT_HREF, icon: Box, tone: "green" },
   { label: "AI summary", href: CONVERT_HREF, icon: Shirt, tone: "pink" },
   { label: "Speaker labels", href: CONVERT_HREF, icon: ImageIcon, tone: "cyan" },
-  { label: "63 languages", href: CONVERT_HREF, icon: LayoutTemplate, tone: "purple" },
+  { label: "200+ languages", href: CONVERT_HREF, icon: LayoutTemplate, tone: "purple" },
   { label: "Export transcript", href: CONVERT_HREF, icon: ScanLine, tone: "blue" },
   { label: "How it works", href: "/#how-it-works", icon: Sparkles, tone: "green" },
   { label: "FAQ", href: "/#faq", icon: HelpCircle, tone: "orange" },

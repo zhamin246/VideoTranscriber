@@ -54,7 +54,7 @@ export default function PromoBanner() {
           Transcribe audio and video — file, link, or record
         </span>
         <span style={{ fontSize: 14, fontWeight: 700, lineHeight: "21px", color: "#fff" }}>
-          + 63 languages
+          + 200+ languages
         </span>
         <span
           className="inline-flex items-center"

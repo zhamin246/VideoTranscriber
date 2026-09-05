@@ -392,7 +392,7 @@ export default function FaceRatingLandingPage() {
                 {[
                   {
                     title: "Convert audio and video to text",
-                    body: "Turn audio and video into searchable text in minutes. Upload a file, paste a YouTube, TikTok, Instagram, Facebook, X, or Apple Podcasts link, or record in the browser. 63 languages, 20+ formats, speaker recognition, and translation on the same run.",
+                    body: "Turn audio and video into searchable text in minutes. Upload a file, paste a YouTube, TikTok, Instagram, Facebook, X, or Apple Podcasts link, or record in the browser. 200+ languages, 20+ formats, speaker recognition, and translation on the same run.",
                     href: CONVERT_HREF,
                     src: "/features/feature-1-convert.webp",
                     alt: "Convert audio and video to text",

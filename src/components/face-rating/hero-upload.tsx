@@ -38,6 +38,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAppContext } from "@/contexts/app";
+import { isAuthEnabled } from "@/lib/auth";
+
 type LocalFilePreview = {
   file: File;
   objectUrl: string;
@@ -247,6 +250,7 @@ const NOTE_MODES = NOTE_MODE_PRESETS.map((m) => ({
 
 
 export default function HeroUpload() {
+  const { user, setShowSignModal } = useAppContext();
   const inputRef = useRef<HTMLInputElement>(null);
   const [tab, setTab] = useState<"upload" | "link" | "record">("upload");
   const [drag, setDrag] = useState(false);
@@ -269,6 +273,13 @@ export default function HeroUpload() {
   const filePreviewUrlRef = useRef<string | null>(null);
   const recordStartedAtRef = useRef<number>(0);
   const progressStopRef = useRef<(() => void) | null>(null);
+
+  const requireSignIn = () => {
+    if (!isAuthEnabled()) return false;
+    if (user) return false;
+    setShowSignModal(true);
+    return true;
+  };
 
   const revokeFilePreview = useCallback(() => {
     if (filePreviewUrlRef.current) {
@@ -885,7 +896,10 @@ export default function HeroUpload() {
 
       <button
         type="button"
-        onClick={() => void Promise.resolve(onTranscribe())}
+        onClick={() => {
+          if (requireSignIn()) return;
+          void Promise.resolve(onTranscribe());
+        }}
         disabled={transcribeBusy}
         className="mt-6 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-75"
         style={{ backgroundColor: "#8882F5" }}
