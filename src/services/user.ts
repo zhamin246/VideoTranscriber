@@ -10,7 +10,7 @@ import { findCreditByUserAndType } from "@/models/credit";
 
 import { User } from "@/types/user";
 import { auth } from "@/auth";
-import { getOneYearLaterTimestr } from "@/lib/time";
+import { creditExpiresAtDays } from "@/lib/time";
 import { getUserUuidByApiKey } from "@/models/apikey";
 import { headers } from "next/headers";
 import { increaseCredits } from "./credit";
@@ -47,6 +47,19 @@ export async function saveUser(user: User) {
       user = {
         ...(dbUser as unknown as User),
       };
+
+      // Free-tier welcome minutes (90 / 30 days). Onboarding path is idempotent.
+      try {
+        await increaseCredits({
+          user_uuid: user.uuid!,
+          trans_type: CreditsTransType.NewUser,
+          credits: CreditsAmount.NewUserGet,
+          expired_at: creditExpiresAtDays(30),
+        });
+        creditEvents.emit("creditsUpdated");
+      } catch (creditErr) {
+        console.error("new user credit grant failed:", creditErr);
+      }
     } else {
       // user exist, return user info in db
       user = {
@@ -87,7 +100,7 @@ export async function completeOnboarding(input: {
       user_uuid: input.user_uuid,
       trans_type: CreditsTransType.NewUser,
       credits: CreditsAmount.NewUserGet,
-      expired_at: getOneYearLaterTimestr(),
+      expired_at: creditExpiresAtDays(30),
     });
     creditEvents.emit("creditsUpdated");
   }

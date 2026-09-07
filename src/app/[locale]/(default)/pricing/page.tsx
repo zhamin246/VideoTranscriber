@@ -16,7 +16,7 @@ export async function generateMetadata({
 
   const title = "Pricing — Video Transcriber";
   const description =
-    "Free 90 minutes/month. Basic from $6/mo (yearly) for 1,200 minutes. Pro and Studio for creators and teams. Minute packs from $5.";
+    "Free 90 minutes/month. Basic from $6/mo (yearly) for 1,200 minutes. Standard 3,000 and Pro 6,000. One-time packs from $12.90.";
 
   return {
     title,

@@ -4,17 +4,18 @@ import { useEffect, useState } from "react";
 import { Loader2, Trash2 } from "lucide-react";
 import { Link, useRouter } from "@/i18n/navigation";
 import { formatDuration, type MediaPreview } from "@/lib/media/preview-types";
+import { EXAMPLE_CARDS, openExampleWorkspace } from "@/lib/media/examples";
 import {
-  emitOpenMedia,
+  deleteUserWorkspace,
+  fetchUserRecentMedia,
   finishTranscribeJob,
   listTranscribeJobs,
-  loadRecentMedia,
-  removeRecentMedia,
   TRANSCRIBE_JOBS_EVENT,
   type RecentMediaItem,
   type TranscribeJob,
 } from "@/lib/media/recent-media";
 import { PlatformMark } from "@/components/face-rating/platform-mark";
+import { useAppContext } from "@/contexts/app";
 import {
   Dialog,
   DialogContent,
@@ -23,36 +24,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-
-type ExampleItem = MediaPreview & { icon: "youtube" | "tiktok" | "instagram" | "audio" };
-
-const EXAMPLES: ExampleItem[] = [
-  {
-    url: "https://youtu.be/Qy4rQpV7frc",
-    title: "Optimal Protocols for Studying & Learning",
-    thumbnailUrl: "https://i.ytimg.com/vi/Qy4rQpV7frc/hqdefault.jpg",
-    durationSeconds: 6099,
-    platform: "YouTube",
-    icon: "youtube",
-  },
-  {
-    url: "https://www.tiktok.com/@tedtoks/video/7621324420199484702",
-    title:
-      "Joy is all around us — you just need to know where to look, says author @David Larbi.",
-    thumbnailUrl: "",
-    durationSeconds: 255,
-    platform: "TikTok",
-    icon: "tiktok",
-  },
-  {
-    url: "https://www.youtube.com/watch?v=grl0rug6rgM",
-    title: "Xi Jinping visits Kyrgyzstan, cough during welcome ceremony cut from official footage",
-    thumbnailUrl: "https://i.ytimg.com/vi/grl0rug6rgM/hqdefault.jpg",
-    durationSeconds: 273,
-    platform: "YouTube",
-    icon: "youtube",
-  },
-];
 
 function formatCardDuration(seconds: number | null | undefined) {
   if (seconds == null || !Number.isFinite(seconds) || seconds < 0) return "";
@@ -97,7 +68,9 @@ function MediaCard({
         </p>
       </button>
       <div className="mt-2 flex h-5 items-center justify-between gap-2">
-        <p className="truncate text-xs text-slate-400">{duration || item.platform}</p>
+        <p className="truncate text-xs text-slate-400">
+          {duration || item.platform}
+        </p>
         {onRequestDelete ? (
           <button
             type="button"
@@ -132,10 +105,10 @@ function ProgressCard({ job }: { job: TranscribeJob }) {
       </div>
       <div className="mt-2 flex h-5 items-center gap-1.5">
         <Loader2
-          className="h-4 w-4 shrink-0 animate-spin text-slate-500"
+          className="h-4 w-4 shrink-0 animate-spin text-[#5270FF]"
           aria-hidden
         />
-        <p className="truncate text-sm text-slate-500">
+        <p className="truncate text-sm font-medium text-[#5270FF]">
           Transcribing ({job.percent}%)
         </p>
       </div>
@@ -145,52 +118,103 @@ function ProgressCard({ job }: { job: TranscribeJob }) {
 
 export default function MediaFilesStrip() {
   const router = useRouter();
-  const [tab, setTab] = useState<"mine" | "examples">("mine");
+  const { user } = useAppContext();
+  const signedIn = Boolean(user?.uuid);
+  const [tab, setTab] = useState<"mine" | "examples">("examples");
   const [recent, setRecent] = useState<RecentMediaItem[]>([]);
   const [jobs, setJobs] = useState<TranscribeJob[]>([]);
-  const [pendingDelete, setPendingDelete] = useState<RecentMediaItem | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<RecentMediaItem | null>(
+    null,
+  );
+  const [loadingMine, setLoadingMine] = useState(false);
 
   useEffect(() => {
-    const refreshRecent = () => setRecent(loadRecentMedia());
-    const refreshJobs = (event?: Event) => {
-      const detail =
-        event instanceof CustomEvent ? (event.detail as TranscribeJob[] | undefined) : undefined;
-      const next = Array.isArray(detail) ? detail : listTranscribeJobs();
-      setJobs(next);
-      if (next.some((j) => j.status === "running")) setTab("mine");
-    };
-    refreshRecent();
-    refreshJobs();
-    window.addEventListener("vt:recent-media-updated", refreshRecent);
-    window.addEventListener("storage", refreshRecent);
-    window.addEventListener(TRANSCRIBE_JOBS_EVENT, refreshJobs as EventListener);
-    return () => {
-      window.removeEventListener("vt:recent-media-updated", refreshRecent);
-      window.removeEventListener("storage", refreshRecent);
-      window.removeEventListener(TRANSCRIBE_JOBS_EVENT, refreshJobs as EventListener);
-    };
-  }, []);
+    setTab(signedIn ? "mine" : "examples");
+  }, [signedIn]);
 
-  const open = (item: RecentMediaItem | MediaPreview) => {
-    if ("workspaceId" in item && typeof item.workspaceId === "string" && item.workspaceId) {
-      router.push(`/workspace/${item.workspaceId}`);
+  useEffect(() => {
+    if (!signedIn) {
+      setRecent([]);
+      setLoadingMine(false);
       return;
     }
-    emitOpenMedia(item);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    let cancelled = false;
+    const refreshRecent = async () => {
+      setLoadingMine(true);
+      try {
+        const items = await fetchUserRecentMedia(24);
+        if (!cancelled) setRecent(items);
+      } finally {
+        if (!cancelled) setLoadingMine(false);
+      }
+    };
+    const onRecentUpdated = () => {
+      void refreshRecent();
+    };
+    void refreshRecent();
+    window.addEventListener("vt:recent-media-updated", onRecentUpdated);
+    window.addEventListener("storage", onRecentUpdated);
+    return () => {
+      cancelled = true;
+      window.removeEventListener("vt:recent-media-updated", onRecentUpdated);
+      window.removeEventListener("storage", onRecentUpdated);
+    };
+  }, [signedIn, user?.uuid]);
+
+  useEffect(() => {
+    const refreshJobs = (event?: Event) => {
+      const detail =
+        event instanceof CustomEvent
+          ? (event.detail as TranscribeJob[] | undefined)
+          : undefined;
+      const next = Array.isArray(detail) ? detail : listTranscribeJobs();
+      setJobs(next);
+      if (signedIn && next.some((j) => j.status === "running")) setTab("mine");
+    };
+    refreshJobs();
+    window.addEventListener(TRANSCRIBE_JOBS_EVENT, refreshJobs as EventListener);
+    return () => {
+      window.removeEventListener(
+        TRANSCRIBE_JOBS_EVENT,
+        refreshJobs as EventListener,
+      );
+    };
+  }, [signedIn]);
+
+  const openMine = (item: RecentMediaItem) => {
+    if (item.workspaceId) {
+      router.push(`/workspace/${item.workspaceId}`);
+    }
   };
 
-  const confirmDelete = () => {
+  const openExample = (workspaceId: string) => {
+    if (!openExampleWorkspace(workspaceId)) return;
+    router.push(`/workspace/${workspaceId}`);
+  };
+
+  const confirmDelete = async () => {
     if (!pendingDelete?.workspaceId) return;
-    removeRecentMedia(pendingDelete.workspaceId);
-    finishTranscribeJob(pendingDelete.workspaceId);
+    const id = pendingDelete.workspaceId;
     setPendingDelete(null);
+    finishTranscribeJob(id);
+    await deleteUserWorkspace(id);
+    setRecent(await fetchUserRecentMedia(24));
   };
 
-  const runningJobs = jobs.filter((j) => j.status === "running");
+  const runningJobs = signedIn
+    ? jobs.filter((j) => j.status === "running")
+    : [];
   const recentSlots = Math.max(0, 4 - runningJobs.length);
   const recentVisible = recent.slice(0, recentSlots);
   const hasMine = runningJobs.length > 0 || recent.length > 0;
+  const activeTab = signedIn ? tab : "examples";
+
+  const tabs = signedIn
+    ? ([
+        { id: "mine" as const, label: "My files" },
+        { id: "examples" as const, label: "Examples" },
+      ] as const)
+    : ([{ id: "examples" as const, label: "Examples" }] as const);
 
   return (
     <div className="mx-auto mt-5 w-full max-w-[1152px]" id="my-files-strip">
@@ -204,14 +228,13 @@ export default function MediaFilesStrip() {
         }
       `}</style>
       <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-5" role="tablist" aria-label="Media library">
-          {(
-            [
-              { id: "mine" as const, label: "My files" },
-              { id: "examples" as const, label: "Examples" },
-            ] as const
-          ).map((item) => {
-            const active = tab === item.id;
+        <div
+          className="flex items-center gap-5"
+          role="tablist"
+          aria-label="Media library"
+        >
+          {tabs.map((item) => {
+            const active = activeTab === item.id;
             return (
               <button
                 key={item.id}
@@ -233,18 +256,25 @@ export default function MediaFilesStrip() {
             );
           })}
         </div>
-        <Link
-          href="/my-assets"
-          className="text-sm font-medium"
-          style={{ color: "#2563EB" }}
-        >
-          All files &gt;
-        </Link>
+        {signedIn ? (
+          <Link
+            href="/my-assets"
+            className="text-sm font-medium"
+            style={{ color: "#2563EB" }}
+          >
+            All files &gt;
+          </Link>
+        ) : null}
       </div>
 
       <div className="relative mt-4 flex w-full gap-3 overflow-hidden">
-        {tab === "mine" ? (
-          hasMine ? (
+        {activeTab === "mine" && signedIn ? (
+          loadingMine && !hasMine ? (
+            <p className="flex items-center gap-2 py-6 text-sm text-slate-400">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Loading your files…
+            </p>
+          ) : hasMine ? (
             <>
               {runningJobs.slice(0, 4).map((job) => (
                 <ProgressCard key={job.id} job={job} />
@@ -254,7 +284,7 @@ export default function MediaFilesStrip() {
                   key={`${item.workspaceId || item.url}-${item.savedAt}`}
                   item={item}
                   mark={item.platform}
-                  onOpen={() => open(item)}
+                  onOpen={() => openMine(item)}
                   onRequestDelete={() => setPendingDelete(item)}
                 />
               ))}
@@ -265,12 +295,12 @@ export default function MediaFilesStrip() {
             </p>
           )
         ) : (
-          EXAMPLES.slice(0, 4).map((item) => (
+          EXAMPLE_CARDS.map((item) => (
             <MediaCard
-              key={item.url}
+              key={item.workspaceId}
               item={item}
               mark={item.icon}
-              onOpen={() => open(item)}
+              onOpen={() => openExample(item.workspaceId)}
             />
           ))
         )}
@@ -288,8 +318,8 @@ export default function MediaFilesStrip() {
               Permanent Delete
             </DialogTitle>
             <p className="text-sm leading-6 text-slate-600">
-              This record cannot be recovered after deletion. Are you sure you want to
-              permanently delete it?
+              This record cannot be recovered after deletion. Are you sure you
+              want to permanently delete it?
             </p>
           </DialogHeader>
           <DialogFooter className="flex-row justify-end gap-2 sm:space-x-0">

@@ -113,7 +113,12 @@ async function resolveCobalt(
   throw new Error(`Unexpected media response (${data.status || "empty"}).`);
 }
 
-const MAX_AUDIO_BYTES = 80 * 1024 * 1024;
+const MAX_DOWNLOAD_BYTES = 200 * 1024 * 1024;
+
+function tooLargeDownloadMessage(bytes: number) {
+  const mb = Math.round(bytes / (1024 * 1024));
+  return `That media is too large to download here (${mb} MB). Try a shorter clip, or upload an audio file instead.`;
+}
 
 export async function downloadResolvedMedia(fileUrl: string) {
   const res = await fetch(fileUrl, {
@@ -124,12 +129,12 @@ export async function downloadResolvedMedia(fileUrl: string) {
     throw new Error("Could not download the audio from that link.");
   }
   const len = Number(res.headers.get("content-length") || 0);
-  if (len > MAX_AUDIO_BYTES) {
-    throw new Error("That file is too large to process here.");
+  if (len > MAX_DOWNLOAD_BYTES) {
+    throw new Error(tooLargeDownloadMessage(len));
   }
   const buf = Buffer.from(await res.arrayBuffer());
-  if (buf.byteLength > MAX_AUDIO_BYTES) {
-    throw new Error("That file is too large to process here.");
+  if (buf.byteLength > MAX_DOWNLOAD_BYTES) {
+    throw new Error(tooLargeDownloadMessage(buf.byteLength));
   }
   const contentType = res.headers.get("content-type") || "audio/mpeg";
   return { buf, contentType };

@@ -126,34 +126,15 @@ export default function FaceRatingLandingPage() {
       <FaceRatingSiteHeader hideBrandOnDesktop />
 
       <main>
-        <section id="landing-hero" className="ac-section-wash px-4 pb-8 pt-10 sm:px-8">
-          <div className="mx-auto max-w-[1152px] text-center" style={{ paddingBottom: 10 }}>
-            <h1
-              className="font-bold"
-              style={{
-                fontSize: 40,
-                lineHeight: "50px",
-                fontWeight: 700,
-                letterSpacing: "normal",
-                color: "#111827",
-              }}
-            >
+        <section id="landing-hero" className="ac-section-wash px-4 pb-6 pt-6 sm:px-8 sm:pb-8 sm:pt-10">
+          <div className="mx-auto max-w-[1152px] text-center sm:pb-2.5">
+            <h1 className="text-[28px] font-bold leading-[1.2] tracking-tight text-[#111827] sm:text-[36px] sm:leading-[46px] md:text-[40px] md:leading-[50px]">
               Convert audio and video to text
             </h1>
-            <p
-              className="mx-auto"
-              style={{
-                marginTop: 8,
-                maxWidth: 1024,
-                fontSize: 18,
-                lineHeight: "27px",
-                fontWeight: 400,
-                color: "#4B5563",
-              }}
-            >
+            <p className="mx-auto mt-2 max-w-3xl text-[15px] font-normal leading-6 text-[#4B5563] sm:mt-2 sm:text-lg sm:leading-[27px]">
               {hero.description}
             </p>
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:mt-4 sm:gap-x-5">
               {(
                 [
                   { label: "99.9% Accuracy", icon: Crosshair, color: "#3B82F6" },
@@ -167,17 +148,21 @@ export default function FaceRatingLandingPage() {
                 return (
                   <span
                     key={item.label}
-                    className="inline-flex items-center gap-1.5 text-sm"
+                    className="inline-flex items-center gap-1 text-[12px] sm:gap-1.5 sm:text-sm"
                     style={{ color: "#475569" }}
                   >
-                    <Icon className="h-4 w-4" style={{ color: item.color }} strokeWidth={2} />
+                    <Icon
+                      className="h-3.5 w-3.5 sm:h-4 sm:w-4"
+                      style={{ color: item.color }}
+                      strokeWidth={2}
+                    />
                     {item.label}
                   </span>
                 );
               })}
             </div>
           </div>
-          <div className="mt-8">
+          <div className="mt-5 sm:mt-8">
             <HeroUpload />
           </div>
           <MediaFilesStrip />

@@ -1,3 +1,5 @@
+import type { PlanSummary } from "@/lib/plan/summary";
+
 export interface User {
   id?: number;
   uuid?: string;
@@ -11,6 +13,8 @@ export interface User {
   signin_provider?: string;
   signin_openid?: string;
   credits?: UserCredits;
+  /** Current subscription / pack summary for sidebar + billing UI */
+  plan?: PlanSummary;
   invite_code?: string;
   invited_by?: string;
   is_affiliate?: boolean;

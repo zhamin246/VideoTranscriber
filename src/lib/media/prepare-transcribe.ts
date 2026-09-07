@@ -25,7 +25,6 @@ import {
   extractAudioViaYtdlp,
   ytdlpWorkerConfigured,
 } from "@/lib/media/ytdlp-worker";
-import { extractYoutubeId } from "@/lib/media/youtube-id";
 import { runWhisper, type WhisperResult } from "@/lib/media/whisper";
 import { insertMediaAsset } from "@/models/workspace";
 
@@ -57,8 +56,11 @@ async function downloadDirect(url: string) {
   const res = await fetch(url, { headers: { Accept: "*/*" } });
   if (!res.ok) throw new Error(`Download failed (HTTP ${res.status})`);
   const buf = Buffer.from(await res.arrayBuffer());
-  if (buf.byteLength > 80 * 1024 * 1024) {
-    throw new Error("That file is too large to process here.");
+  if (buf.byteLength > 200 * 1024 * 1024) {
+    const mb = Math.round(buf.byteLength / (1024 * 1024));
+    throw new Error(
+      `That media is too large to download here (${mb} MB). Try a shorter clip, or upload an audio file instead.`,
+    );
   }
   const contentType = res.headers.get("content-type") || "application/octet-stream";
   const pathName = (() => {
@@ -72,16 +74,14 @@ async function downloadDirect(url: string) {
 }
 
 /**
- * Fetch media for transcription.
- * YouTube → Replicate download-media first (yt-dlp/Cobalt usually hit login wall).
- * Other platforms → yt-dlp / Cobalt, then Replicate as last resort.
+ * Fetch audio for transcription.
+ * Prefer yt-dlp (audio-only) → Cobalt audio → Replicate download-media.
+ * YouTube used to call Replicate first, which often returns a full video
+ * and trips the 80 MB guard before ffmpeg can extract audio.
  */
 async function fetchSocialAudio(sourceUrl: string) {
-  if (extractYoutubeId(sourceUrl)) {
-    return downloadMediaViaReplicate(sourceUrl);
-  }
-
   let lastError: unknown;
+
   if (ytdlpWorkerConfigured()) {
     try {
       return await extractAudioViaYtdlp(sourceUrl);
@@ -90,6 +90,7 @@ async function fetchSocialAudio(sourceUrl: string) {
       console.warn("[prepare] ytdlp audio failed:", e);
     }
   }
+
   try {
     const resolved = await resolveCobaltAudio(sourceUrl);
     const file = await downloadResolvedMedia(resolved.url);
@@ -189,9 +190,10 @@ async function persistAsset(input: {
 }
 
 /**
- * Download / accept media → ffmpeg audio → R2 → Whisper.
+ * Download / accept media → ffmpeg MP3 → R2 → Whisper.
+ * Local uploads: never store the raw video on R2 (audio only).
  * YouTube / TikTok / Bilibili: audio only (iframe for playback).
- * Instagram / Facebook / X / uploads: store video on R2 when needed for <video>.
+ * Instagram / Facebook / X: may store resolved video on R2 for <video>.
  */
 export async function prepareAndTranscribe(input: {
   workspaceId?: string;
@@ -224,7 +226,8 @@ export async function prepareAndTranscribe(input: {
     mediaName =
       input.filename ||
       (input.file instanceof File ? input.file.name : "upload.bin");
-    storeVideo = isLikelyVideo(mediaName, mediaCt) && !isLikelyAudio(mediaName, mediaCt);
+    // Local file: ffmpeg → MP3 → R2 only. Do not upload the original video.
+    storeVideo = false;
     mediaKind = isLikelyAudio(mediaName, mediaCt)
       ? "audio"
       : isLikelyVideo(mediaName, mediaCt)
@@ -278,7 +281,7 @@ export async function prepareAndTranscribe(input: {
     throw new Error("Empty media");
   }
 
-  // Persist video for non-embed playback before ffmpeg (same bytes)
+  // Social / direct video that needs <video> playback — store before ffmpeg
   if (storeVideo) {
     const videoAsset = await persistAsset({
       workspaceId,
@@ -292,6 +295,7 @@ export async function prepareAndTranscribe(input: {
     expires = videoAsset.expiresAt;
   }
 
+  // Always: extract MP3 → R2 → Whisper (local video never skips this path)
   const audio = await extractAudioBuffer({
     buf: mediaBuf,
     filename: mediaName,
@@ -311,10 +315,11 @@ export async function prepareAndTranscribe(input: {
     if (storage === "none") storage = audioAsset.storage;
     expires = audioAsset.expiresAt || expires;
   }
-  // Pure audio (uploads / recordings): play the R2 audio object, not a black video stage
+  // Local uploads / pure audio: play the R2 MP3 (no raw video on R2).
+  // Embed platforms (YouTube/TikTok/…) keep playbackUrl null → iframe.
   if (mediaKind === "audio" && audioUrl) {
     playbackUrl = audioUrl;
-  } else if (!playbackUrl && mediaKind === "audio" && audioUrl) {
+  } else if (input.file && audioUrl) {
     playbackUrl = audioUrl;
   }
 

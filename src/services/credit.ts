@@ -31,13 +31,16 @@ export enum CreditsTransType {
   SystemAdd = "system_add",
   SystemRefund = "system_refund",
   Convert = "convert",
+  /** Whisper / media transcription minute debit */
+  MediaTranscribe = "media_transcribe",
   Ping = "ping",
   VIDEO_GENERATION = "video_generation",
   IMAGE_GENERATION = "image_generation",
 }
 
 export enum CreditsAmount {
-  NewUserGet = 3,
+  /** Free tier welcome minutes (matches pricing catalog Free plan). */
+  NewUserGet = 90,
   ConvertCost = 1,
   PingCost = 1,
 }
@@ -307,6 +310,7 @@ async function summarizeCreditLots(
 
 function recordTypeLabel(transType: string, credits: number): string {
   if (transType === CreditsTransType.Convert) return "Conversion";
+  if (transType === CreditsTransType.MediaTranscribe) return "Transcription";
   if (transType === CreditsTransType.SystemRefund) return "Refund";
   if (transType === CreditsTransType.NewUser) return "Welcome";
   if (transType === CreditsTransType.OrderPay) return "Purchase";
@@ -431,6 +435,34 @@ export async function decreaseCredits({
     order_no: order_no,
   };
   await insertCredit(new_credit);
+}
+
+export function mediaTranscribeTransNo(workspaceId: string) {
+  return `mt:${workspaceId}`;
+}
+
+/** Debit N transcription minutes once per workspace (idempotent). */
+export async function consumeTranscriptionMinutes(
+  user_uuid: string,
+  workspaceId: string,
+  minutes: number,
+) {
+  const credits = Math.max(1, Math.ceil(minutes));
+  const trans_no = mediaTranscribeTransNo(workspaceId);
+  if (await findCreditByTransNo(trans_no)) return;
+
+  try {
+    await grantDueYearlyCreditsForUser(user_uuid);
+  } catch (e) {
+    console.log("grant yearly credits before transcribe failed: ", e);
+  }
+
+  await decreaseCredits({
+    user_uuid,
+    trans_type: CreditsTransType.MediaTranscribe,
+    credits,
+    trans_no,
+  });
 }
 
 export async function consumeConvertCredit(jobId: string, user_uuid: string) {

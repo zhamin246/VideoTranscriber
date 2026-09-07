@@ -40,13 +40,17 @@ export function creditExpiresAt(months: number, from: Date = new Date()): string
   return addMonths(from, months).toISOString();
 }
 
-/** Monthly lots expire in 30 days; yearly grants and packs expire in 12 months. */
+/** Monthly lots expire in 30 days; packs use `validMonths` (default 12). */
 export function subscriptionCreditExpiresAt(
   interval: "month" | "year" | "one-time",
-  from: Date = new Date()
+  from: Date = new Date(),
+  validMonths = 12
 ): string {
   if (interval === "month") {
     return creditExpiresAtDays(MONTHLY_CREDIT_EXPIRY_DAYS, from);
+  }
+  if (interval === "one-time") {
+    return creditExpiresAt(validMonths, from);
   }
   return creditExpiresAt(12, from);
 }

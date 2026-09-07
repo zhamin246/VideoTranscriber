@@ -16,7 +16,10 @@ const STATIC_PATHS: {
   path: string;
   changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
   priority: number;
-}[] = [{ path: "/", changeFrequency: "weekly", priority: 1 }];
+}[] = [
+  { path: "/", changeFrequency: "weekly", priority: 1 },
+  { path: "/video-to-text-converter", changeFrequency: "weekly", priority: 0.9 },
+];
 
 function absoluteUrl(path: string, locale: string): string {
   const base = siteOrigin();

@@ -67,6 +67,11 @@ import {
   saveWorkspace,
   type WorkspacePayload,
 } from "@/lib/media/workspace-store";
+import {
+  fetchExampleWorkspace,
+  getExampleWorkspace,
+  isExampleWorkspaceId,
+} from "@/lib/media/examples";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -163,6 +168,7 @@ export default function TranscriptWorkspace({ id }: { id: string }) {
 
   const queuePersistAskMessages = (workspaceId: string, next: AskMessage[]) => {
     askTouchedRef.current = true;
+    if (isExampleWorkspaceId(workspaceId)) return;
     if (askPersistTimerRef.current) clearTimeout(askPersistTimerRef.current);
     askPersistTimerRef.current = setTimeout(() => {
       void persistAskMessages(workspaceId, next);
@@ -178,6 +184,33 @@ export default function TranscriptWorkspace({ id }: { id: string }) {
   useEffect(() => {
     let cancelled = false;
     askTouchedRef.current = false;
+
+    // Fixed Examples: always prefer bundled payload (don't trust stale session)
+    if (isExampleWorkspaceId(id)) {
+      const example = getExampleWorkspace(id);
+      if (example) {
+        saveWorkspace(example);
+        setPayload(example);
+        if (
+          chaptersAreComplete(example.chapters) &&
+          chaptersHaveValidTimeline(example.chapters, example.durationSeconds)
+        ) {
+          setChapters(example.chapters!);
+        } else if (chaptersAreComplete(example.chapters)) {
+          setChapters(example.chapters!);
+        }
+        if (notesAreComplete(example.aiNotes)) {
+          setAiNotes(example.aiNotes!);
+        }
+        if (mindmapAreComplete(example.mindmap)) {
+          setMindmap(example.mindmap!);
+        }
+        return;
+      }
+      setPayload(null);
+      return;
+    }
+
     const local = loadWorkspace(id);
     if (local) {
       setPayload(local);
@@ -218,7 +251,8 @@ export default function TranscriptWorkspace({ id }: { id: string }) {
       };
     }
     (async () => {
-      const remote = await fetchWorkspace(id);
+      const remote =
+        (await fetchExampleWorkspace(id)) || (await fetchWorkspace(id));
       if (cancelled) return;
       if (remote) {
         try {
@@ -256,6 +290,7 @@ export default function TranscriptWorkspace({ id }: { id: string }) {
   useEffect(() => {
     if (leftTab !== "chapter") return;
     if (!payload?.id) return;
+    if (isExampleWorkspaceId(payload.id)) return;
     if (
       chaptersAreComplete(chapters) &&
       chaptersHaveValidTimeline(chapters, payload.durationSeconds)
@@ -326,6 +361,7 @@ export default function TranscriptWorkspace({ id }: { id: string }) {
     opts?: { force?: boolean },
   ) => {
     if (!payload?.id) return;
+    if (isExampleWorkspaceId(payload.id) && !opts?.force) return;
     if (!opts?.force && notesAreComplete(aiNotes) && aiNotes?.mode === mode) {
       return;
     }
@@ -389,6 +425,7 @@ export default function TranscriptWorkspace({ id }: { id: string }) {
   useEffect(() => {
     if (rightTab !== "notes") return;
     if (!payload?.id) return;
+    if (isExampleWorkspaceId(payload.id)) return;
     if (notesLoading) return;
     if (notesAreComplete(aiNotes)) return;
     void generateAiNotes(payload.noteMode || "smart_summary");
@@ -397,6 +434,7 @@ export default function TranscriptWorkspace({ id }: { id: string }) {
 
   const generateMindMapForWorkspace = async (opts?: { force?: boolean }) => {
     if (!payload?.id) return;
+    if (isExampleWorkspaceId(payload.id)) return;
     if (!opts?.force && mindmapAreComplete(mindmap)) return;
     const ticket = ++mindmapGenRef.current;
     setMindmapLoading(true);
@@ -450,6 +488,7 @@ export default function TranscriptWorkspace({ id }: { id: string }) {
   useEffect(() => {
     if (rightTab !== "mindmap") return;
     if (!payload?.id) return;
+    if (isExampleWorkspaceId(payload.id)) return;
     if (mindmapLoading) return;
     if (mindmapAreComplete(mindmap)) return;
     void generateMindMapForWorkspace();

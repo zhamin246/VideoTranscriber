@@ -11,6 +11,11 @@ import { btnPrimary, V } from "./visual";
 
 const DASHBOARD_HREF = "/dashboard";
 
+const MEGA_MENU_CLASS =
+  "absolute left-0 top-full z-50 grid max-w-[92vw] grid-cols-2 gap-x-2 gap-y-4 rounded-xl border border-neutral-200 bg-white p-4 shadow-lg lg:w-[720px] lg:grid-cols-4";
+const SIMPLE_MENU_CLASS =
+  "absolute left-0 top-full z-50 min-w-[240px] rounded-xl border border-neutral-200 bg-white py-1.5 shadow-lg";
+
 /** Strip query/hash; treat locale-prefixed paths from raw location if needed. */
 function pathOnly(href: string): string {
   return href.split("?")[0].split("#")[0] || "/";
@@ -67,18 +72,18 @@ function NavPill({
   onClick?: () => void;
   className?: string;
 }) {
+  const tone = active
+    ? "bg-[#8882F5] text-white hover:bg-[#726BE8]"
+    : isFree
+      ? "bg-transparent text-[#8882F5] hover:bg-[#F4F3FF]"
+      : "bg-transparent font-medium text-[#606266] hover:bg-[#F7F6FF]";
+
   return (
     <Link
       href={href}
       onClick={onClick}
       aria-current={active ? "page" : undefined}
-      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[14px] font-semibold transition-colors ${
-        active
-          ? "bg-[#8882F5] text-white hover:bg-[#726BE8]"
-          : isFree
-            ? "bg-transparent text-[#8882F5] hover:bg-[#F4F3FF]"
-            : "bg-transparent font-medium text-[#606266] hover:bg-[#F7F6FF]"
-      } ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[14px] font-semibold transition-colors ${tone} ${className}`}
     >
       {children}
     </Link>
@@ -240,91 +245,133 @@ export default function FaceRatingSiteHeader({
     >
       <div className="flex h-[59px] w-full items-center justify-between" style={{ padding: "8px 12px" }}>
         <div className="flex min-w-0 items-center">
-        <Link
-          href="/"
-          className={`shrink-0 ${hideBrandOnDesktop ? "md:hidden" : ""}`}
-          style={{ color: V.ink }}
-          aria-label={`${brand.name} — home`}
-        >
-          <span className="inline-flex items-center gap-2">
-            <span className="inline-flex h-8 w-8 items-center justify-center bg-transparent">
-              <img src="/favicon.svg" alt="" width={32} height={32} className="h-8 w-8 object-contain" />
+          <Link
+            href="/"
+            className={`shrink-0 ${hideBrandOnDesktop ? "md:hidden" : ""}`}
+            style={{ color: V.ink }}
+            aria-label={`${brand.name} — home`}
+          >
+            <span className="inline-flex items-center gap-2">
+              <span className="inline-flex h-8 w-8 items-center justify-center bg-transparent">
+                <img src="/favicon.svg" alt="" width={32} height={32} className="h-8 w-8 object-contain" />
+              </span>
+              <span className="sr-only">{brand.name}</span>
             </span>
-            <span className="sr-only">{brand.name}</span>
-          </span>
-        </Link>
+          </Link>
 
-        <nav className="hidden items-center md:flex" ref={menusRef}>
-          {nav.menus.map((menu) => {
-            const openMenu = menuOpen === menu.label;
-            return (
-              <div
-                key={menu.label}
-                className="relative"
-                onMouseEnter={() => setMenuOpen(menu.label)}
-                onMouseLeave={() => setMenuOpen(null)}
-              >
-                <button
-                  type="button"
-                  className="inline-flex items-center hover:text-[#635BFF]"
-                  style={{
-                    height: 40,
-                    padding: "0 12px",
-                    fontSize: 15,
-                    fontWeight: 400,
-                    lineHeight: "20px",
-                    color: "rgb(101, 100, 132)",
-                    gap: 4,
-                  }}
-                  onClick={() => setMenuOpen(openMenu ? null : menu.label)}
-                  aria-expanded={openMenu}
-                  aria-haspopup="menu"
+          <nav className="hidden items-center md:flex" ref={menusRef}>
+            {nav.menus.map((menu) => {
+              const openMenu = menuOpen === menu.label;
+              const groups = "groups" in menu ? menu.groups : undefined;
+              const items = "items" in menu ? menu.items : undefined;
+              const more = "more" in menu ? menu.more : undefined;
+              const isMega = Boolean(groups?.length);
+
+              return (
+                <div
+                  key={menu.label}
+                  className="relative"
+                  onMouseEnter={() => setMenuOpen(menu.label)}
+                  onMouseLeave={() => setMenuOpen(null)}
                 >
-                  {menu.label}
-                  <ChevronDown
-                    style={{ width: 14, height: 14 }}
-                    className={openMenu ? "rotate-180" : ""}
-                  />
-                </button>
-                {openMenu ? (
-                  <div
-                    role="menu"
-                    className="absolute left-0 top-full z-50 min-w-[220px] rounded-[12px] border border-[#EAEAEA] bg-white py-1.5 shadow-[0_12px_32px_-16px_rgba(17,24,39,0.28)]"
+                  <button
+                    type="button"
+                    className="inline-flex items-center hover:text-[#635BFF]"
+                    style={{
+                      height: 40,
+                      padding: "0 12px",
+                      fontSize: 15,
+                      fontWeight: 400,
+                      lineHeight: "20px",
+                      color: "rgb(101, 100, 132)",
+                      gap: 4,
+                    }}
+                    onClick={() => setMenuOpen(openMenu ? null : menu.label)}
+                    aria-expanded={openMenu}
+                    aria-haspopup="menu"
                   >
-                    {menu.items.map((item) => (
-                      <Link
-                        key={item.label}
-                        href={item.href}
-                        role="menuitem"
-                        onClick={() => setMenuOpen(null)}
-                        className="block px-3.5 py-2 text-[14px] font-medium text-[#111827] hover:bg-[#F7F6FF]"
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
-                  </div>
-                ) : null}
-              </div>
-            );
-          })}
-          {nav.items.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className="inline-flex items-center hover:text-[#635BFF]"
-              style={{
-                height: 40,
-                padding: "0 12px",
-                fontSize: 15,
-                fontWeight: 400,
-                lineHeight: "20px",
-                color: "rgb(101, 100, 132)",
-              }}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+                    {menu.label}
+                    <ChevronDown
+                      style={{ width: 14, height: 14 }}
+                      className={openMenu ? "rotate-180" : ""}
+                    />
+                  </button>
+                  {openMenu ? (
+                    <div role="menu" className={isMega ? MEGA_MENU_CLASS : SIMPLE_MENU_CLASS}>
+                      {groups?.map((group) => (
+                        <div key={group.title} className="min-w-0">
+                          <p className="px-2 pb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            {group.title}
+                          </p>
+                          <div className="flex flex-col">
+                            {group.items.map((item) => (
+                              <Link
+                                key={item.label}
+                                href={item.href}
+                                role="menuitem"
+                                onClick={() => setMenuOpen(null)}
+                                className="rounded-md px-2 py-1.5 text-[13px] font-medium text-neutral-900 hover:bg-violet-50"
+                              >
+                                {item.label}
+                              </Link>
+                            ))}
+                            {"more" in group && group.more ? (
+                              <Link
+                                href={group.more.href}
+                                role="menuitem"
+                                onClick={() => setMenuOpen(null)}
+                                className="rounded-md px-2 py-1.5 text-[13px] font-semibold text-violet-600 hover:bg-violet-50"
+                              >
+                                {group.more.label}
+                              </Link>
+                            ) : null}
+                          </div>
+                        </div>
+                      ))}
+                      {items?.map((item) => (
+                        <Link
+                          key={item.label}
+                          href={item.href}
+                          role="menuitem"
+                          onClick={() => setMenuOpen(null)}
+                          className="block px-3.5 py-2 text-sm font-medium text-neutral-900 hover:bg-violet-50"
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                      {more ? (
+                        <Link
+                          href={more.href}
+                          role="menuitem"
+                          onClick={() => setMenuOpen(null)}
+                          className="block border-t border-neutral-200 px-3.5 py-2 text-sm font-semibold text-violet-600 hover:bg-violet-50"
+                        >
+                          {more.label}
+                        </Link>
+                      ) : null}
+                    </div>
+                  ) : null}
+                </div>
+              );
+            })}
+            {nav.items.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="inline-flex items-center hover:text-[#635BFF]"
+                style={{
+                  height: 40,
+                  padding: "0 12px",
+                  fontSize: 15,
+                  fontWeight: 400,
+                  lineHeight: "20px",
+                  color: "rgb(101, 100, 132)",
+                }}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
@@ -359,19 +406,65 @@ export default function FaceRatingSiteHeader({
           style={{ borderColor: V.line, backgroundColor: V.bg }}
         >
           <div className="flex flex-col gap-1">
-            {nav.menus.flatMap((menu) =>
-              menu.items.map((item) => (
-                <Link
-                  key={`${menu.label}-${item.label}`}
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  className="rounded-[10px] px-3 py-2.5 text-[15px] font-medium"
-                  style={{ color: V.ink }}
-                >
-                  {item.label}
-                </Link>
-              )),
-            )}
+            {nav.menus.map((menu) => {
+              const groups = "groups" in menu ? menu.groups : undefined;
+              const items = "items" in menu ? menu.items : undefined;
+              const more = "more" in menu ? menu.more : undefined;
+              return (
+                <div key={menu.label} className="mb-2">
+                  <p className="px-3 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    {menu.label}
+                  </p>
+                  {groups?.map((group) => (
+                    <div key={group.title} className="mb-1">
+                      <p className="px-3 py-1 text-[13px] font-semibold" style={{ color: V.ink }}>
+                        {group.title}
+                      </p>
+                      {group.items.map((item) => (
+                        <Link
+                          key={`${menu.label}-${group.title}-${item.label}`}
+                          href={item.href}
+                          onClick={() => setOpen(false)}
+                          className="block rounded-[10px] px-3 py-2 text-[14px] font-medium"
+                          style={{ color: V.ink }}
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                      {"more" in group && group.more ? (
+                        <Link
+                          href={group.more.href}
+                          onClick={() => setOpen(false)}
+                          className="block rounded-[10px] px-3 py-2 text-[14px] font-semibold text-violet-600"
+                        >
+                          {group.more.label}
+                        </Link>
+                      ) : null}
+                    </div>
+                  ))}
+                  {items?.map((item) => (
+                    <Link
+                      key={`${menu.label}-${item.label}`}
+                      href={item.href}
+                      onClick={() => setOpen(false)}
+                      className="block rounded-[10px] px-3 py-2 text-[14px] font-medium"
+                      style={{ color: V.ink }}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                  {more ? (
+                    <Link
+                      href={more.href}
+                      onClick={() => setOpen(false)}
+                      className="block rounded-[10px] px-3 py-2 text-[14px] font-semibold text-violet-600"
+                    >
+                      {more.label}
+                    </Link>
+                  ) : null}
+                </div>
+              );
+            })}
             <div className="my-2 border-t" style={{ borderColor: V.line }} />
             {nav.items.map((item) => (
               <Link

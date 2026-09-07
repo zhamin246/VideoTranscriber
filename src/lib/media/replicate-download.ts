@@ -4,7 +4,13 @@ import Replicate from "replicate";
 export const DOWNLOAD_MEDIA_MODEL =
   "mptamilselvan/download-media:e2fece7512a3969f839ec06a1a7211370f4f41db70a86c3fb7a7c58d0371ecf4";
 
-const MAX_BYTES = 80 * 1024 * 1024;
+/** Raw download may be video; allow headroom so ffmpeg can extract audio. */
+const MAX_BYTES = 200 * 1024 * 1024;
+
+function tooLargeMessage(bytes: number) {
+  const mb = Math.round(bytes / (1024 * 1024));
+  return `That media is too large to download here (${mb} MB). Try a shorter clip, or upload an audio file instead.`;
+}
 
 function getClient() {
   const token = process.env.REPLICATE_API_TOKEN;
@@ -70,7 +76,7 @@ export async function downloadMediaViaReplicate(mediaUrl: string) {
     throw new Error("Replicate download-media returned an empty file");
   }
   if (buf.byteLength > MAX_BYTES) {
-    throw new Error("That file is too large to process here.");
+    throw new Error(tooLargeMessage(buf.byteLength));
   }
   const contentType =
     res.headers.get("content-type") || "application/octet-stream";

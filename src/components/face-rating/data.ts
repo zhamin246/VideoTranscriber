@@ -4,6 +4,7 @@
  */
 
 import { useCaseAsset } from "@/lib/convert/use-case-assets";
+import { VIDEO_TO_TEXT_CONVERTER_HREF } from "@/lib/convert/video-to-text-converter-content";
 
 export const FREE_TEST_HREF = "/tools/ai-attractiveness-test";
 export const FULL_REPORT_HREF = "/tools/full-analysis";
@@ -19,57 +20,139 @@ export const content = {
   },
 
   nav: {
+    /** Top nav mirrors footer taxonomy (merged for header capacity). */
     menus: [
       {
+        label: "Popular Tools",
+        items: [
+          { label: "Video to Text Converter", href: VIDEO_TO_TEXT_CONVERTER_HREF },
+          { label: "Audio to Text Converter", href: CONVERT_HREF },
+          { label: "YouTube Transcript Generator", href: CONVERT_HREF },
+          { label: "AI Video Summarizer", href: CONVERT_HREF },
+          { label: "YouTube Subtitle Downloader", href: CONVERT_HREF },
+          { label: "TikTok Transcript Generator", href: CONVERT_HREF },
+          { label: "Facebook Transcript Generator", href: CONVERT_HREF },
+          { label: "AI Video Translator", href: CONVERT_HREF },
+          { label: "AI Medical Dictation", href: CONVERT_HREF },
+          { label: "Legal Transcription", href: CONVERT_HREF },
+        ],
+      },
+      {
         label: "Transcribe",
-        items: [
-          { label: "File upload", href: CONVERT_HREF },
-          { label: "Paste a link", href: CONVERT_HREF },
-          { label: "Record audio", href: CONVERT_HREF },
+        groups: [
+          {
+            title: "Video Transcriber",
+            items: [
+              { label: "Video Transcript Generator", href: CONVERT_HREF },
+              { label: "MP4 to Text Converter", href: CONVERT_HREF },
+              { label: "Video to SRT Converter", href: CONVERT_HREF },
+              { label: "Time Code Transcription", href: CONVERT_HREF },
+              { label: "Speaker Label in Transcription", href: CONVERT_HREF },
+            ],
+          },
+          {
+            title: "Audio Transcriber",
+            items: [
+              { label: "Speech to Text AI", href: CONVERT_HREF },
+              { label: "Voice to Text Generator", href: CONVERT_HREF },
+              { label: "MP3 to Text Converter", href: CONVERT_HREF },
+              { label: "Audio to SRT Converter", href: CONVERT_HREF },
+              { label: "M4A to Text Converter", href: CONVERT_HREF },
+              { label: "WAV to Text", href: CONVERT_HREF },
+            ],
+          },
+          {
+            title: "YouTube Transcriber",
+            items: [
+              { label: "YouTube to Transcript", href: CONVERT_HREF },
+              { label: "YouTube to Text Converter", href: CONVERT_HREF },
+              { label: "YouTube Subtitle Generator", href: CONVERT_HREF },
+              { label: "YouTube Video Summarizer", href: CONVERT_HREF },
+              { label: "YouTube Transcript Downloader", href: CONVERT_HREF },
+            ],
+          },
+          {
+            title: "Social Media Transcriber",
+            items: [
+              { label: "Instagram Transcript Generator", href: CONVERT_HREF },
+              { label: "X Transcript Generator", href: CONVERT_HREF },
+              { label: "Bilibili Transcript Generator", href: CONVERT_HREF },
+            ],
+          },
         ],
       },
       {
-        label: "Outputs",
+        label: "Translator",
         items: [
-          { label: "Copy transcript", href: CONVERT_HREF },
-          { label: "Download file", href: CONVERT_HREF },
-          { label: "Share text", href: CONVERT_HREF },
+          { label: "YouTube Video Translator", href: CONVERT_HREF },
+          { label: "AI Audio Translator", href: CONVERT_HREF },
         ],
       },
       {
-        label: "Examples",
-        items: [
-          { label: "Meetings", href: "/#usecases" },
-          { label: "Interviews", href: "/#usecases" },
-          { label: "Podcasts", href: "/#usecases" },
-          { label: "YouTube", href: "/#usecases" },
+        label: "Solutions",
+        groups: [
+          {
+            title: "Meetings & Business",
+            items: [
+              { label: "AI Meeting Note Taker", href: "/#usecases" },
+              { label: "AI Meeting Minutes Generator", href: "/#usecases" },
+              { label: "Interview Transcription", href: "/#usecases" },
+              { label: "Sales Call Transcription", href: "/#usecases" },
+              { label: "AI Webinar Transcription", href: "/#usecases" },
+              { label: "AI Voice Recorder", href: CONVERT_HREF },
+            ],
+          },
+          {
+            title: "Learning & Content",
+            items: [
+              { label: "AI Lecture Note Taker", href: "/#usecases" },
+              { label: "Study Notes Generator", href: "/#usecases" },
+              { label: "Podcast to Transcript", href: "/#usecases" },
+            ],
+          },
+          {
+            title: "AI Medical Transcriber",
+            items: [
+              { label: "AI Medical Transcription", href: CONVERT_HREF },
+              { label: "AI Medical Scribe", href: CONVERT_HREF },
+              { label: "AI SOAP Note Generator", href: CONVERT_HREF },
+              { label: "AI H&P Note Generator", href: CONVERT_HREF },
+              { label: "AI Clinical Note Generator", href: CONVERT_HREF },
+              { label: "AI Nursing Note Taker", href: CONVERT_HREF },
+              { label: "AI Therapy Note Generator", href: CONVERT_HREF },
+              { label: "AI Progress Note Generator", href: CONVERT_HREF },
+              { label: "AI Discharge Summary Generator", href: CONVERT_HREF },
+              { label: "AI Medical Records Summary", href: CONVERT_HREF },
+            ],
+          },
+          {
+            title: "AI Legal Transcriber",
+            items: [
+              { label: "Legal Dictation Software", href: CONVERT_HREF },
+              { label: "Court Transcript", href: CONVERT_HREF },
+              { label: "Deposition Transcript", href: CONVERT_HREF },
+              { label: "Witness Statement Transcript", href: CONVERT_HREF },
+              { label: "Hearing Transcript", href: CONVERT_HREF },
+              { label: "Trial Transcript", href: CONVERT_HREF },
+            ],
+            more: { label: "All AI Transcript Tools >>", href: CONVERT_HREF },
+          },
         ],
       },
       {
-        label: "Tools",
+        label: "Compare",
         items: [
-          { label: "My Assets", href: "/my-assets" },
-          { label: "Transcribe", href: CONVERT_HREF },
+          { label: "Video Transcriber AI vs HappyScribe", href: "/pricing" },
+          { label: "Video Transcriber AI vs Evernote", href: "/pricing" },
+          { label: "Video Transcriber AI vs Descript", href: "/pricing" },
+          { label: "Video Transcriber AI vs Any2Text", href: "/pricing" },
+          { label: "Video Transcriber AI vs Restream", href: "/pricing" },
+          { label: "Video Transcriber AI vs TurboScribe", href: "/pricing" },
         ],
-      },
-      {
-        label: "Guides",
-        items: [
-          { label: "How it works", href: "/#how-it-works" },
-          { label: "FAQ", href: "/#faq" },
-        ],
+        more: { label: "See all comparisons >>", href: "/pricing" },
       },
     ],
-    tools: {
-      label: "Tools",
-      items: [
-        { label: "My Assets", href: "/my-assets" },
-        { label: "Transcribe", href: CONVERT_HREF },
-      ],
-    },
-    items: [
-      { label: "Pricing", href: "/pricing" },
-    ],
+    items: [{ label: "Pricing", href: "/pricing" }],
     login: { label: "Log in", href: "/auth/signin" },
     cta: { label: "Start transcribing", href: CONVERT_HREF },
   },

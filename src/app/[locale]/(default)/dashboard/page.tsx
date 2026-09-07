@@ -17,8 +17,6 @@ export default async function DashboardRoutePage({
   const initialTab =
     params.tab === "credits"
       ? "credits"
-      : params.tab === "orders" || paid
-        ? "orders"
-        : "history";
+      : "orders";
   return <FaceRatingDashboardPage paid={paid} initialTab={initialTab} />;
 }

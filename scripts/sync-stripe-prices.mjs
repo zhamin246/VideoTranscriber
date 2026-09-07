@@ -1,6 +1,9 @@
 /**
  * Create or reuse Stripe Prices for Video Transcriber minute packs and plans.
  * Usage: node scripts/sync-stripe-prices.mjs .env.development
+ *
+ * Aligned to UniScribe: Basic 1200 / Standard 3000 / Pro 6000;
+ * One-time Lite $12.90/300 · Plus $19.90/600 · Max $49.90/3000.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -31,31 +34,31 @@ function loadEnv(file) {
 
 const SKUS = [
   {
-    env: "STRIPE_MINUTES_500_PRICE_ID",
-    lookup: "vt_minutes_500",
-    name: "500 minutes pack",
-    amount: 500,
-    credits: 500,
+    env: "STRIPE_MINUTES_300_PRICE_ID",
+    lookup: "vt_minutes_300",
+    name: "Lite · 300 minutes",
+    amount: 1290,
+    credits: 300,
   },
   {
-    env: "STRIPE_MINUTES_1000_PRICE_ID",
-    lookup: "vt_minutes_1000",
-    name: "1,000 minutes pack",
-    amount: 1000,
-    credits: 1000,
+    env: "STRIPE_MINUTES_600_PRICE_ID",
+    lookup: "vt_minutes_600",
+    name: "Plus · 600 minutes",
+    amount: 1990,
+    credits: 600,
   },
   {
     env: "STRIPE_MINUTES_3000_PRICE_ID",
-    lookup: "vt_minutes_3000",
-    name: "3,000 minutes pack",
-    amount: 2500,
+    lookup: "vt_minutes_3000_max",
+    name: "Max · 3,000 minutes",
+    amount: 4990,
     credits: 3000,
   },
   {
     env: "STRIPE_BASIC_MONTHLY_PRICE_ID",
-    lookup: "vt_basic_monthly",
+    lookup: "vt_basic_monthly_10",
     name: "Basic monthly",
-    amount: 900,
+    amount: 1000,
     credits: 1200,
     interval: "month",
   },
@@ -68,35 +71,35 @@ const SKUS = [
     interval: "year",
   },
   {
+    env: "STRIPE_STANDARD_MONTHLY_PRICE_ID",
+    lookup: "vt_standard_monthly",
+    name: "Standard monthly",
+    amount: 2000,
+    credits: 3000,
+    interval: "month",
+  },
+  {
+    env: "STRIPE_STANDARD_YEARLY_PRICE_ID",
+    lookup: "vt_standard_yearly",
+    name: "Standard yearly",
+    amount: 14400,
+    credits: 36000,
+    interval: "year",
+  },
+  {
     env: "STRIPE_PRO_MONTHLY_PRICE_ID",
-    lookup: "vt_pro_monthly",
+    lookup: "vt_pro_monthly_30",
     name: "Pro monthly",
-    amount: 1900,
-    credits: 4000,
+    amount: 3000,
+    credits: 6000,
     interval: "month",
   },
   {
     env: "STRIPE_PRO_YEARLY_PRICE_ID",
-    lookup: "vt_pro_yearly",
+    lookup: "vt_pro_yearly_216",
     name: "Pro yearly",
-    amount: 14400,
-    credits: 48000,
-    interval: "year",
-  },
-  {
-    env: "STRIPE_STUDIO_MONTHLY_PRICE_ID",
-    lookup: "vt_studio_monthly",
-    name: "Studio monthly",
-    amount: 3900,
-    credits: 10000,
-    interval: "month",
-  },
-  {
-    env: "STRIPE_STUDIO_YEARLY_PRICE_ID",
-    lookup: "vt_studio_yearly",
-    name: "Studio yearly",
-    amount: 28800,
-    credits: 120000,
+    amount: 21600,
+    credits: 72000,
     interval: "year",
   },
 ];
@@ -148,3 +151,19 @@ for (const sku of SKUS) {
 }
 
 console.log(JSON.stringify({ envFile: envPath, mode: key.startsWith("sk_live") ? "live" : "test", prices: result }, null, 2));
+
+/** Optionally patch env file: node scripts/sync-stripe-prices.mjs .env.development --write */
+if (process.argv.includes("--write")) {
+  let text = fs.readFileSync(envPath, "utf8");
+  for (const [k, v] of Object.entries(result)) {
+    const re = new RegExp(`^(${k}\\s*=\\s*).*$`, "m");
+    // Avoid `$` in price ids being treated as replace groups
+    if (re.test(text)) {
+      text = text.replace(re, (_, prefix) => `${prefix}${v}`);
+    } else {
+      text = `${text.trimEnd()}\n${k} = ${v}\n`;
+    }
+  }
+  fs.writeFileSync(envPath, text);
+  console.log(`Wrote ${Object.keys(result).length} price IDs into ${envPath}`);
+}

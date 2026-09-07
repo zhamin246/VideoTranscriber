@@ -2,15 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { ImageIcon } from "lucide-react";
 import FaceRatingSiteHeader from "./site-header";
 import FaceRatingSiteFooter from "./site-footer";
+import WorkspaceNav from "./workspace-nav";
 import { Link } from "@/i18n/navigation";
-import type { ConvertHistoryItem } from "@/lib/convert/history";
 import type { CreditLot, CreditRecord } from "@/types/user";
 import { V } from "./visual";
 
-type Tab = "history" | "orders" | "credits";
+type Tab = "orders" | "credits";
 
 type DashboardOrder = {
   orderNo: string;
@@ -21,7 +20,6 @@ type DashboardOrder = {
   paidAt: string | null;
 };
 
-const PAGE_SIZE = 25;
 const LIST_PAGE_SIZE = 10;
 
 function formatDate(iso: string | null) {
@@ -46,7 +44,7 @@ function displayName(session: {
 
 export default function FaceRatingDashboardPage({
   paid = false,
-  initialTab = "history",
+  initialTab = "orders",
 }: {
   paid?: boolean;
   initialTab?: Tab;
@@ -60,13 +58,7 @@ export default function FaceRatingDashboardPage({
 
   const [tab, setTab] = useState<Tab>(initialTab);
   const [showPaidBanner, setShowPaidBanner] = useState(paid);
-  const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
-  const [items, setItems] = useState<(ConvertHistoryItem & { createdAt?: string })[]>(
-    []
-  );
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [credits, setCredits] = useState<number | null>(null);
   const [creditLots, setCreditLots] = useState<CreditLot[]>([]);
   const [isRecharged, setIsRecharged] = useState(false);
@@ -81,33 +73,19 @@ export default function FaceRatingDashboardPage({
     let cancelled = false;
     (async () => {
       setLoading(true);
-      setError(null);
       try {
-        const [jobsRes, creditsRes] = await Promise.all([
-          fetch(
-            `/api/convert/jobs?limit=${PAGE_SIZE}&offset=${(page - 1) * PAGE_SIZE}`,
-            { cache: "no-store" }
-          ),
-          fetch("/api/get-user-credits", { method: "POST", cache: "no-store" }),
-        ]);
-        const jobsData = await jobsRes.json().catch(() => ({}));
+        const creditsRes = await fetch("/api/get-user-credits", {
+          method: "POST",
+          cache: "no-store",
+        });
         const creditsData = await creditsRes.json().catch(() => ({}));
-        if (!jobsRes.ok || jobsData?.code !== 0) {
-          throw new Error(jobsData?.message || "Failed to load conversions");
+        if (!cancelled && creditsRes.ok && creditsData?.code === 0) {
+          setCredits(creditsData?.data?.left_credits ?? 0);
+          setCreditLots(creditsData?.data?.lots || []);
+          setIsRecharged(Boolean(creditsData?.data?.is_recharged));
         }
-        if (!cancelled) {
-          setItems(jobsData?.data?.items || []);
-          setTotal(Number(jobsData?.data?.total) || 0);
-          if (creditsRes.ok && creditsData?.code === 0) {
-            setCredits(creditsData?.data?.left_credits ?? 0);
-            setCreditLots(creditsData?.data?.lots || []);
-            setIsRecharged(Boolean(creditsData?.data?.is_recharged));
-          }
-        }
-      } catch (e) {
-        if (!cancelled) {
-          setError(e instanceof Error ? e.message : "Failed to load conversions");
-        }
+      } catch {
+        // CreditsPanel can still load independently
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -116,17 +94,19 @@ export default function FaceRatingDashboardPage({
     return () => {
       cancelled = true;
     };
-  }, [status, email, page]);
+  }, [status, email]);
 
   const signedIn = status === "authenticated" && Boolean(email);
 
   return (
     <div
-      className="flex min-h-screen flex-col bg-white"
-      style={{ color: V.ink }}
+      className="flex min-h-screen font-sans antialiased"
+      style={{ backgroundColor: V.bg, color: V.ink }}
       data-theme="light"
     >
-      <FaceRatingSiteHeader />
+      <WorkspaceNav />
+      <div className="flex min-h-screen min-w-0 flex-1 flex-col">
+      <FaceRatingSiteHeader hideBrandOnDesktop />
 
       <section
         className="px-5 pb-14 pt-12 text-center sm:px-8 sm:pb-16 sm:pt-14"
@@ -149,7 +129,7 @@ export default function FaceRatingDashboardPage({
             {email}
           </p>
         ) : (
-          <p className="mt-3 text-[14px] text-white/70">Sign in to see your drawings and credits.</p>
+          <p className="mt-3 text-[14px] text-white/70">Sign in to see your orders and credits.</p>
         )}
       </section>
 
@@ -162,7 +142,6 @@ export default function FaceRatingDashboardPage({
         >
           {(
             [
-              ["history", "Conversion History"],
               ["orders", "My Orders"],
               ["credits", "Credits & Plan"],
             ] as const
@@ -201,7 +180,7 @@ export default function FaceRatingDashboardPage({
           <p className="text-center text-sm text-[#737373]">Loading your dashboard…</p>
         ) : !signedIn ? (
           <div className="rounded-2xl border border-[#e5e5e5] bg-[#fafafa] px-6 py-10 text-center">
-            <p className="text-sm text-[#525252]">Sign in to see conversions and credits.</p>
+            <p className="text-sm text-[#525252]">Sign in to see orders and credits.</p>
             <Link
               href="/auth/signin?callbackUrl=/dashboard"
               className="mt-5 inline-flex h-10 items-center rounded-full bg-[#9F1239] px-5 text-sm font-bold text-white"
@@ -209,14 +188,6 @@ export default function FaceRatingDashboardPage({
               Log in
             </Link>
           </div>
-        ) : tab === "history" ? (
-          <HistoryPanel
-            items={items}
-            error={error}
-            page={page}
-            total={total}
-            onPageChange={setPage}
-          />
         ) : tab === "orders" ? (
           <OrdersPanel />
         ) : (
@@ -229,83 +200,7 @@ export default function FaceRatingDashboardPage({
       </main>
 
       <FaceRatingSiteFooter />
-    </div>
-  );
-}
-
-function HistoryPanel({
-  items,
-  error,
-  page,
-  total,
-  onPageChange,
-}: {
-  items: (ConvertHistoryItem & { createdAt?: string })[];
-  error: string | null;
-  page: number;
-  total: number;
-  onPageChange: (page: number) => void;
-}) {
-  if (error) {
-    return <p className="text-sm font-medium text-red-600">{error}</p>;
-  }
-  if (total === 0 && items.length === 0) {
-    return (
-      <div className="rounded-2xl border border-dashed border-[#e5e5e5] px-6 py-12 text-center">
-        <ImageIcon className="mx-auto h-10 w-10 text-[#9F1239]/50" />
-        <p className="mt-4 text-base font-bold">No conversions yet</p>
-        <p className="mt-2 text-sm text-[#737373]">
-          Convert a photo to vector and it will show up here.
-        </p>
-        <Link
-          href="/"
-          className="mt-6 inline-flex h-10 items-center rounded-full bg-[#9F1239] px-5 text-sm font-bold text-white"
-        >
-          Upload a photo
-        </Link>
       </div>
-    );
-  }
-
-  const pageCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
-
-  return (
-    <div>
-      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-        {items.map((item) => (
-          <li key={item.id}>
-            <Link
-              href={`/convert?job=${encodeURIComponent(item.id)}`}
-              className="block overflow-hidden rounded-2xl border border-[#ececec] bg-white transition-colors hover:border-[#9F1239]/40"
-            >
-              <div className="aspect-square bg-white">
-                {item.thumbUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={item.thumbUrl} alt="" className="h-full w-full object-contain" />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center">
-                    <ImageIcon className="h-6 w-6 text-[#a3a3a3]" />
-                  </div>
-                )}
-              </div>
-              <div className="border-t border-[#f4f4f4] px-3 py-2">
-                <p className="truncate text-sm font-medium text-[#0a0a0a]">{item.title}</p>
-                {item.createdAt ? (
-                  <p className="mt-0.5 text-xs text-[#a3a3a3]">{formatDate(item.createdAt)}</p>
-                ) : null}
-              </div>
-            </Link>
-          </li>
-        ))}
-      </ul>
-      {pageCount > 1 ? (
-        <ListPager
-          page={page}
-          pageCount={pageCount}
-          onPageChange={onPageChange}
-          label="Conversion history pages"
-        />
-      ) : null}
     </div>
   );
 }

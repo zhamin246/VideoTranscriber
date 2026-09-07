@@ -1,4 +1,4 @@
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, gte, ne, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { mediaAssets, transcripts, workspaces } from "@/db/schema";
 
@@ -40,6 +40,24 @@ export async function listWorkspacesByUser(userUuid: string, limit = 24) {
     )
     .orderBy(desc(workspaces.created_at))
     .limit(limit);
+}
+
+/** Files started today (UTC calendar day) — used for free daily limit UI/enforcement. */
+export async function countWorkspacesCreatedToday(userUuid: string) {
+  if (!userUuid) return 0;
+  const start = new Date();
+  start.setUTCHours(0, 0, 0, 0);
+  const [row] = await db()
+    .select({ n: sql<number>`count(*)::int` })
+    .from(workspaces)
+    .where(
+      and(
+        eq(workspaces.user_uuid, userUuid),
+        ne(workspaces.status, "deleted"),
+        gte(workspaces.created_at, start),
+      ),
+    );
+  return Number(row?.n || 0);
 }
 
 export async function softDeleteWorkspace(workspaceId: string) {

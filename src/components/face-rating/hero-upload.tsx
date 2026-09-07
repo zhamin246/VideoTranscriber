@@ -40,6 +40,10 @@ import {
 } from "@/components/ui/select";
 import { useAppContext } from "@/contexts/app";
 import { isAuthEnabled } from "@/lib/auth";
+import UpgradePricingModal, {
+  upgradeReasonFromMessage,
+  type UpgradePricingReason,
+} from "./upgrade-pricing-modal";
 
 type LocalFilePreview = {
   file: File;
@@ -250,11 +254,14 @@ const NOTE_MODES = NOTE_MODE_PRESETS.map((m) => ({
 
 
 export default function HeroUpload() {
-  const { user, setShowSignModal } = useAppContext();
+  const { user, setShowSignModal, refreshUserInfo } = useAppContext();
   const inputRef = useRef<HTMLInputElement>(null);
   const [tab, setTab] = useState<"upload" | "link" | "record">("upload");
   const [drag, setDrag] = useState(false);
   const [error, setError] = useState("");
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [upgradeReason, setUpgradeReason] =
+    useState<UpgradePricingReason>("minutes");
   const [url, setUrl] = useState("");
   const [linkBusy, setLinkBusy] = useState(false);
   const [transcribeBusy, setTranscribeBusy] = useState(false);
@@ -274,10 +281,58 @@ export default function HeroUpload() {
   const recordStartedAtRef = useRef<number>(0);
   const progressStopRef = useRef<(() => void) | null>(null);
 
+  const openUpgradePricing = (reason: UpgradePricingReason = "minutes") => {
+    setUpgradeReason(reason);
+    setUpgradeOpen(true);
+    setError("");
+  };
+
+  const handlePlanOrApiError = (message: string) => {
+    const reason = upgradeReasonFromMessage(message);
+    if (reason) {
+      openUpgradePricing(reason);
+      return;
+    }
+    setError(message);
+  };
+
   const requireSignIn = () => {
     if (!isAuthEnabled()) return false;
     if (user) return false;
     setShowSignModal(true);
+    return true;
+  };
+
+  /** Client-side gate mirroring server plan limits (daily + minutes). */
+  const requirePlanCapacity = (durationSeconds?: number | null) => {
+    if (requireSignIn()) return false;
+    const plan = user?.plan;
+    const left =
+      user?.credits?.left_credits ?? plan?.minutes.left ?? 0;
+    if (plan?.dailyFiles.limit != null && plan.dailyFiles.used >= plan.dailyFiles.limit) {
+      openUpgradePricing("daily");
+      return false;
+    }
+    if (left < 1) {
+      openUpgradePricing("minutes");
+      return false;
+    }
+    if (
+      plan?.badge === "FREE" &&
+      !plan.isPackOnly &&
+      typeof durationSeconds === "number" &&
+      durationSeconds > 30 * 60
+    ) {
+      openUpgradePricing("file_limit");
+      return false;
+    }
+    if (typeof durationSeconds === "number" && durationSeconds > 0) {
+      const need = Math.max(1, Math.ceil(durationSeconds / 60));
+      if (left < need) {
+        openUpgradePricing("minutes");
+        return false;
+      }
+    }
     return true;
   };
 
@@ -446,6 +501,14 @@ export default function HeroUpload() {
       };
       saveWorkspace(stored);
       updateTranscribeJob(id, { percent: 100, status: "done" });
+      finishTranscribeJob(id);
+
+      const persisted = await persistWorkspace(stored, payload.file);
+      if (persisted?.playbackUrl && persisted.playbackUrl !== stored.playbackUrl) {
+        saveWorkspace({ ...stored, playbackUrl: persisted.playbackUrl });
+      }
+
+      // After DB write so My files syncs across devices for the same account
       saveRecentMedia({
         url: payload.url,
         title: payload.title,
@@ -454,12 +517,6 @@ export default function HeroUpload() {
         platform: payload.platform,
         workspaceId: id,
       });
-      finishTranscribeJob(id);
-
-      const persisted = await persistWorkspace(stored, payload.file);
-      if (persisted?.playbackUrl && persisted.playbackUrl !== stored.playbackUrl) {
-        saveWorkspace({ ...stored, playbackUrl: persisted.playbackUrl });
-      }
 
       // Clear upload UI; keep blob URL alive for workspace in this session
       setPreview(null);
@@ -469,6 +526,7 @@ export default function HeroUpload() {
       filePreviewUrlRef.current = null;
       if (inputRef.current) inputRef.current.value = "";
       setTranscribeBusy(false);
+      void refreshUserInfo?.();
     } catch {
       if (payload.workspaceId) finishTranscribeJob(payload.workspaceId);
       setError("Could not save transcription.");
@@ -547,6 +605,7 @@ export default function HeroUpload() {
 
   const transcribeLink = async () => {
     if (!preview?.url) return;
+    if (!requirePlanCapacity(preview.durationSeconds)) return;
     setError("");
     setLinkOk("");
     setTranscribeBusy(true);
@@ -571,6 +630,7 @@ export default function HeroUpload() {
           workspaceId,
           language: sourceLanguage,
           separateSpeaker,
+          durationSeconds,
         }),
       });
       const json = (await res.json()) as {
@@ -591,7 +651,7 @@ export default function HeroUpload() {
       progress.stopProgress();
       if (!res.ok || json.code !== 0 || !json.data) {
         finishTranscribeJob(workspaceId);
-        setError(json.message || "Transcription failed");
+        handlePlanOrApiError(json.message || "Transcription failed");
         setTranscribeBusy(false);
         return;
       }
@@ -621,6 +681,7 @@ export default function HeroUpload() {
 
   const transcribeFile = async () => {
     if (!filePreview) return;
+    if (!requirePlanCapacity(filePreview.durationSeconds)) return;
     setError("");
     setLinkOk("");
     setTranscribeBusy(true);
@@ -644,6 +705,9 @@ export default function HeroUpload() {
       form.append("workspaceId", workspaceId);
       form.append("language", sourceLanguage);
       form.append("separateSpeaker", separateSpeaker ? "true" : "false");
+      if (durationSeconds != null) {
+        form.append("durationSeconds", String(durationSeconds));
+      }
 
       const res = await fetch("/api/media/transcribe", {
         method: "POST",
@@ -666,7 +730,7 @@ export default function HeroUpload() {
       progress.stopProgress();
       if (!res.ok || json.code !== 0 || !json.data) {
         finishTranscribeJob(workspaceId);
-        setError(json.message || "Transcription failed");
+        handlePlanOrApiError(json.message || "Transcription failed");
         setTranscribeBusy(false);
         return;
       }
@@ -803,9 +867,9 @@ export default function HeroUpload() {
   };
 
   const wellStyle = {
-    minHeight: 280,
+    minHeight: 220,
     borderRadius: 16,
-    padding: "28px 32px",
+    padding: "20px 14px",
     border: drag ? "1.6px dashed rgba(255,255,255,0.85)" : "1.6px dashed rgb(107, 103, 167)",
     backgroundColor: drag ? "rgba(136, 130, 245, 0.16)" : "rgba(136, 130, 245, 0.08)",
   } as const;
@@ -970,10 +1034,8 @@ export default function HeroUpload() {
 
   return (
     <div
-      className="relative mx-auto w-full max-w-[1200px] overflow-hidden"
+      className="relative mx-auto w-full max-w-[1200px] overflow-hidden rounded-2xl p-1 sm:rounded-[32px] sm:p-1.5"
       style={{
-        borderRadius: 32,
-        padding: 6,
         background: "color-mix(in srgb, #8882F5 4%, #fff)",
         boxShadow: "0 3px 10px rgba(99,91,255,0.16), 0 1px 4px rgba(15,23,42,0.1)",
       }}
@@ -989,10 +1051,8 @@ export default function HeroUpload() {
         }}
       />
       <div
-        className="flex min-h-[450px] flex-col"
+        className="flex min-h-[360px] flex-col rounded-xl p-4 sm:min-h-[450px] sm:rounded-3xl sm:p-10"
         style={{
-          borderRadius: 24,
-          padding: "40px",
           border: "0.8px solid rgb(86, 82, 141)",
           backgroundImage:
             "linear-gradient(165deg, rgb(68, 65, 115) 0%, rgb(55, 53, 91) 52%, rgb(43, 41, 70) 100%)",
@@ -1001,16 +1061,16 @@ export default function HeroUpload() {
         <div
           role="tablist"
           aria-label="Upload method"
-          className="mx-auto mb-4 grid h-12 w-full max-w-[38rem] grid-cols-3 rounded-xl p-1"
+          className="mx-auto mb-3 grid h-11 w-full max-w-[38rem] grid-cols-3 rounded-xl p-1 sm:mb-4 sm:h-12"
           style={{ backgroundColor: "rgba(255,255,255,0.1)" }}
         >
           {(
             [
-              { id: "upload" as const, label: "File upload", Icon: FileText },
-              { id: "link" as const, label: "Paste link", Icon: Link2 },
-              { id: "record" as const, label: "Record audio", Icon: Mic },
+              { id: "upload" as const, label: "File upload", short: "File", Icon: FileText },
+              { id: "link" as const, label: "Paste link", short: "Link", Icon: Link2 },
+              { id: "record" as const, label: "Record audio", short: "Record", Icon: Mic },
             ] as const
-          ).map(({ id, label, Icon }) => {
+          ).map(({ id, label, short, Icon }) => {
             const active = tab === id;
             return (
               <button
@@ -1034,7 +1094,7 @@ export default function HeroUpload() {
                     if (inputRef.current) inputRef.current.value = "";
                   }
                 }}
-                className="inline-flex h-10 items-center justify-center gap-1.5 rounded-lg px-2 text-sm font-semibold transition-colors sm:gap-2 sm:px-4"
+                className="inline-flex h-9 items-center justify-center gap-1 rounded-lg px-1.5 text-[12px] font-semibold transition-colors sm:h-10 sm:gap-2 sm:px-4 sm:text-sm"
                 style={
                   active
                     ? {
@@ -1045,8 +1105,9 @@ export default function HeroUpload() {
                     : { backgroundColor: "transparent", color: "rgba(255,255,255,0.72)" }
                 }
               >
-                <Icon className="h-4 w-4" strokeWidth={2} />
-                {label}
+                <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={2} />
+                <span className="sm:hidden">{short}</span>
+                <span className="hidden sm:inline">{label}</span>
               </button>
             );
           })}
@@ -1337,6 +1398,11 @@ export default function HeroUpload() {
           </div>
         )}
       </div>
+      <UpgradePricingModal
+        open={upgradeOpen}
+        onOpenChange={setUpgradeOpen}
+        reason={upgradeReason}
+      />
     </div>
   );
 }

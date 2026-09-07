@@ -13,15 +13,15 @@ import { Order } from "@/types/order";
 import { newCreemClient } from "@/integrations/creem";
 
 const PRICE_IDS: Record<string, string | undefined> = {
-  minutes_500: process.env.STRIPE_MINUTES_500_PRICE_ID,
-  minutes_1000: process.env.STRIPE_MINUTES_1000_PRICE_ID,
+  minutes_300: process.env.STRIPE_MINUTES_300_PRICE_ID,
+  minutes_600: process.env.STRIPE_MINUTES_600_PRICE_ID,
   minutes_3000: process.env.STRIPE_MINUTES_3000_PRICE_ID,
   basic_monthly: process.env.STRIPE_BASIC_MONTHLY_PRICE_ID,
   basic_yearly: process.env.STRIPE_BASIC_YEARLY_PRICE_ID,
+  standard_monthly: process.env.STRIPE_STANDARD_MONTHLY_PRICE_ID,
+  standard_yearly: process.env.STRIPE_STANDARD_YEARLY_PRICE_ID,
   pro_monthly: process.env.STRIPE_PRO_MONTHLY_PRICE_ID,
   pro_yearly: process.env.STRIPE_PRO_YEARLY_PRICE_ID,
-  studio_monthly: process.env.STRIPE_STUDIO_MONTHLY_PRICE_ID,
-  studio_yearly: process.env.STRIPE_STUDIO_YEARLY_PRICE_ID,
 };
 
 export async function POST(req: Request) {
@@ -67,7 +67,7 @@ export async function POST(req: Request) {
       return respErr("invalid valid_months");
     }
 
-    if (interval === "one-time" && valid_months !== 12) {
+    if (interval === "one-time" && ![3, 6, 12].includes(valid_months || 0)) {
       return respErr("invalid valid_months");
     }
 
@@ -104,10 +104,14 @@ export async function POST(req: Request) {
     const currentDate = new Date();
     const created_at = currentDate.toISOString();
 
-    // Credit-lot expiry: monthly = 30 days; yearly grants and packs = 12 months.
+    // Credit-lot expiry: monthly = 30 days; yearly = 12 months; packs = valid_months.
     let expired_at = "";
     if (interval === "month" || interval === "year" || interval === "one-time") {
-      expired_at = subscriptionCreditExpiresAt(interval, currentDate);
+      expired_at = subscriptionCreditExpiresAt(
+        interval,
+        currentDate,
+        valid_months || 12
+      );
     }
 
     // 创建订单
@@ -205,7 +209,7 @@ async function stripeCheckout({
                 ? `${order.credits} conversion credits each month`
                 : order.interval === "month"
                   ? `${order.credits} conversion credits each month · expire after 30 days`
-                  : `${order.credits} conversion credits · use within 12 months`,
+                  : `${order.credits} conversion credits · use within ${order.valid_months || 12} months`,
           },
           ...(is_subscription
             ? {

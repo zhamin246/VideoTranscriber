@@ -3,6 +3,7 @@ import { respData, respErr, respJson } from "@/lib/resp";
 import { findUserByUuid } from "@/models/user";
 import { getUserUuid } from "@/services/user";
 import { getUserCredits } from "@/services/credit";
+import { getPlanSummary } from "@/services/plan";
 import { User } from "@/types/user";
 
 export async function POST(req: Request) {
@@ -17,11 +18,20 @@ export async function POST(req: Request) {
       return respErr("user not exist");
     }
 
-    const userCredits = await getUserCredits(user_uuid);
+    const [userCredits, plan] = await Promise.all([
+      getUserCredits(user_uuid),
+      getPlanSummary(user_uuid),
+    ]);
 
-    const user = {
+    const user: User = {
       ...(dbUser as unknown as User),
-      credits: userCredits,
+      credits: {
+        ...userCredits,
+        monthly_credits: plan.minutes.total,
+        used_credits: plan.minutes.used,
+        free_credits: plan.tier === "FREE" ? plan.minutes.left : undefined,
+      },
+      plan,
     };
 
     return respData(user);

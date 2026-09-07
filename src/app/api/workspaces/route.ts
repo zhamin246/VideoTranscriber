@@ -8,6 +8,11 @@ import {
   upsertWorkspace,
 } from "@/models/workspace";
 import {
+  extractAudioBuffer,
+  isLikelyAudio,
+  isLikelyVideo,
+} from "@/lib/media/ffmpeg-audio";
+import {
   mediaExpiresAt,
   storageConfigured,
   uploadMediaToR2,
@@ -40,13 +45,17 @@ function normalizeSegments(raw: unknown): string {
 }
 
 /** GET — list workspaces for the signed-in user */
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     const userUuid = (await getUserUuid()) || "";
     if (!userUuid) {
       return respData({ workspaces: [] });
     }
-    const rows = await listWorkspacesByUser(userUuid);
+    const limitRaw = Number(req.nextUrl.searchParams.get("limit") || "48");
+    const limit = Number.isFinite(limitRaw)
+      ? Math.min(100, Math.max(1, Math.floor(limitRaw)))
+      : 48;
+    const rows = await listWorkspacesByUser(userUuid, limit);
     return respData({
       workspaces: rows.map((r) => ({
         id: r.workspace_id,
@@ -153,21 +162,46 @@ export async function POST(req: NextRequest) {
     let expires = mediaExpiresAt();
 
     if (file && storageConfigured()) {
-      const buf = Buffer.from(await file.arrayBuffer());
-      const kind =
-        mediaKind === "audio" || file.type.startsWith("audio/")
-          ? "audio"
-          : "video";
+      const raw = Buffer.from(await file.arrayBuffer());
+      const name = file.name || "upload.bin";
+      const ct = file.type || "application/octet-stream";
+      const wantsAudio =
+        mediaKind === "audio" ||
+        isLikelyAudio(name, ct) ||
+        isLikelyVideo(name, ct);
+
+      // Local video/audio: ffmpeg → MP3 → R2 only (never store raw video here)
+      let body = raw;
+      let contentType = ct;
+      let filename = name;
+      let kind: "audio" | "video" = "audio";
+
+      if (wantsAudio) {
+        const audio = await extractAudioBuffer({
+          buf: raw,
+          filename: name,
+          contentType: ct,
+        });
+        body = audio.buf;
+        contentType = audio.contentType;
+        filename = audio.filename;
+        kind = "audio";
+        if (!mediaKind) mediaKind = isLikelyVideo(name, ct) ? "video" : "audio";
+      } else {
+        kind =
+          mediaKind === "video" || isLikelyVideo(name, ct) ? "video" : "audio";
+        if (!mediaKind) mediaKind = kind;
+      }
+
       const uploaded = await uploadMediaToR2({
         workspaceId,
-        filename: file.name || "upload.bin",
-        body: buf,
-        contentType: file.type || "application/octet-stream",
+        filename,
+        body,
+        contentType,
         kind,
       });
       playbackUrl = uploaded.url;
       expires = uploaded.expiresAt;
-      if (!mediaKind) mediaKind = kind;
       try {
         await insertMediaAsset({
           asset_id: uploaded.assetId,
@@ -175,9 +209,9 @@ export async function POST(req: NextRequest) {
           kind,
           storage_key: uploaded.key,
           public_url: uploaded.url,
-          content_type: file.type || "",
-          bytes: buf.byteLength,
-          filename: (file.name || "upload.bin").slice(0, 255),
+          content_type: contentType,
+          bytes: body.byteLength,
+          filename: filename.slice(0, 255),
           expires_at: uploaded.expiresAt,
         });
       } catch (e) {

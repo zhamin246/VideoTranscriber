@@ -31,6 +31,7 @@ function isFaceRatingShellPath(pathname: string, locale: string) {
     clean.includes("/workspace/") ||
     clean.includes("/dashboard") ||
     clean.includes("/pricing") ||
+    clean.includes("/video-to-text-converter") ||
     clean.includes("/my-assets") ||
     clean.includes("/auth/") ||
     clean.includes("/my-orders") ||

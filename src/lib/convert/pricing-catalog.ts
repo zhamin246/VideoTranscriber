@@ -4,7 +4,7 @@ import type { PricingPage } from "@/types/pages/landing";
 const USD = "USD";
 
 const COMMON_FEATURES = [
-  "63+ languages",
+  "200+ languages",
   "TXT, SRT, VTT, PDF export",
   "YouTube / TikTok / link transcription",
   "Cancel anytime",
@@ -16,22 +16,37 @@ function packItem(input: {
   minutes: number;
   amount: number;
   price: string;
+  /** Pack validity in months (3 months for all one-time packs). */
+  valid_months: 3 | 6 | 12;
   featured?: boolean;
   tip?: string;
+  description?: string;
 }): PricingItem {
+  const validityLabel =
+    input.valid_months === 3
+      ? "3-month validity"
+      : input.valid_months === 6
+        ? "6-month validity"
+        : "Use within 12 months";
   return {
     title: input.title,
-    description: `${input.minutes.toLocaleString()} transcription minutes. Use within 12 months.`,
+    description:
+      input.description ||
+      `${input.minutes.toLocaleString()} transcription minutes. ${validityLabel}.`,
     features_title: "Includes",
     features: [
+      `${input.minutes.toLocaleString()} minutes total transcription`,
+      validityLabel,
       `${(input.amount / 100 / input.minutes).toLocaleString("en-US", {
         style: "currency",
         currency: "USD",
         maximumFractionDigits: 3,
       })} per minute`,
-      "Add-on minutes for any paid plan",
-      "Use within 12 months · unused minutes expire",
-      "No plan to cancel",
+      "No daily file limit",
+      "Premium transcription + AI insights",
+      "Speaker identification",
+      ...COMMON_FEATURES.slice(0, 2),
+      "Priority email support",
     ],
     interval: "one-time",
     amount: input.amount,
@@ -44,7 +59,7 @@ function packItem(input: {
     product_id: input.product_id,
     product_name: `${input.title} · ${input.minutes} minutes`,
     credits: input.minutes,
-    valid_months: 12,
+    valid_months: input.valid_months,
     group: "credits",
     stripe_price_id: `\${process.env.STRIPE_${input.product_id.toUpperCase()}_PRICE_ID}`,
   };
@@ -94,7 +109,7 @@ function subItem(input: {
 
 const FREE_FEATURES = [
   "90 minutes / month",
-  "Up to 3 files per day",
+  "Up to 1 file per day",
   "Each file up to 30 minutes",
   "Captions-first when available",
   "Basic AI summary",
@@ -102,9 +117,10 @@ const FREE_FEATURES = [
   "Email support",
 ];
 
+/** Aligned to UniScribe: Basic 1,200 · Standard 3,000 · Pro 6,000 */
 const BASIC_FEATURES = [
   "1,200 minutes / month",
-  "$5 per 500 extra minutes",
+  "$10 per 500 extra minutes",
   "No daily file limit",
   "Each file up to 5 hours",
   "Speaker identification",
@@ -113,9 +129,9 @@ const BASIC_FEATURES = [
   "Priority email support",
 ];
 
-const PRO_FEATURES = [
-  "4,000 minutes / month",
-  "$10 per 1,000 extra minutes",
+const STANDARD_FEATURES = [
+  "3,000 minutes / month",
+  "$15 per 1,000 extra minutes",
   "Everything in Basic",
   "Higher priority processing",
   "Bulk transcription",
@@ -124,13 +140,15 @@ const PRO_FEATURES = [
   "Priority email support",
 ];
 
-const STUDIO_FEATURES = [
-  "10,000 minutes / month",
-  "Everything in Pro",
-  "3–5 team seats",
-  "Shared workspace for teams",
-  "Priority support",
+const PRO_FEATURES = [
+  "6,000 minutes / month",
+  "$20 per 3,000 extra minutes",
+  "Everything in Standard",
+  "Ideal for high-volume users and teams",
+  "Bulk transcription",
+  "Enhanced AI insights",
   ...COMMON_FEATURES,
+  "Priority email support",
 ];
 
 export const CONVERT_PRICING_ITEMS: PricingItem[] = [
@@ -153,38 +171,45 @@ export const CONVERT_PRICING_ITEMS: PricingItem[] = [
     valid_months: 1,
     group: "subscription",
   },
+  // One-time packs — UniScribe Lite / Plus / Max
   packItem({
-    title: "500 minutes",
-    product_id: "minutes_500",
-    minutes: 500,
-    amount: 500,
-    price: "$5",
-    tip: "Top-up pack",
+    title: "Lite",
+    product_id: "minutes_300",
+    minutes: 300,
+    amount: 1290,
+    price: "$12.90",
+    valid_months: 3,
+    tip: "Short-term projects",
+    description: "Perfect for short-term projects.",
   }),
   packItem({
-    title: "1,000 minutes",
-    product_id: "minutes_1000",
-    minutes: 1000,
-    amount: 1000,
-    price: "$10",
-    featured: true,
-    tip: "Best top-up",
+    title: "Plus",
+    product_id: "minutes_600",
+    minutes: 600,
+    amount: 1990,
+    price: "$19.90",
+    valid_months: 3,
+    tip: "Short-term projects",
+    description: "Perfect for short-term projects.",
   }),
   packItem({
-    title: "3,000 minutes",
+    title: "Max",
     product_id: "minutes_3000",
     minutes: 3000,
-    amount: 2500,
-    price: "$25",
-    tip: "Heavy users",
+    amount: 4990,
+    price: "$49.90",
+    valid_months: 3,
+    featured: true,
+    tip: "Best value",
+    description: "For professional needs.",
   }),
   subItem({
     title: "Basic",
     product_id: "basic_monthly",
     interval: "month",
     monthlyMinutes: 1200,
-    amount: 900,
-    price: "$9",
+    amount: 1000,
+    price: "$10",
     features: BASIC_FEATURES,
   }),
   subItem({
@@ -194,51 +219,51 @@ export const CONVERT_PRICING_ITEMS: PricingItem[] = [
     monthlyMinutes: 1200,
     amount: 7200,
     price: "$6",
-    original_price: "$9",
+    original_price: "$10",
     tip: "$72 billed yearly",
     features: BASIC_FEATURES,
+  }),
+  subItem({
+    title: "Standard",
+    product_id: "standard_monthly",
+    interval: "month",
+    monthlyMinutes: 3000,
+    amount: 2000,
+    price: "$20",
+    featured: true,
+    features: STANDARD_FEATURES,
+  }),
+  subItem({
+    title: "Standard",
+    product_id: "standard_yearly",
+    interval: "year",
+    monthlyMinutes: 3000,
+    amount: 14400,
+    price: "$12",
+    original_price: "$20",
+    featured: true,
+    tip: "$144 billed yearly",
+    features: STANDARD_FEATURES,
   }),
   subItem({
     title: "Pro",
     product_id: "pro_monthly",
     interval: "month",
-    monthlyMinutes: 4000,
-    amount: 1900,
-    price: "$19",
-    featured: true,
+    monthlyMinutes: 6000,
+    amount: 3000,
+    price: "$30",
     features: PRO_FEATURES,
   }),
   subItem({
     title: "Pro",
     product_id: "pro_yearly",
     interval: "year",
-    monthlyMinutes: 4000,
-    amount: 14400,
-    price: "$12",
-    original_price: "$19",
-    featured: true,
-    tip: "$144 billed yearly",
+    monthlyMinutes: 6000,
+    amount: 21600,
+    price: "$18",
+    original_price: "$30",
+    tip: "$216 billed yearly",
     features: PRO_FEATURES,
-  }),
-  subItem({
-    title: "Studio",
-    product_id: "studio_monthly",
-    interval: "month",
-    monthlyMinutes: 10000,
-    amount: 3900,
-    price: "$39",
-    features: STUDIO_FEATURES,
-  }),
-  subItem({
-    title: "Studio",
-    product_id: "studio_yearly",
-    interval: "year",
-    monthlyMinutes: 10000,
-    amount: 28800,
-    price: "$24",
-    original_price: "$39",
-    tip: "$288 billed yearly",
-    features: STUDIO_FEATURES,
   }),
 ];
 
@@ -249,7 +274,7 @@ export const convertPricing: Pricing = {
     "Minute-based plans for video and audio transcription. Captions-first when available; Whisper minutes when you need them.",
   groups: [
     { name: "subscription", title: "Subscriptions", label: "Best value" },
-    { name: "credits", title: "Minute packs", label: "Top-ups" },
+    { name: "credits", title: "Minute packs", label: "One-time" },
   ],
   items: CONVERT_PRICING_ITEMS,
 };
@@ -289,9 +314,9 @@ export function monthlyCreditsForProduct(
 
 export function savePercentVsStarter(item: PricingItem): number | null {
   const starter = CONVERT_PRICING_ITEMS.find(
-    (p) => p.product_id === "minutes_500"
+    (p) => p.product_id === "minutes_300"
   );
-  if (!starter || item.product_id === "minutes_500" || !item.credits) {
+  if (!starter || item.product_id === "minutes_300" || !item.credits) {
     return null;
   }
   const starterUnit = starter.amount / starter.credits;

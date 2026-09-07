@@ -14,8 +14,8 @@ import {
 import { Link, useRouter } from "@/i18n/navigation";
 import WorkspaceNav from "@/components/face-rating/workspace-nav";
 import {
-  loadRecentMedia,
-  removeRecentMedia,
+  deleteUserWorkspace,
+  fetchUserRecentMedia,
   type RecentMediaItem,
 } from "@/lib/media/recent-media";
 import { PlatformMark } from "@/components/face-rating/platform-mark";
@@ -40,6 +40,7 @@ import {
   loadWorkspace,
 } from "@/lib/media/workspace-store";
 import type { ChapterItem } from "@/lib/media/chapters";
+import { useAppContext } from "@/contexts/app";
 
 type AssetTab = "transcription" | "translation" | "recordings";
 
@@ -92,8 +93,10 @@ const SIDE_TABS: {
 
 export default function MyAssetsPage() {
   const router = useRouter();
+  const { user } = useAppContext();
   const [tab, setTab] = useState<AssetTab>("transcription");
   const [items, setItems] = useState<RecentMediaItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [pendingDelete, setPendingDelete] = useState<RecentMediaItem | null>(
     null,
   );
@@ -102,18 +105,27 @@ export default function MyAssetsPage() {
   const [exportLoadingId, setExportLoadingId] = useState<string | null>(null);
   const [exportTarget, setExportTarget] = useState<ExportTarget | null>(null);
 
-  const refresh = () => setItems(loadRecentMedia());
+  const refresh = async () => {
+    setLoading(true);
+    try {
+      setItems(await fetchUserRecentMedia(100));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    refresh();
-    const onUpdate = () => refresh();
+    void refresh();
+    const onUpdate = () => {
+      void refresh();
+    };
     window.addEventListener("vt:recent-media-updated", onUpdate);
     window.addEventListener("storage", onUpdate);
     return () => {
       window.removeEventListener("vt:recent-media-updated", onUpdate);
       window.removeEventListener("storage", onUpdate);
     };
-  }, []);
+  }, [user?.uuid]);
 
   useEffect(() => {
     const close = () => setMenuId(null);
@@ -172,15 +184,12 @@ export default function MyAssetsPage() {
     }
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (!pendingDelete?.workspaceId) return;
-    removeRecentMedia(pendingDelete.workspaceId);
-    void fetch(
-      `/api/workspaces?id=${encodeURIComponent(pendingDelete.workspaceId)}`,
-      { method: "DELETE" },
-    ).catch(() => undefined);
+    const id = pendingDelete.workspaceId;
     setPendingDelete(null);
-    refresh();
+    await deleteUserWorkspace(id);
+    await refresh();
   };
 
   return (
@@ -270,6 +279,18 @@ export default function MyAssetsPage() {
                           className="px-4 py-16 text-center text-sm text-slate-400"
                         >
                           Translations will show up here once available.
+                        </td>
+                      </tr>
+                    ) : loading ? (
+                      <tr>
+                        <td
+                          colSpan={5}
+                          className="px-4 py-16 text-center text-sm text-slate-400"
+                        >
+                          <span className="inline-flex items-center gap-2">
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            Loading your files…
+                          </span>
                         </td>
                       </tr>
                     ) : filtered.length === 0 ? (

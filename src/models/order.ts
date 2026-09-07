@@ -294,6 +294,56 @@ export async function userHasPaidSubscription(
   return byEmail.length > 0;
 }
 
+/** Latest paid subscription that still looks active for plan UI. */
+export async function getActiveSubscriptionOrder(
+  user_uuid: string,
+): Promise<typeof orders.$inferSelect | undefined> {
+  if (!user_uuid) return undefined;
+  const nowUnix = Math.floor(Date.now() / 1000);
+  const now = new Date();
+  const rows = await db()
+    .select()
+    .from(orders)
+    .where(
+      and(
+        eq(orders.user_uuid, user_uuid),
+        eq(orders.status, OrderStatus.Paid),
+        or(eq(orders.interval, "month"), eq(orders.interval, "year")),
+      ),
+    )
+    .orderBy(desc(orders.created_at));
+
+  for (const row of rows) {
+    const id = String(row.product_id || "");
+    if (!id || id.startsWith("minutes_") || id === "free") continue;
+    if (row.sub_period_end && row.sub_period_end < nowUnix) continue;
+    if (row.expired_at && row.expired_at < now) continue;
+    return row;
+  }
+  return undefined;
+}
+
+/** Latest paid minute-pack order (no active subscription required). */
+export async function getLatestPaidPackOrder(
+  user_uuid: string,
+): Promise<typeof orders.$inferSelect | undefined> {
+  if (!user_uuid) return undefined;
+  const rows = await db()
+    .select()
+    .from(orders)
+    .where(
+      and(
+        eq(orders.user_uuid, user_uuid),
+        eq(orders.status, OrderStatus.Paid),
+        eq(orders.interval, "one-time"),
+      ),
+    )
+    .orderBy(desc(orders.created_at))
+    .limit(20);
+
+  return rows.find((r) => String(r.product_id || "").startsWith("minutes_"));
+}
+
 export async function getOrdersByUserEmail(
   user_email: string
 ): Promise<(typeof orders.$inferSelect)[] | undefined> {

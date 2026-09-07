@@ -73,7 +73,10 @@ export async function extractAudioViaYtdlp(sourceUrl: string) {
 
   const buf = Buffer.from(await res.arrayBuffer());
   if (buf.byteLength > MAX_AUDIO_BYTES) {
-    throw new Error("That file is too large to process here.");
+    const mb = Math.round(buf.byteLength / (1024 * 1024));
+    throw new Error(
+      `That audio is too large to process here (${mb} MB). Try a shorter clip.`,
+    );
   }
   const filename =
     filenameFromDisposition(res.headers.get("content-disposition")) || "audio.mp3";

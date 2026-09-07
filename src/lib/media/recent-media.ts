@@ -86,6 +86,81 @@ export function removeRecentMedia(workspaceId: string) {
   }
 }
 
+type ApiWorkspaceRow = {
+  id?: string;
+  url?: string;
+  playbackUrl?: string | null;
+  title?: string;
+  thumbnailUrl?: string | null;
+  durationSeconds?: number | null;
+  platform?: string | null;
+  createdAt?: number | null;
+};
+
+function mapWorkspaceRow(row: ApiWorkspaceRow): RecentMediaItem | null {
+  const workspaceId = String(row.id || "").trim();
+  if (!workspaceId) return null;
+  const url = String(row.url || row.playbackUrl || "").trim() || `workspace:${workspaceId}`;
+  return {
+    url,
+    title: String(row.title || "Untitled").trim() || "Untitled",
+    thumbnailUrl: String(row.thumbnailUrl || ""),
+    durationSeconds:
+      typeof row.durationSeconds === "number" && Number.isFinite(row.durationSeconds)
+        ? row.durationSeconds
+        : null,
+    platform: String(row.platform || "Upload"),
+    workspaceId,
+    savedAt: Number(row.createdAt) || Date.now(),
+  };
+}
+
+/**
+ * Load My files from the signed-in user's DB workspaces.
+ * Falls back to localStorage when logged out / request fails.
+ * Merges fresh local-only items (race right after transcribe) on top.
+ */
+export async function fetchUserRecentMedia(
+  limit = 48,
+): Promise<RecentMediaItem[]> {
+  if (typeof window === "undefined") return [];
+  try {
+    const res = await fetch(`/api/workspaces?limit=${limit}`, {
+      cache: "no-store",
+    });
+    const json = (await res.json().catch(() => null)) as {
+      code?: number;
+      data?: { workspaces?: ApiWorkspaceRow[] };
+    } | null;
+    if (!res.ok || json?.code !== 0) {
+      return loadRecentMedia().slice(0, limit);
+    }
+    const fromApi = (json?.data?.workspaces || [])
+      .map(mapWorkspaceRow)
+      .filter((row): row is RecentMediaItem => Boolean(row));
+    const apiIds = new Set(fromApi.map((item) => item.workspaceId));
+    const localOnly = loadRecentMedia().filter(
+      (item) => !apiIds.has(item.workspaceId),
+    );
+    return [...localOnly, ...fromApi].slice(0, limit);
+  } catch {
+    return loadRecentMedia().slice(0, limit);
+  }
+}
+
+/** Soft-delete on server + clear local caches. */
+export async function deleteUserWorkspace(workspaceId: string) {
+  if (!workspaceId) return;
+  removeRecentMedia(workspaceId);
+  try {
+    await fetch(`/api/workspaces?id=${encodeURIComponent(workspaceId)}`, {
+      method: "DELETE",
+    });
+  } catch {
+    /* best-effort */
+  }
+}
+
 export function emitOpenMedia(preview: MediaPreview) {
   if (typeof window === "undefined") return;
   window.dispatchEvent(new CustomEvent(OPEN_MEDIA_EVENT, { detail: preview }));
