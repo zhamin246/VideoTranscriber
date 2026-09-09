@@ -253,10 +253,14 @@ const NOTE_MODES = NOTE_MODE_PRESETS.map((m) => ({
 }));
 
 
-export default function HeroUpload() {
+export default function HeroUpload({
+  defaultTab = "upload",
+}: {
+  defaultTab?: "upload" | "link" | "record";
+} = {}) {
   const { user, setShowSignModal, refreshUserInfo } = useAppContext();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [tab, setTab] = useState<"upload" | "link" | "record">("upload");
+  const [tab, setTab] = useState<"upload" | "link" | "record">(defaultTab);
   const [drag, setDrag] = useState(false);
   const [error, setError] = useState("");
   const [upgradeOpen, setUpgradeOpen] = useState(false);

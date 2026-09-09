@@ -18,8 +18,8 @@ function isHomePath(pathname: string, locale: string) {
   return clean === "/en" || clean === `/${locale}`;
 }
 
-/** Face Rating self-contained pages (own header/footer) */
-function isFaceRatingShellPath(pathname: string, locale: string) {
+/** Product pages that ship their own header/footer — skip the leftover Face Rating chrome. */
+function isSelfContainedShellPath(pathname: string, locale: string) {
   if (isHomePath(pathname, locale)) return true;
   const clean = (pathname || "").split("?")[0].replace(/\/$/, "") || "/";
   const isToolPage =
@@ -31,7 +31,8 @@ function isFaceRatingShellPath(pathname: string, locale: string) {
     clean.includes("/workspace/") ||
     clean.includes("/dashboard") ||
     clean.includes("/pricing") ||
-    clean.includes("/video-to-text-converter") ||
+    /\/[a-z0-9-]+-to-text-converter(?:\/|$)/.test(clean) ||
+    clean.includes("/youtube-transcript-generator") ||
     clean.includes("/my-assets") ||
     clean.includes("/auth/") ||
     clean.includes("/my-orders") ||
@@ -54,8 +55,8 @@ export default async function DefaultLayout({
   const pathname = h.get("x-pathname") || "";
   const home = isHomePath(pathname, locale);
 
-  // Homepage + tool pages use self-contained Face Rating chrome (own header/footer)
-  if (home || isFaceRatingShellPath(pathname, locale)) {
+  // Homepage + converter/tool pages use their own header/footer
+  if (home || isSelfContainedShellPath(pathname, locale)) {
     return (
       <>
         <HashScrollHandler />

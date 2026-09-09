@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { CONVERT_HREF } from "./data";
+import { AUDIO_TO_TEXT_CONVERTER_HREF } from "@/lib/convert/audio-to-text-converter-content";
 import { VIDEO_TO_TEXT_CONVERTER_HREF } from "@/lib/convert/video-to-text-converter-content";
+import { YOUTUBE_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/youtube-transcript-generator-content";
 
 type FooterLink = { label: string; href: string };
 
@@ -17,8 +19,8 @@ const COLUMNS: FooterGroup[][] = [
       title: "Popular Tools",
       links: [
         { label: "Video to Text Converter", href: VIDEO_TO_TEXT_CONVERTER_HREF },
-        { label: "Audio to Text Converter", href: CONVERT_HREF },
-        { label: "YouTube Transcript Generator", href: CONVERT_HREF },
+        { label: "Audio to Text Converter", href: AUDIO_TO_TEXT_CONVERTER_HREF },
+        { label: "YouTube Transcript Generator", href: YOUTUBE_TRANSCRIPT_GENERATOR_HREF },
         { label: "AI Video Summarizer", href: CONVERT_HREF },
         { label: "YouTube Subtitle Downloader", href: CONVERT_HREF },
         { label: "TikTok Transcript Generator", href: CONVERT_HREF },

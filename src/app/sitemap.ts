@@ -19,6 +19,8 @@ const STATIC_PATHS: {
 }[] = [
   { path: "/", changeFrequency: "weekly", priority: 1 },
   { path: "/video-to-text-converter", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/audio-to-text-converter", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/youtube-transcript-generator", changeFrequency: "weekly", priority: 0.9 },
 ];
 
 function absoluteUrl(path: string, locale: string): string {

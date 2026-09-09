@@ -8,7 +8,7 @@ export default function HeroWrapper({ hero }: { hero: any }) {
   const pathname = usePathname();
   
   // 在特定页面不显示旧 hero（首页改用 FaceRatingLandingPage 自带 Hero）
-  const hideHeroPages = ['/image-to-video', '/text-to-video', '/my-orders', '/my-credits', '/my-invites', '/user-generation-records', '/pricing'];
+  const hideHeroPages = ['/image-to-video', '/text-to-video', '/my-orders', '/my-credits', '/my-invites', '/user-generation-records', '/pricing', '/video-to-text-converter', '/audio-to-text-converter', '/youtube-transcript-generator'];
   const pathHit = hideHeroPages.some(page => pathname.includes(page));
   
   // 判断是否是首页
