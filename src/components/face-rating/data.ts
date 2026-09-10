@@ -6,6 +6,8 @@
 import { useCaseAsset } from "@/lib/convert/use-case-assets";
 import { AUDIO_TO_TEXT_CONVERTER_HREF } from "@/lib/convert/audio-to-text-converter-content";
 import { VIDEO_TO_TEXT_CONVERTER_HREF } from "@/lib/convert/video-to-text-converter-content";
+import { AI_VIDEO_SUMMARIZER_HREF } from "@/lib/convert/ai-video-summarizer-content";
+import { YOUTUBE_SUBTITLE_DOWNLOADER_HREF } from "@/lib/convert/youtube-subtitle-downloader-content";
 import { YOUTUBE_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/youtube-transcript-generator-content";
 
 export const FREE_TEST_HREF = "/tools/ai-attractiveness-test";
@@ -30,8 +32,8 @@ export const content = {
           { label: "Video to Text Converter", href: VIDEO_TO_TEXT_CONVERTER_HREF },
           { label: "Audio to Text Converter", href: AUDIO_TO_TEXT_CONVERTER_HREF },
           { label: "YouTube Transcript Generator", href: YOUTUBE_TRANSCRIPT_GENERATOR_HREF },
-          { label: "AI Video Summarizer", href: CONVERT_HREF },
-          { label: "YouTube Subtitle Downloader", href: CONVERT_HREF },
+          { label: "AI Video Summarizer", href: AI_VIDEO_SUMMARIZER_HREF },
+          { label: "YouTube Subtitle Downloader", href: YOUTUBE_SUBTITLE_DOWNLOADER_HREF },
           { label: "TikTok Transcript Generator", href: CONVERT_HREF },
           { label: "Facebook Transcript Generator", href: CONVERT_HREF },
           { label: "AI Video Translator", href: CONVERT_HREF },

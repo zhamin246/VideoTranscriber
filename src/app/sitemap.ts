@@ -21,6 +21,8 @@ const STATIC_PATHS: {
   { path: "/video-to-text-converter", changeFrequency: "weekly", priority: 0.9 },
   { path: "/audio-to-text-converter", changeFrequency: "weekly", priority: 0.9 },
   { path: "/youtube-transcript-generator", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/ai-video-summarizer", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/youtube-subtitle-downloader", changeFrequency: "weekly", priority: 0.9 },
 ];
 
 function absoluteUrl(path: string, locale: string): string {

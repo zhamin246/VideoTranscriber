@@ -297,7 +297,7 @@ export default function WorkspaceNav() {
                   className="ml-auto hidden shrink-0 items-center justify-center rounded-lg px-2 py-0.5 text-xs font-bold text-black group-hover/nav:inline-flex"
                   style={{ backgroundColor: "#FFCB65" }}
                 >
-                  50% Off
+                  40% Off
                 </span>
               </button>
             </li>

@@ -33,6 +33,8 @@ function isSelfContainedShellPath(pathname: string, locale: string) {
     clean.includes("/pricing") ||
     /\/[a-z0-9-]+-to-text-converter(?:\/|$)/.test(clean) ||
     clean.includes("/youtube-transcript-generator") ||
+    clean.includes("/ai-video-summarizer") ||
+    clean.includes("/youtube-subtitle-downloader") ||
     clean.includes("/my-assets") ||
     clean.includes("/auth/") ||
     clean.includes("/my-orders") ||

@@ -12,9 +12,9 @@ import { btnPrimary, V } from "./visual";
 const DASHBOARD_HREF = "/dashboard";
 
 const MEGA_MENU_CLASS =
-  "absolute left-0 top-full z-50 grid max-w-[92vw] grid-cols-2 gap-x-2 gap-y-4 rounded-xl border border-neutral-200 bg-white p-4 shadow-lg lg:w-[720px] lg:grid-cols-4";
+  "absolute left-0 top-full z-50 grid max-w-[min(96vw,960px)] grid-cols-2 gap-x-5 gap-y-4 rounded-xl border border-neutral-200 bg-white p-4 shadow-lg lg:w-[960px] lg:grid-cols-4";
 const SIMPLE_MENU_CLASS =
-  "absolute left-0 top-full z-50 min-w-[240px] rounded-xl border border-neutral-200 bg-white py-1.5 shadow-lg";
+  "absolute left-0 top-full z-50 w-max min-w-[240px] rounded-xl border border-neutral-200 bg-white py-1.5 shadow-lg";
 
 /** Strip query/hash; treat locale-prefixed paths from raw location if needed. */
 function pathOnly(href: string): string {
@@ -299,7 +299,7 @@ export default function FaceRatingSiteHeader({
                   {openMenu ? (
                     <div role="menu" className={isMega ? MEGA_MENU_CLASS : SIMPLE_MENU_CLASS}>
                       {groups?.map((group) => (
-                        <div key={group.title} className="min-w-0">
+                        <div key={group.title} className="min-w-0 pr-1">
                           <p className="px-2 pb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
                             {group.title}
                           </p>
@@ -310,7 +310,7 @@ export default function FaceRatingSiteHeader({
                                 href={item.href}
                                 role="menuitem"
                                 onClick={() => setMenuOpen(null)}
-                                className="rounded-md px-2 py-1.5 text-[13px] font-medium text-neutral-900 hover:bg-violet-50"
+                                className="whitespace-nowrap rounded-md px-2 py-1.5 text-[13px] font-medium text-neutral-900 hover:bg-violet-50"
                               >
                                 {item.label}
                               </Link>
@@ -334,7 +334,7 @@ export default function FaceRatingSiteHeader({
                           href={item.href}
                           role="menuitem"
                           onClick={() => setMenuOpen(null)}
-                          className="block px-3.5 py-2 text-sm font-medium text-neutral-900 hover:bg-violet-50"
+                          className="block whitespace-nowrap px-3.5 py-2 text-sm font-medium text-neutral-900 hover:bg-violet-50"
                         >
                           {item.label}
                         </Link>
@@ -425,7 +425,7 @@ export default function FaceRatingSiteHeader({
                           key={`${menu.label}-${group.title}-${item.label}`}
                           href={item.href}
                           onClick={() => setOpen(false)}
-                          className="block rounded-[10px] px-3 py-2 text-[14px] font-medium"
+                          className="block whitespace-nowrap rounded-[10px] px-3 py-2 text-[14px] font-medium"
                           style={{ color: V.ink }}
                         >
                           {item.label}
@@ -447,7 +447,7 @@ export default function FaceRatingSiteHeader({
                       key={`${menu.label}-${item.label}`}
                       href={item.href}
                       onClick={() => setOpen(false)}
-                      className="block rounded-[10px] px-3 py-2 text-[14px] font-medium"
+                      className="block whitespace-nowrap rounded-[10px] px-3 py-2 text-[14px] font-medium"
                       style={{ color: V.ink }}
                     >
                       {item.label}
