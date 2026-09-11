@@ -21,6 +21,12 @@ function pathOnly(href: string): string {
   return href.split("?")[0].split("#")[0] || "/";
 }
 
+function isNavMore(value: unknown): value is { label: string; href: string } {
+  if (!value || typeof value !== "object") return false;
+  const rec = value as { label?: unknown; href?: unknown };
+  return typeof rec.label === "string" && typeof rec.href === "string";
+}
+
 function isNavActive(pathname: string, hash: string, href: string): boolean {
   const path = pathOnly(href);
   const hashPart = href.includes("#") ? `#${href.split("#")[1] || ""}` : "";
@@ -264,7 +270,7 @@ export default function FaceRatingSiteHeader({
               const openMenu = menuOpen === menu.label;
               const groups = "groups" in menu ? menu.groups : undefined;
               const items = "items" in menu ? menu.items : undefined;
-              const more = "more" in menu ? menu.more : undefined;
+              const more = "more" in menu && isNavMore(menu.more) ? menu.more : undefined;
               const isMega = Boolean(groups?.length);
 
               return (
@@ -315,7 +321,7 @@ export default function FaceRatingSiteHeader({
                                 {item.label}
                               </Link>
                             ))}
-                            {"more" in group && group.more ? (
+                            {"more" in group && isNavMore(group.more) ? (
                               <Link
                                 href={group.more.href}
                                 role="menuitem"
@@ -409,7 +415,7 @@ export default function FaceRatingSiteHeader({
             {nav.menus.map((menu) => {
               const groups = "groups" in menu ? menu.groups : undefined;
               const items = "items" in menu ? menu.items : undefined;
-              const more = "more" in menu ? menu.more : undefined;
+              const more = "more" in menu && isNavMore(menu.more) ? menu.more : undefined;
               return (
                 <div key={menu.label} className="mb-2">
                   <p className="px-3 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
@@ -431,7 +437,7 @@ export default function FaceRatingSiteHeader({
                           {item.label}
                         </Link>
                       ))}
-                      {"more" in group && group.more ? (
+                      {"more" in group && isNavMore(group.more) ? (
                         <Link
                           href={group.more.href}
                           onClick={() => setOpen(false)}
