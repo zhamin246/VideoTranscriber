@@ -25,6 +25,9 @@ import ReviewMarquee from "./review-marquee";
 import MoreTools from "./more-tools";
 import ScrollCta from "./scroll-cta";
 import { content, CONVERT_HREF } from "./data";
+import { VIDEO_TO_TEXT_CONVERTER_HREF } from "@/lib/convert/video-to-text-converter-content";
+import { AUDIO_TO_TEXT_CONVERTER_HREF } from "@/lib/convert/audio-to-text-converter-content";
+import { YOUTUBE_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/youtube-transcript-generator-content";
 import { V } from "./visual";
 import { useCaseAsset } from "@/lib/convert/use-case-assets";
 
@@ -129,7 +132,7 @@ export default function FaceRatingLandingPage() {
         <section id="landing-hero" className="ac-section-wash px-4 pb-6 pt-6 sm:px-8 sm:pb-8 sm:pt-10">
           <div className="mx-auto max-w-[1152px] text-center sm:pb-2.5">
             <h1 className="text-[28px] font-bold leading-[1.2] tracking-tight text-[#111827] sm:text-[36px] sm:leading-[46px] md:text-[40px] md:leading-[50px]">
-              Convert audio and video to text
+              Video Transcriber for files, links, and recordings
             </h1>
             <p className="mx-auto mt-2 max-w-3xl text-[15px] font-normal leading-6 text-[#4B5563] sm:mt-2 sm:text-lg sm:leading-[27px]">
               {hero.description}
@@ -165,6 +168,20 @@ export default function FaceRatingLandingPage() {
           <div className="mt-5 sm:mt-8">
             <HeroUpload />
           </div>
+          <p className="mx-auto mt-6 flex max-w-3xl flex-wrap items-center justify-center gap-2 px-4 text-sm text-slate-600">
+            <span>Looking for a specific start?</span>
+            <Link href={VIDEO_TO_TEXT_CONVERTER_HREF} className="font-medium text-[#6F68F0] underline-offset-2 hover:underline">
+              Video files
+            </Link>
+            <span aria-hidden>·</span>
+            <Link href={AUDIO_TO_TEXT_CONVERTER_HREF} className="font-medium text-[#6F68F0] underline-offset-2 hover:underline">
+              Audio files
+            </Link>
+            <span aria-hidden>·</span>
+            <Link href={YOUTUBE_TRANSCRIPT_GENERATOR_HREF} className="font-medium text-[#6F68F0] underline-offset-2 hover:underline">
+              YouTube links
+            </Link>
+          </p>
           <MediaFilesStrip />
         </section>
 

@@ -13,9 +13,9 @@ export async function generateMetadata({
     canonicalUrl = `${process.env.NEXT_PUBLIC_WEB_URL}/${locale}`;
   }
 
-  const title = "Video Transcriber — Convert audio and video to text";
+  const title = "Video Transcriber — Speech to searchable text";
   const description =
-    "Video Transcriber converts speech in audio and video into searchable text. Upload a file, paste a link, or record. Copy, download, or share.";
+    "Video Transcriber is a browser transcription workspace. Start from a file, a public media link, or a recording, then copy, download, or share the transcript.";
 
   return {
     title,
@@ -57,7 +57,7 @@ export default async function LandingPage() {
     applicationCategory: "MultimediaApplication",
     operatingSystem: "Web",
     description:
-      "Browser tool that converts speech in audio and video into searchable text. Upload a file, paste a link, or record.",
+      "Browser transcription workspace. Start from a file, a public media link, or a recording, then copy or export the transcript.",
     offers: {
       "@type": "Offer",
       price: "0",

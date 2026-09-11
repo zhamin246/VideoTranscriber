@@ -1,6 +1,12 @@
-import { redirect } from "next/navigation";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
-/** Old slug → product URL */
+export const metadata: Metadata = {
+  title: "Not found",
+  robots: { index: false, follow: false },
+};
+
+/** Leftover Face Rating slug — 404 instead of redirecting to another Face Rating URL. */
 export default function AttractivenessRedirect() {
-  redirect("/tools/ai-attractiveness-test");
+  notFound();
 }

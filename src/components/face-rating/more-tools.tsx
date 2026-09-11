@@ -30,17 +30,19 @@ const MORE_TOOLS: {
   icon: typeof Box;
   tone: (typeof TONES)[number];
 }[] = [
+  { label: "Video to text", href: "/video-to-text-converter", icon: PenTool, tone: "purple" },
+  { label: "Audio to text", href: "/audio-to-text-converter", icon: Box, tone: "blue" },
   { label: "File upload", href: CONVERT_HREF, icon: PenTool, tone: "purple" },
   { label: "Paste link", href: CONVERT_HREF, icon: Box, tone: "blue" },
-  { label: "Record audio", href: CONVERT_HREF, icon: PenLine, tone: "green" },
-  { label: "YouTube to text", href: CONVERT_HREF, icon: FileType, tone: "orange" },
+  { label: "Record audio", href: "/audio-to-text-converter", icon: PenLine, tone: "green" },
+  { label: "YouTube to text", href: "/youtube-transcript-generator", icon: FileType, tone: "orange" },
   { label: "Meetings", href: "/#usecases", icon: Pencil, tone: "cyan" },
   { label: "Interviews", href: "/#usecases", icon: Camera, tone: "pink" },
   { label: "Podcasts", href: "/#usecases", icon: Sparkles, tone: "purple" },
   { label: "Voice memos", href: "/#usecases", icon: Grid2x2, tone: "blue" },
   { label: "Lectures", href: "/#usecases", icon: Building2, tone: "orange" },
   { label: "Translation", href: CONVERT_HREF, icon: Box, tone: "green" },
-  { label: "AI summary", href: CONVERT_HREF, icon: Shirt, tone: "pink" },
+  { label: "AI summary", href: "/ai-video-summarizer", icon: Shirt, tone: "pink" },
   { label: "Speaker labels", href: CONVERT_HREF, icon: ImageIcon, tone: "cyan" },
   { label: "200+ languages", href: CONVERT_HREF, icon: LayoutTemplate, tone: "purple" },
   { label: "Export transcript", href: CONVERT_HREF, icon: ScanLine, tone: "blue" },

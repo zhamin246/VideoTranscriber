@@ -1,40 +1,12 @@
-import FullAnalysisPage from "@/components/face-rating/full-analysis-page";
-import { defaultLocale } from "@/i18n/locale";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
-  const base = process.env.NEXT_PUBLIC_WEB_URL || "";
-  const path = "/tools/full-analysis";
-  const canonicalUrl =
-    locale !== defaultLocale ? `${base}/${locale}${path}` : `${base}${path}`;
+export const metadata: Metadata = {
+  title: "Not found",
+  robots: { index: false, follow: false },
+};
 
-  const title = "AI Face Report — Measurements, Style Previews & Action Plan | Face Rating";
-  const description =
-    "Understand what suits your face with 40+ measurements, six hairstyle try-ons, a 12-season palette, an AI styling concept and a prioritized 4-week plan. $9.90 once.";
-
-  return {
-    title,
-    description,
-    alternates: { canonical: canonicalUrl },
-    openGraph: {
-      title: "Your Personal AI Face Report | Face Rating",
-      description,
-      url: canonicalUrl,
-      siteName: "Face Rating",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: "Your Personal AI Face Report | Face Rating",
-      description,
-    },
-  };
-}
-
+/** Leftover Face Rating URL — 404 so it cannot be indexed as this product. */
 export default function FullAnalysisRoutePage() {
-  return <FullAnalysisPage />;
+  notFound();
 }

@@ -9,14 +9,12 @@ import {
   ChevronDown,
   FileUp,
   GraduationCap,
-  Link2,
   Mic,
   Podcast,
   ShieldCheck,
   Subtitles,
   Users,
   UsersRound,
-  Youtube,
 } from "lucide-react";
 import FaceRatingSiteHeader from "./site-header";
 import FaceRatingSiteFooter from "./site-footer";
@@ -27,14 +25,13 @@ import PromoBanner from "./promo-banner";
 import ReviewMarquee from "./review-marquee";
 import MoreTools from "./more-tools";
 import ScrollCta from "./scroll-cta";
-import { content } from "./data";
 import { V } from "./visual";
 import {
   AUDIO_TO_TEXT_CONVERTER_HREF,
   audioToTextConverterSeo,
 } from "@/lib/convert/audio-to-text-converter-content";
 
-const CHIP_ICONS = [FileUp, Link2, UsersRound, Subtitles, AudioLines] as const;
+const CHIP_ICONS = [FileUp, AudioLines, Mic, UsersRound, Subtitles] as const;
 
 function scrollToHero(e: React.MouseEvent) {
   e.preventDefault();
@@ -43,7 +40,6 @@ function scrollToHero(e: React.MouseEvent) {
 
 export default function AudioToTextConverterPage() {
   const seo = audioToTextConverterSeo;
-  const { cta } = content;
   const [faqOpen, setFaqOpen] = useState<number | null>(null);
 
   return (
@@ -164,7 +160,7 @@ export default function AudioToTextConverterPage() {
                       className="max-w-3xl text-center text-lg font-normal text-slate-700"
                       style={{ fontSize: 18, lineHeight: "27px" }}
                     >
-                      Transcribe files, links, or a live recording. Then generate AI notes and export TXT, DOCX, SRT, VTT, or CSV.
+                      {seo.features.lead}
                     </p>
                   </div>
                 </div>
@@ -172,8 +168,8 @@ export default function AudioToTextConverterPage() {
                   <div className="grid gap-20">
                     {[
                       {
-                        title: "Convert audio files and links to text",
-                        body: "Upload MP3, WAV, M4A, and other common formats. Paste a public YouTube, TikTok, Instagram, Facebook, X, Apple Podcasts, or Bilibili link, or record in the browser. Add speaker labels and language selection when you need them.",
+                        title: "Convert MP3, WAV, and M4A to text",
+                        body: "Upload a recording into this Audio to Text Converter, or capture audio in the browser. Add speaker labels and language selection when you need them. For MP4 video, use the Video to Text Converter. For a YouTube URL, use the YouTube Transcript Generator.",
                         href: AUDIO_TO_TEXT_CONVERTER_HREF,
                         src: "https://cdn.videotranscriber.pro/videotranscriber/landing/features/audio-feature-1-convert.webp",
                         alt: "Convert audio to text",
@@ -250,11 +246,10 @@ export default function AudioToTextConverterPage() {
                     className="font-bold"
                     style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px", color: "#000" }}
                   >
-                    Convert any audio recording to text
+                    When to use this Audio to Text Converter
                   </h2>
                   <p className="text-lg text-slate-700" style={{ fontSize: 18, lineHeight: "27px" }}>
-                    Whether it is a voice memo on your phone, an hour-long meeting, or a public podcast link,
-                    the converter turns it into a searchable transcript. MP3, WAV, M4A and other common formats are supported.
+                    Built for recordings you already have: voice memos, calls, interviews, and podcasts as MP3, WAV, or M4A.
                   </p>
                 </div>
                 <div className="mx-auto mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -285,9 +280,9 @@ export default function AudioToTextConverterPage() {
                       icon: GraduationCap,
                     },
                     {
-                      title: "YouTube & online media",
-                      body: "Paste a public YouTube or podcast link and get the transcript without a separate download step. Useful for research, captions, and repurposing spoken content.",
-                      icon: Youtube,
+                      title: "Browser recording",
+                      body: "Capture a short clip with your microphone on this page, then transcribe it the same way as an uploaded file.",
+                      icon: Mic,
                     },
                   ].map((item) => {
                     const Icon = item.icon;
@@ -399,6 +394,21 @@ export default function AudioToTextConverterPage() {
               </div>
             </section>
 
+            <section className="ac-section-wash px-4 py-12">
+              <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-3">
+                <span className="text-sm font-medium text-slate-500">Related converters</span>
+                {seo.related.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="rounded-full border border-[#DFE4FB] bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:border-[#8882F5] hover:text-[#6F68F0]"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </section>
+
             <MoreTools />
 
             <section className="ac-section-wash overflow-hidden">
@@ -431,7 +441,7 @@ export default function AudioToTextConverterPage() {
                         backgroundColor: "#fff",
                       }}
                     >
-                      {cta.primary}
+                      {seo.cta.button}
                       <span
                         className="inline-flex h-7 w-7 items-center justify-center rounded-full"
                         style={{ border: "1.5px solid rgb(111, 104, 240)" }}

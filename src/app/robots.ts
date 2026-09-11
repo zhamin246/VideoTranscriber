@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 function siteOrigin() {
-  let base = (process.env.NEXT_PUBLIC_WEB_URL || "https://imagetocad.app").trim();
+  let base = (process.env.NEXT_PUBLIC_WEB_URL || "https://videotranscriber.pro").trim();
   base = base.replace(/\/$/, "");
   if (!/^https?:\/\//i.test(base)) base = `https://${base}`;
   return base;

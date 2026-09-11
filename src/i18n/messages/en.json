@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Video Transcriber — Convert audio and video to text",
-    "description": "Video Transcriber converts speech in audio and video into searchable text. Upload a file, paste a link, or record. Copy, download, or share.",
+    "title": "Video Transcriber — Speech to searchable text",
+    "description": "Video Transcriber is a browser transcription workspace. Start from a file, a public media link, or a recording, then copy, download, or share the transcript.",
     "keywords": ""
   },
   "user": {

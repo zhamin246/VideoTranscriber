@@ -1,24 +1,24 @@
 /**
  * SEO copy for /video-to-text-converter.
  * Primary keyword: "Video to Text Converter"
- * Claims are limited to product capabilities that exist in-app.
+ * Scope: local video files (MP4 and similar). Links and audio belong on other URLs.
  */
 
 export const VIDEO_TO_TEXT_CONVERTER_HREF = "/video-to-text-converter";
 
 export const videoToTextConverterSeo = {
   meta: {
-    title: "Video to Text Converter — Transcribe Video Files Online",
+    title: "Video to Text Converter — Transcribe MP4, MOV, WebM",
     description:
-      "Use our Video to Text Converter to turn MP4 and other video files into searchable transcripts. Upload a file, paste a link, or record audio, then export TXT, DOCX, SRT, VTT, or CSV.",
+      "Upload an MP4, MOV, WebM, or MKV file and turn spoken video into a searchable transcript. Export TXT, DOCX, SRT, VTT, or CSV. For YouTube links or audio-only files, use the dedicated converters.",
   },
   hero: {
     h1: "Video to Text Converter",
     subtitle:
-      "This Video to Text Converter turns spoken words in your videos into clear, searchable text. Upload a recording, paste a public media link, or capture audio in the browser — then copy, download, or keep working in your workspace.",
+      "Turn a video file on your computer into searchable text. Drop an MP4, MOV, WebM, or MKV — then copy, download, or keep working in your workspace.",
     chips: [
-      { label: "File upload", color: "#3B82F6" },
-      { label: "Link paste", color: "#60A5FA" },
+      { label: "MP4 upload", color: "#3B82F6" },
+      { label: "MOV & WebM", color: "#60A5FA" },
       { label: "Speaker labels", color: "#14B8A6" },
       { label: "SRT & VTT export", color: "#38BDF8" },
       { label: "AI notes & chapters", color: "#8882F5" },
@@ -26,18 +26,18 @@ export const videoToTextConverterSeo = {
   },
   how: {
     title: "How this Video to Text Converter works",
-    lead: "Three steps take you from a video file or link to a readable transcript you can edit and export.",
+    lead: "Three steps take you from a local video file to a readable transcript you can edit and export.",
     steps: [
       {
         n: "1",
-        title: "Add your video",
-        body: "Upload common formats such as MP4, MOV, WebM, or MKV, or paste a public link from supported platforms. You can also record audio when you need a quick capture.",
+        title: "Upload your video file",
+        body: "Drop a common video container such as MP4, MOV, WebM, or MKV. The converter reads the soundtrack from the file. It does not need you to extract audio first.",
         src: "/howtouse/step-1-upload.webp",
       },
       {
         n: "2",
         title: "Run transcription",
-        body: "Our Video to Text Converter extracts speech with AI. Choose auto language detect or a specific source language, and optionally separate speakers for clearer dialogue.",
+        body: "AI extracts speech from the uploaded video. Choose auto language detect or a specific source language, and optionally separate speakers for clearer dialogue.",
         src: "/howtouse/step-2-transcribe.webp",
       },
       {
@@ -50,19 +50,15 @@ export const videoToTextConverterSeo = {
   },
   features: {
     title: "What you can do with this Video to Text Converter",
-    lead: "Built for real transcription workflows — not claims we cannot deliver.",
+    lead: "Built for video files you already have — screen recordings, camera clips, and exported meetings.",
     items: [
       {
-        title: "Upload video and audio files",
-        body: "Drop MP4, MOV, WebM, MKV, and other common video files, or audio such as MP3, WAV, and M4A. Large local uploads are supported in the browser up to the client size limit.",
+        title: "Upload MP4 and other video files",
+        body: "Drop MP4, MOV, WebM, and MKV. Large local uploads are supported in the browser up to the client size limit. Audio-only files belong on the Audio to Text Converter.",
       },
       {
-        title: "Paste public media links",
-        body: "Paste links from platforms such as YouTube, TikTok, Instagram, Facebook, X, Apple Podcasts, and Bilibili when the media is publicly reachable.",
-      },
-      {
-        title: "Record audio in the browser",
-        body: "Capture a short recording with your microphone, then send it through the same Video to Text Converter pipeline as an uploaded file.",
+        title: "Keep the soundtrack in the container",
+        body: "You do not need a separate demux step. If the video includes a usable audio track, transcription can process it.",
       },
       {
         title: "Language detect and speaker labels",
@@ -76,6 +72,10 @@ export const videoToTextConverterSeo = {
         title: "Notes, chapters, Ask AI, mind map",
         body: "After transcription, generate summaries and note presets, chapter outlines, Ask AI answers grounded in your transcript, and a mind map you can export.",
       },
+      {
+        title: "Need a link or an audio file instead?",
+        body: "Paste a YouTube URL on the YouTube Transcript Generator. Upload MP3, WAV, or M4A on the Audio to Text Converter.",
+      },
     ],
   },
   faq: {
@@ -83,15 +83,19 @@ export const videoToTextConverterSeo = {
     items: [
       {
         q: "What is a Video to Text Converter?",
-        a: "A Video to Text Converter turns speech from a video or audio source into written text. Ours accepts file uploads, supported public links, and browser recordings, then opens a workspace with copy and export options.",
+        a: "A Video to Text Converter turns speech from a video file into written text. This page is for uploads such as MP4, MOV, WebM, and MKV. After transcription you can copy or export the result.",
       },
       {
         q: "Which file types can I upload?",
-        a: "Common video formats such as MP4, MOV, WebM, and MKV, plus common audio formats such as MP3, WAV, and M4A. If the file includes a usable audio track, the Video to Text Converter can process it.",
+        a: "Common video formats such as MP4, MOV, WebM, and MKV. If the file includes a usable audio track, the converter can process it.",
       },
       {
-        q: "Can I paste a YouTube or TikTok link?",
-        a: "Yes, when the media is publicly reachable. Paste the link in the link tab. Private or blocked media may not download.",
+        q: "Can I paste a YouTube or TikTok link here?",
+        a: "Use the YouTube Transcript Generator for a public YouTube URL. Other public links can start from the Video Transcriber homepage link tab.",
+      },
+      {
+        q: "What if I only have an MP3 or WAV?",
+        a: "Use the Audio to Text Converter. That page is for recordings and audio files, not video containers.",
       },
       {
         q: "What can I export?",
@@ -107,9 +111,14 @@ export const videoToTextConverterSeo = {
       },
     ],
   },
+  related: [
+    { label: "Audio to Text Converter", href: "/audio-to-text-converter" },
+    { label: "YouTube Transcript Generator", href: "/youtube-transcript-generator" },
+    { label: "AI Video Summarizer", href: "/ai-video-summarizer" },
+  ],
   cta: {
-    title: "Convert your next video to text",
-    body: "Upload a file, paste a link, or record audio with this Video to Text Converter — then export the transcript in the format you need.",
+    title: "Convert your next video file to text",
+    body: "Upload an MP4, MOV, WebM, or MKV with this Video to Text Converter — then export the transcript in the format you need.",
     button: "Start converting",
   },
 } as const;

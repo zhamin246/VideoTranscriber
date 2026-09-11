@@ -1,37 +1,37 @@
 /**
  * SEO copy for /audio-to-text-converter.
  * Primary keyword: "Audio to Text Converter"
- * Claims limited to in-app capabilities.
+ * Scope: audio files and browser recordings. Video files and YouTube links belong on other URLs.
  */
 
 export const AUDIO_TO_TEXT_CONVERTER_HREF = "/audio-to-text-converter";
 
 export const audioToTextConverterSeo = {
   meta: {
-    title: "Audio to Text Converter — Transcribe MP3, WAV, M4A Online",
+    title: "Audio to Text Converter — Transcribe MP3, WAV, M4A",
     description:
-      "Use our Audio to Text Converter to turn MP3, WAV, M4A, and other recordings into searchable transcripts. Upload a file, paste a link, or record, then export TXT, DOCX, SRT, VTT, or CSV.",
+      "Use this Audio to Text Converter to transcribe MP3, WAV, or M4A, or record in the browser. Export TXT, DOCX, SRT, VTT, or CSV. For video files or YouTube links, use the dedicated converters.",
   },
   hero: {
     h1: "Audio to Text Converter",
     subtitle:
-      "This Audio to Text Converter turns speech in your recordings into clear, searchable text. Upload MP3, WAV, or M4A, paste a public media link, or capture audio in the browser — then copy, download, or keep working in your workspace.",
+      "This Audio to Text Converter turns a recording into searchable text. Upload MP3, WAV, or M4A, or capture audio in the browser — then copy, download, or keep working in your workspace.",
     chips: [
-      { label: "File upload", color: "#3B82F6" },
-      { label: "Link paste", color: "#60A5FA" },
-      { label: "Speaker labels", color: "#14B8A6" },
-      { label: "SRT & VTT export", color: "#38BDF8" },
-      { label: "AI notes & chapters", color: "#8882F5" },
+      { label: "MP3 upload", color: "#3B82F6" },
+      { label: "WAV & M4A", color: "#60A5FA" },
+      { label: "Record in browser", color: "#14B8A6" },
+      { label: "Speaker labels", color: "#38BDF8" },
+      { label: "SRT & VTT export", color: "#8882F5" },
     ],
   },
   how: {
     title: "How this Audio to Text Converter works",
-    lead: "Three steps take you from a recording or link to a readable transcript you can edit and export.",
+    lead: "Three steps take you from a recording to a readable transcript you can edit and export.",
     steps: [
       {
         n: "1",
         title: "Add your audio",
-        body: "Upload common formats such as MP3, WAV, or M4A, or paste a public link from supported platforms. You can also record in the browser when you need a quick capture.",
+        body: "Upload MP3, WAV, or M4A, or record with your microphone on this page. This converter is for speech in audio files — not for MP4 video containers.",
         src: "https://cdn.videotranscriber.pro/videotranscriber/landing/howtouse/audio-step-1-v2.webp",
       },
       {
@@ -50,15 +50,11 @@ export const audioToTextConverterSeo = {
   },
   features: {
     title: "What you can do with this Audio to Text Converter",
-    lead: "Built for real transcription workflows — not claims we cannot deliver.",
+    lead: "Built for recordings you already have — voice memos, calls, interviews, and podcasts.",
     items: [
       {
-        title: "Upload audio and video files",
-        body: "Drop MP3, WAV, M4A, and other common audio files, or video such as MP4, MOV, and WebM. Large local uploads are supported in the browser up to the client size limit.",
-      },
-      {
-        title: "Paste public media links",
-        body: "Paste links from platforms such as YouTube, TikTok, Instagram, Facebook, X, Apple Podcasts, and Bilibili when the media is publicly reachable.",
+        title: "Upload MP3, WAV, and M4A",
+        body: "Drop common audio files. Large local uploads are supported in the browser up to the client size limit. Video files such as MP4 belong on the Video to Text Converter.",
       },
       {
         title: "Record audio in the browser",
@@ -76,22 +72,30 @@ export const audioToTextConverterSeo = {
         title: "Notes, chapters, Ask AI, mind map",
         body: "After transcription, generate summaries and note presets, chapter outlines, Ask AI answers grounded in your transcript, and a mind map you can export.",
       },
+      {
+        title: "Need a video file or a YouTube link instead?",
+        body: "Upload MP4, MOV, WebM, or MKV on the Video to Text Converter. Paste a public YouTube URL on the YouTube Transcript Generator.",
+      },
     ],
   },
   faq: {
-    title: "Frequently asked questions",
+    title: "Audio to Text Converter FAQ",
     items: [
       {
         q: "What is an Audio to Text Converter?",
-        a: "An Audio to Text Converter turns speech from a recording or other media source into written text. Ours accepts file uploads, supported public links, and browser recordings, then opens a workspace with copy and export options.",
+        a: "An Audio to Text Converter turns speech from a recording into written text. This page is for MP3, WAV, M4A, and browser recordings.",
       },
       {
         q: "Which file types can I upload?",
-        a: "Common audio formats such as MP3, WAV, and M4A, plus common video formats such as MP4, MOV, WebM, and MKV. If the file includes a usable soundtrack, transcription can process it.",
+        a: "Common audio formats such as MP3, WAV, and M4A. For MP4 and other video files, use the Video to Text Converter.",
       },
       {
-        q: "Can I paste a YouTube, podcast, or TikTok link?",
-        a: "Yes, when the media is publicly reachable. Paste the link in the link tab. Private or blocked media may not download.",
+        q: "Can I paste a YouTube or podcast link here?",
+        a: "Use the YouTube Transcript Generator for a public YouTube URL. Other public links can start from the Video Transcriber homepage link tab.",
+      },
+      {
+        q: "Can I record in the browser?",
+        a: "Yes. Use the record tab on this page, then transcribe the clip the same way as an uploaded file.",
       },
       {
         q: "What can I export?",
@@ -107,9 +111,14 @@ export const audioToTextConverterSeo = {
       },
     ],
   },
+  related: [
+    { label: "Video to Text Converter", href: "/video-to-text-converter" },
+    { label: "YouTube Transcript Generator", href: "/youtube-transcript-generator" },
+    { label: "AI Video Summarizer", href: "/ai-video-summarizer" },
+  ],
   cta: {
-    title: "Convert your next audio file to text",
-    body: "Upload a file, paste a link, or record with this Audio to Text Converter — then export the transcript in the format you need.",
+    title: "Convert your next recording to text",
+    body: "Upload MP3, WAV, or M4A, or record in the browser — then export the transcript in the format you need.",
     button: "Start converting",
   },
 } as const;

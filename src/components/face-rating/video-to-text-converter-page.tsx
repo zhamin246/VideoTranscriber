@@ -2,23 +2,22 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import {
   ArrowRight,
-  AudioLines,
+  ChevronDown,
   FileUp,
+  Film,
   GraduationCap,
-  Link2,
   Mic,
-  Podcast,
+  MonitorPlay,
   ShieldCheck,
   Subtitles,
   Users,
   UsersRound,
-  Youtube,
 } from "lucide-react";
 import FaceRatingSiteHeader from "./site-header";
 import FaceRatingSiteFooter from "./site-footer";
-import FaceRatingFaq from "./faq";
 import HeroUpload from "./hero-upload";
 import MediaFilesStrip from "./media-files-strip";
 import WorkspaceNav from "./workspace-nav";
@@ -26,14 +25,13 @@ import PromoBanner from "./promo-banner";
 import ReviewMarquee from "./review-marquee";
 import MoreTools from "./more-tools";
 import ScrollCta from "./scroll-cta";
-import { content } from "./data";
 import { V } from "./visual";
 import {
   VIDEO_TO_TEXT_CONVERTER_HREF,
   videoToTextConverterSeo,
 } from "@/lib/convert/video-to-text-converter-content";
 
-const CHIP_ICONS = [FileUp, Link2, UsersRound, Subtitles, AudioLines] as const;
+const CHIP_ICONS = [FileUp, Film, UsersRound, Subtitles, GraduationCap] as const;
 
 function scrollToHero(e: React.MouseEvent) {
   e.preventDefault();
@@ -42,7 +40,7 @@ function scrollToHero(e: React.MouseEvent) {
 
 export default function VideoToTextConverterPage() {
   const seo = videoToTextConverterSeo;
-  const { cta } = content;
+  const [faqOpen, setFaqOpen] = useState<number | null>(null);
 
   return (
     <div
@@ -162,7 +160,7 @@ export default function VideoToTextConverterPage() {
                       className="whitespace-nowrap text-center text-lg font-normal text-slate-700"
                       style={{ fontSize: 18, lineHeight: "27px" }}
                     >
-                      Use this Video to Text Converter to transcribe files, links, or a live recording. Then generate AI notes and export TXT, DOCX, SRT, VTT, or CSV.
+                      {seo.features.lead}
                     </p>
                   </div>
                 </div>
@@ -170,11 +168,11 @@ export default function VideoToTextConverterPage() {
                   <div className="grid gap-20">
                     {[
                       {
-                        title: "Convert video files and links to text",
-                        body: "This Video to Text Converter accepts MP4, MOV, WebM, and other common formats. Paste a public YouTube, TikTok, Instagram, Facebook, X, Apple Podcasts, or Bilibili link, or record audio in the browser. Add speaker labels and language selection when you need them.",
+                        title: "Convert MP4 and other video files to text",
+                        body: "This Video to Text Converter accepts MP4, MOV, WebM, and MKV. Add speaker labels and language selection when you need them. For a YouTube URL, use the YouTube Transcript Generator. For MP3 or WAV, use the Audio to Text Converter.",
                         href: VIDEO_TO_TEXT_CONVERTER_HREF,
                         src: "/features/feature-1-convert.webp",
-                        alt: "Convert video to text",
+                        alt: "Convert a video file to text",
                         imageRight: true,
                       },
                       {
@@ -248,44 +246,43 @@ export default function VideoToTextConverterPage() {
                     className="font-bold"
                     style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px", color: "#000" }}
                   >
-                    Convert any video and audio to text
+                    Convert video files to text
                   </h2>
                   <p className="text-lg text-slate-700" style={{ fontSize: 18, lineHeight: "27px" }}>
-                    Whether it is a voice memo on your phone, an hour-long meeting, or an online video,
-                    this Video to Text Converter turns it into a searchable transcript. MP3, WAV, M4A, MP4, MOV and other common formats are supported.
+                    Built for files you already have: camera clips, screen recordings, and exported meetings in MP4, MOV, WebM, or MKV.
                   </p>
                 </div>
                 <div className="mx-auto mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {[
                     {
-                      title: "Meeting & call recordings",
-                      body: "Turn Zoom, Teams, or phone call recordings into searchable notes. Speaker recognition labels who said what, so decisions and action items never get lost in the audio.",
+                      title: "Exported meeting video",
+                      body: "Upload a Zoom or Teams recording saved as MP4. Speaker labels help you see who said what without scrubbing the file.",
                       icon: Users,
                     },
                     {
-                      title: "Interviews",
-                      body: "Transcribe interview audio to text with timestamps. Quote your sources accurately and jump back to the exact moment instead of scrubbing through the whole recording.",
+                      title: "Interview video",
+                      body: "Transcribe camera interviews with timestamps so you can quote sources and jump to the exact moment.",
                       icon: Mic,
                     },
                     {
-                      title: "Podcasts",
-                      body: "Convert podcast audio to text for show notes, blog posts, and quotable snippets. A full transcript also makes every episode searchable for your audience.",
-                      icon: Podcast,
+                      title: "Screen recordings",
+                      body: "Drop a product demo or walkthrough video and get a transcript you can search, edit, and share.",
+                      icon: MonitorPlay,
                     },
                     {
-                      title: "Voice memos",
-                      body: "That idea you recorded on a walk? Convert voice memos from your phone into clean text notes you can actually search, edit, and share.",
-                      icon: AudioLines,
-                    },
-                    {
-                      title: "Lectures & online courses",
-                      body: "Turn recorded lectures and course videos into study notes. AI summaries and key points help you review hours of material in minutes.",
+                      title: "Course and lecture video",
+                      body: "Turn recorded class video into study notes. AI summaries and key points help you review hours of material.",
                       icon: GraduationCap,
                     },
                     {
-                      title: "YouTube & online videos",
-                      body: "Paste a YouTube link and get the video transcript without downloading anything. Perfect for research, subtitles, and repurposing video content.",
-                      icon: Youtube,
+                      title: "Camera clips",
+                      body: "Upload MOV or MP4 from a phone or camera when you already have the file on disk.",
+                      icon: Film,
+                    },
+                    {
+                      title: "Caption export from a file",
+                      body: "After transcription, download SRT or VTT for an editor. This page starts from a video file, not a YouTube URL.",
+                      icon: Subtitles,
                     },
                   ].map((item) => {
                     const Icon = item.icon;
@@ -331,7 +328,86 @@ export default function VideoToTextConverterPage() {
               </div>
             </section>
 
-            <FaceRatingFaq />
+            <section
+              id="faq"
+              style={{
+                backgroundColor: "#FBFBFE",
+                paddingBottom: 64,
+                fontFamily: "var(--font-lexend), Lexend, ui-sans-serif, system-ui, sans-serif",
+              }}
+            >
+              <div className="mx-auto max-w-3xl px-4 pb-12 pt-16 text-center md:pb-16">
+                <h2
+                  className="font-bold"
+                  style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px", color: "#000" }}
+                >
+                  {seo.faq.title}
+                </h2>
+              </div>
+              <div className="mx-auto mb-10 max-w-7xl px-4 lg:px-24">
+                {seo.faq.items.map((item, index) => {
+                  const isOpen = faqOpen === index;
+                  return (
+                    <div key={item.q}>
+                      <button
+                        type="button"
+                        onClick={() => setFaqOpen(isOpen ? null : index)}
+                        className="relative mt-4 flex w-full items-center justify-between bg-white text-left"
+                        style={{
+                          padding: "24px",
+                          borderRadius: 8,
+                          fontSize: 20,
+                          fontWeight: 700,
+                          lineHeight: 1.25,
+                          letterSpacing: "-0.02em",
+                          color: "rgb(76, 76, 76)",
+                        }}
+                        aria-expanded={isOpen}
+                      >
+                        <span>{item.q}</span>
+                        <ChevronDown
+                          className="h-10 w-10 shrink-0"
+                          style={{
+                            color: "rgb(136, 130, 245)",
+                            transform: isOpen ? "rotate(180deg)" : "none",
+                            transition: "transform 200ms",
+                          }}
+                        />
+                      </button>
+                      {isOpen ? (
+                        <div
+                          className="mt-2"
+                          style={{
+                            padding: "8px 24px 16px",
+                            fontSize: 16,
+                            lineHeight: "24px",
+                            fontWeight: 400,
+                            color: "rgb(76, 76, 76)",
+                          }}
+                        >
+                          {item.a}
+                        </div>
+                      ) : null}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+
+            <section className="ac-section-wash px-4 py-12">
+              <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-3">
+                <span className="text-sm font-medium text-slate-500">Related converters</span>
+                {seo.related.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="rounded-full border border-[#DFE4FB] bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:border-[#8882F5] hover:text-[#6F68F0]"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </section>
 
             <MoreTools />
 
@@ -342,13 +418,13 @@ export default function VideoToTextConverterPage() {
                     className="font-bold text-white"
                     style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px" }}
                   >
-                    {cta.title}
+                    {seo.cta.title}
                   </h2>
                   <p
                     className="text-white"
                     style={{ marginTop: 16, fontSize: 18, fontWeight: 400, lineHeight: "27px" }}
                   >
-                    {cta.body}
+                    {seo.cta.body}
                   </p>
                   <div className="mt-4 flex justify-center">
                     <Link
@@ -365,7 +441,7 @@ export default function VideoToTextConverterPage() {
                         backgroundColor: "#fff",
                       }}
                     >
-                      {cta.primary}
+                      {seo.cta.button}
                       <span
                         className="inline-flex h-7 w-7 items-center justify-center rounded-full"
                         style={{ border: "1.5px solid rgb(111, 104, 240)" }}
