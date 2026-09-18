@@ -1156,12 +1156,12 @@ export default function HeroUpload({
                     <Video className="h-5 w-5" />
                   </span>
                 </div>
-                <h2
+                <p
                   className="text-base font-semibold md:text-lg"
                   style={{ color: "rgba(255,255,255,0.94)" }}
                 >
                   Click or drag & drop to upload your file
-                </h2>
+                </p>
                 <span
                   className="mt-3 inline-flex h-11 items-center gap-2 rounded-lg px-8 text-base font-semibold text-white"
                   style={{ backgroundColor: "#8882F5", boxShadow: "0 4px 12px rgba(136,130,245,0.28)" }}

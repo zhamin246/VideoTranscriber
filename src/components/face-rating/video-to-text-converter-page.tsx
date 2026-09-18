@@ -154,10 +154,10 @@ export default function VideoToTextConverterPage() {
                       className="whitespace-nowrap font-bold"
                       style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px", color: "#000" }}
                     >
-                      What you can do with this Video to Text Converter
+                      What you can do with Video to Text
                     </h2>
                     <p
-                      className="whitespace-nowrap text-center text-lg font-normal text-slate-700"
+                      className="max-w-3xl text-center text-lg font-normal text-slate-700"
                       style={{ fontSize: 18, lineHeight: "27px" }}
                     >
                       {seo.features.lead}
@@ -169,10 +169,10 @@ export default function VideoToTextConverterPage() {
                     {[
                       {
                         title: "Convert MP4 and other video files to text",
-                        body: "This Video to Text Converter accepts MP4, MOV, WebM, and MKV. Add speaker labels and language selection when you need them. For a YouTube URL, use the YouTube Transcript Generator. For MP3 or WAV, use the Audio to Text Converter.",
+                        body: "Upload MP4, MOV, WebM, or MKV here. Add speaker labels and language selection when you need them. For a YouTube URL, use the YouTube Transcript Generator. For MP3 or WAV, use Audio to Text.",
                         href: VIDEO_TO_TEXT_CONVERTER_HREF,
                         src: "/features/feature-1-convert.webp",
-                        alt: "Convert a video file to text",
+                        alt: "Transcribe a video recording",
                         imageRight: true,
                       },
                       {

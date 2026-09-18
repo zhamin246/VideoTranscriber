@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { content } from "./data";
+import { usePathname } from "@/i18n/navigation";
+import { isToTextSensitivePath, softenToTextLabel } from "./nav-labels";
 
 function StarRow({ n }: { n: number }) {
   return (
@@ -79,7 +81,14 @@ function ReviewColumn({
 }
 
 export default function ReviewMarquee() {
-  const items = content.usersSay.items;
+  const pathname = usePathname() || "";
+  const items = isToTextSensitivePath(pathname)
+    ? content.usersSay.items.map((it) => ({
+        ...it,
+        title: softenToTextLabel(it.title),
+        quote: softenToTextLabel(it.quote),
+      }))
+    : content.usersSay.items;
   const cols = [0, 1, 2].map((col) => items.filter((_, i) => i % 3 === col));
 
   return (

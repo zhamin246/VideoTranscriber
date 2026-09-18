@@ -99,6 +99,36 @@ const nextConfig = {
         destination: '/zh/text-to-video',
         permanent: true,
       },
+      {
+        source: '/audio-to-text',
+        destination: '/audio-to-text-converter',
+        permanent: true,
+      },
+      {
+        source: '/:locale/audio-to-text',
+        destination: '/:locale/audio-to-text-converter',
+        permanent: true,
+      },
+      {
+        source: '/video-to-text',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/:locale/video-to-text',
+        destination: '/:locale',
+        permanent: true,
+      },
+      {
+        source: '/video-to-text-converter',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/:locale/video-to-text-converter',
+        destination: '/:locale',
+        permanent: true,
+      },
       // 规范化带参数的URL
       {
         source: '/:path*',

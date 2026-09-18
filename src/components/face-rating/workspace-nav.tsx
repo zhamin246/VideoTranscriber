@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useAppContext } from "@/contexts/app";
 import { CONVERT_HREF } from "./data";
+import { isToTextSensitivePath } from "./nav-labels";
 import type { PlanSummary } from "@/lib/plan/summary";
 import UpgradePricingModal, {
   type UpgradePricingReason,
@@ -200,6 +201,7 @@ function CurrentPlanCard({
 
 export default function WorkspaceNav() {
   const pathname = usePathname() || "";
+  const hideHomeKeyword = isToTextSensitivePath(pathname);
   const onHome = pathname === "/" || pathname === "";
   const onAssets = pathname.includes("/my-assets");
   const onPricing = pathname.includes("/pricing");
@@ -219,22 +221,24 @@ export default function WorkspaceNav() {
           <Link
             href="/"
             className="flex h-full min-h-0 w-full items-center justify-center rounded-xl group-hover/nav:justify-start"
-            aria-label="video transcriber — home"
+            aria-label={hideHomeKeyword ? "Home" : "video transcriber — home"}
           >
             <span className="flex max-w-full items-center overflow-hidden group-hover/nav:ml-[5px]">
               <BrandMark />
-              <span
-                className="ml-2 hidden whitespace-nowrap group-hover/nav:inline"
-                style={{
-                  fontSize: 18,
-                  fontWeight: 700,
-                  lineHeight: "40px",
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                <span style={{ color: "#000000" }}>video </span>
-                <span style={{ color: "#5270FF" }}>transcriber</span>
-              </span>
+              {hideHomeKeyword ? null : (
+                <span
+                  className="ml-2 hidden whitespace-nowrap group-hover/nav:inline"
+                  style={{
+                    fontSize: 18,
+                    fontWeight: 700,
+                    lineHeight: "40px",
+                    letterSpacing: "-0.02em",
+                  }}
+                >
+                  <span style={{ color: "#000000" }}>video </span>
+                  <span style={{ color: "#5270FF" }}>transcriber</span>
+                </span>
+              )}
             </span>
           </Link>
         </div>

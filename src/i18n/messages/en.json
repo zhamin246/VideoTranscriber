@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Video Transcriber — Speech to searchable text",
-    "description": "Video Transcriber is a browser transcription workspace. Start from a file, a public media link, or a recording, then copy, download, or share the transcript.",
+    "title": "Video to Text for MP4 Files and Links | Video Transcriber",
+    "description": "Use video to text on an MP4, MOV, WebM, or a public link. Copy or export TXT, DOCX, SRT, or VTT in the workspace. Private videos may fail.",
     "keywords": ""
   },
   "user": {

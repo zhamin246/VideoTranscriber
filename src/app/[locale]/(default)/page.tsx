@@ -13,9 +13,9 @@ export async function generateMetadata({
     canonicalUrl = `${process.env.NEXT_PUBLIC_WEB_URL}/${locale}`;
   }
 
-  const title = "Video Transcriber — Speech to searchable text";
+  const title = "Video to Text for MP4 Files and Links | Video Transcriber";
   const description =
-    "Video Transcriber is a browser transcription workspace. Start from a file, a public media link, or a recording, then copy, download, or share the transcript.";
+    "Use video to text on an MP4, MOV, WebM, or a public link. Copy or export TXT, DOCX, SRT, or VTT in the workspace. Private videos may fail.";
 
   return {
     title,
@@ -57,7 +57,7 @@ export default async function LandingPage() {
     applicationCategory: "MultimediaApplication",
     operatingSystem: "Web",
     description:
-      "Browser transcription workspace. Start from a file, a public media link, or a recording, then copy or export the transcript.",
+      "Use video to text on an MP4, MOV, WebM, or a public link. Copy or export TXT, DOCX, SRT, or VTT in the workspace.",
     offers: {
       "@type": "Offer",
       price: "0",

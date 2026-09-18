@@ -1,21 +1,21 @@
 /**
- * SEO copy for /video-to-text-converter.
- * Primary keyword: "Video to Text Converter"
+ * SEO copy for /video-to-text.
+ * Primary keyword: "Video to Text" — target ~2.5% density.
  * Scope: local video files (MP4 and similar). Links and audio belong on other URLs.
  */
 
-export const VIDEO_TO_TEXT_CONVERTER_HREF = "/video-to-text-converter";
+export const VIDEO_TO_TEXT_CONVERTER_HREF = "/video-to-text";
 
 export const videoToTextConverterSeo = {
   meta: {
-    title: "Video to Text Converter — Transcribe MP4, MOV, WebM",
+    title: "Video to Text — Transcribe MP4, MOV, WebM Online",
     description:
-      "Upload an MP4, MOV, WebM, or MKV file and turn spoken video into a searchable transcript. Export TXT, DOCX, SRT, VTT, or CSV. For YouTube links or audio-only files, use the dedicated converters.",
+      "Use Video to Text to transcribe MP4, MOV, WebM, or MKV. Export TXT, DOCX, SRT, VTT, or CSV. For YouTube links or audio-only files, use the dedicated tools.",
   },
   hero: {
-    h1: "Video to Text Converter",
+    h1: "Video to Text",
     subtitle:
-      "Turn a video file on your computer into searchable text. Drop an MP4, MOV, WebM, or MKV — then copy, download, or keep working in your workspace.",
+      "Video to Text turns a file on your computer into searchable text. Drop an MP4, MOV, WebM, or MKV — then copy, download, or keep working in your workspace.",
     chips: [
       { label: "MP4 upload", color: "#3B82F6" },
       { label: "MOV & WebM", color: "#60A5FA" },
@@ -25,13 +25,13 @@ export const videoToTextConverterSeo = {
     ],
   },
   how: {
-    title: "How this Video to Text Converter works",
-    lead: "Three steps take you from a local video file to a readable transcript you can edit and export.",
+    title: "How Video to Text works",
+    lead: "Three steps take you from a local video file to a readable transcript. Video to Text is built for speech inside video containers you can edit and export.",
     steps: [
       {
         n: "1",
         title: "Upload your video file",
-        body: "Drop a common video container such as MP4, MOV, WebM, or MKV. The converter reads the soundtrack from the file. It does not need you to extract audio first.",
+        body: "Drop a common video container such as MP4, MOV, WebM, or MKV. The tool reads the soundtrack from the file. It does not need you to extract audio first.",
         src: "/howtouse/step-1-upload.webp",
       },
       {
@@ -49,12 +49,12 @@ export const videoToTextConverterSeo = {
     ],
   },
   features: {
-    title: "What you can do with this Video to Text Converter",
+    title: "What you can do with Video to Text",
     lead: "Built for video files you already have — screen recordings, camera clips, and exported meetings.",
     items: [
       {
         title: "Upload MP4 and other video files",
-        body: "Drop MP4, MOV, WebM, and MKV. Large local uploads are supported in the browser up to the client size limit. Audio-only files belong on the Audio to Text Converter.",
+        body: "Drop MP4, MOV, WebM, and MKV. Large local uploads are supported in the browser up to the client size limit. Audio-only files belong on Audio to Text.",
       },
       {
         title: "Keep the soundtrack in the container",
@@ -70,24 +70,24 @@ export const videoToTextConverterSeo = {
       },
       {
         title: "Notes, chapters, Ask AI, mind map",
-        body: "After transcription, generate summaries and note presets, chapter outlines, Ask AI answers grounded in your transcript, and a mind map you can export.",
+        body: "After transcription finishes, generate summaries and note presets, chapter outlines, Ask AI answers grounded in your transcript, and a mind map you can export.",
       },
       {
         title: "Need a link or an audio file instead?",
-        body: "Paste a YouTube URL on the YouTube Transcript Generator. Upload MP3, WAV, or M4A on the Audio to Text Converter.",
+        body: "Paste a YouTube URL on the YouTube Transcript Generator. Upload MP3, WAV, or M4A on Audio to Text.",
       },
     ],
   },
   faq: {
-    title: "Video to Text Converter FAQ",
+    title: "Frequently asked questions",
     items: [
       {
-        q: "What is a Video to Text Converter?",
-        a: "A Video to Text Converter turns speech from a video file into written text. This page is for uploads such as MP4, MOV, WebM, and MKV. After transcription you can copy or export the result.",
+        q: "What is Video to Text?",
+        a: "Video to Text turns speech from a video file into written text. This page is for uploads such as MP4, MOV, WebM, and MKV. After transcription you can copy or export the result.",
       },
       {
         q: "Which file types can I upload?",
-        a: "Common video formats such as MP4, MOV, WebM, and MKV. If the file includes a usable audio track, the converter can process it.",
+        a: "Common video formats such as MP4, MOV, WebM, and MKV. If the file includes a usable audio track, the tool can process it.",
       },
       {
         q: "Can I paste a YouTube or TikTok link here?",
@@ -95,11 +95,11 @@ export const videoToTextConverterSeo = {
       },
       {
         q: "What if I only have an MP3 or WAV?",
-        a: "Use the Audio to Text Converter. That page is for recordings and audio files, not video containers.",
+        a: "Use Audio to Text. That page is for recordings and audio files, not video containers.",
       },
       {
         q: "What can I export?",
-        a: "TXT, DOCX, SRT, VTT, and CSV. PDF transcript export and translation are not available in the current Video to Text Converter.",
+        a: "TXT, DOCX, SRT, VTT, and CSV. PDF transcript export and translation are not available in the current export set.",
       },
       {
         q: "Do you support speaker labels?",
@@ -112,13 +112,13 @@ export const videoToTextConverterSeo = {
     ],
   },
   related: [
-    { label: "Audio to Text Converter", href: "/audio-to-text-converter" },
+    { label: "Audio to Text", href: "/audio-to-text-converter" },
     { label: "YouTube Transcript Generator", href: "/youtube-transcript-generator" },
     { label: "AI Video Summarizer", href: "/ai-video-summarizer" },
   ],
   cta: {
     title: "Convert your next video file to text",
-    body: "Upload an MP4, MOV, WebM, or MKV with this Video to Text Converter — then export the transcript in the format you need.",
+    body: "Start Video to Text with an MP4, MOV, WebM, or MKV upload — then export the transcript in the format you need.",
     button: "Start converting",
   },
 } as const;

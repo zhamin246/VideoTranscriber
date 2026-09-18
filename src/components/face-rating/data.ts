@@ -5,10 +5,10 @@
 
 import { useCaseAsset } from "@/lib/convert/use-case-assets";
 import { AUDIO_TO_TEXT_CONVERTER_HREF } from "@/lib/convert/audio-to-text-converter-content";
-import { VIDEO_TO_TEXT_CONVERTER_HREF } from "@/lib/convert/video-to-text-converter-content";
 import { AI_VIDEO_SUMMARIZER_HREF } from "@/lib/convert/ai-video-summarizer-content";
 import { YOUTUBE_SUBTITLE_DOWNLOADER_HREF } from "@/lib/convert/youtube-subtitle-downloader-content";
 import { YOUTUBE_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/youtube-transcript-generator-content";
+import { TIKTOK_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/tiktok-transcript-generator-content";
 
 export const FREE_TEST_HREF = "/tools/ai-attractiveness-test";
 export const FULL_REPORT_HREF = "/tools/full-analysis";
@@ -32,13 +32,12 @@ export const content = {
           {
             title: "Video Transcriber",
             items: [
-              { label: "Video to Text Converter", href: VIDEO_TO_TEXT_CONVERTER_HREF },
               { label: "AI Video Summarizer", href: AI_VIDEO_SUMMARIZER_HREF },
               { label: "Video to Word", href: CONVERT_HREF },
               { label: "Video Link to Text", href: CONVERT_HREF },
-              { label: "MP4 to Text Converter", href: CONVERT_HREF },
-              { label: "MOV to Text Converter", href: CONVERT_HREF },
-              { label: "Video to SRT Converter", href: CONVERT_HREF },
+              { label: "MP4 to Text", href: CONVERT_HREF },
+              { label: "MOV to Text", href: CONVERT_HREF },
+              { label: "Video to SRT", href: CONVERT_HREF },
               { label: "Time Code Transcription", href: CONVERT_HREF },
               { label: "Speaker Label Transcription", href: CONVERT_HREF },
             ],
@@ -46,13 +45,13 @@ export const content = {
           {
             title: "Audio Transcriber",
             items: [
-              { label: "Audio to Text Converter", href: AUDIO_TO_TEXT_CONVERTER_HREF },
+              { label: "Audio to Text", href: AUDIO_TO_TEXT_CONVERTER_HREF },
               { label: "AI Audio Summarizer", href: CONVERT_HREF },
               { label: "Audio to Word", href: CONVERT_HREF },
-              { label: "MP3 to Text Converter", href: CONVERT_HREF },
-              { label: "Audio to SRT Converter", href: CONVERT_HREF },
-              { label: "M4A to Text Converter", href: CONVERT_HREF },
-              { label: "WAV to Text Converter", href: CONVERT_HREF },
+              { label: "MP3 to Text", href: CONVERT_HREF },
+              { label: "Audio to SRT", href: CONVERT_HREF },
+              { label: "M4A to Text", href: CONVERT_HREF },
+              { label: "WAV to Text", href: CONVERT_HREF },
               { label: "Voicemail to Text", href: CONVERT_HREF },
               { label: "Voice Memos to Text", href: CONVERT_HREF },
               { label: "Dictation to Text", href: CONVERT_HREF },
@@ -65,7 +64,7 @@ export const content = {
               { label: "YouTube Video Summarizer", href: CONVERT_HREF },
               { label: "YouTube Subtitle Downloader", href: YOUTUBE_SUBTITLE_DOWNLOADER_HREF },
               { label: "YouTube to Word", href: CONVERT_HREF },
-              { label: "TikTok Transcript Generator", href: CONVERT_HREF },
+              { label: "TikTok Transcript Generator", href: TIKTOK_TRANSCRIPT_GENERATOR_HREF },
               { label: "TikTok Video Summarizer", href: CONVERT_HREF },
               { label: "Facebook Transcript Generator", href: CONVERT_HREF },
               { label: "Instagram Transcript Generator", href: CONVERT_HREF },
@@ -122,11 +121,11 @@ export const content = {
 
   hero: {
     kicker: "AUDIO + VIDEO → TEXT",
-    title: "Video Transcriber for files, links, and recordings",
-    titleItalic: "files, links, and recordings",
+    title: "Get Video to Text from a File or Public Link",
+    titleItalic: "File or Public Link",
     subtitle: "",
     description:
-      "One workspace for speech-to-text. Copy, download, or share the transcript. Dedicated converters cover video files, audio files, and YouTube links.",
+      "Video to text on this page turns spoken video or audio into a transcript you can search and export. Upload an MP4, MOV, WebM, or MKV, paste a public link, or record a short clip — then copy, download, or keep working in the workspace.",
     primaryCta: { label: "Start transcribing", href: CONVERT_HREF },
     secondaryCta: { label: "See examples", href: "/#usecases" },
     volume: "Semantic linework — not a pixel tracing.",
@@ -484,50 +483,50 @@ export const content = {
     items: [
       {
         q: "What can I upload?",
-        a: "Video Transcriber accepts 20+ audio and video formats, including MP3, WAV, M4A, MP4, and MOV. You can also paste a media link from YouTube, TikTok, Instagram, Facebook, X, Apple Podcasts, and other supported platforms, or record audio in the browser.",
+        a: "Common video such as MP4, MOV, WebM, and MKV, plus audio such as MP3, WAV, and M4A. You can also paste a public link from YouTube, TikTok, Instagram, Facebook, X, Apple Podcasts, or Bilibili, or record audio in the browser. Private or login-walled media may fail.",
       },
       {
         q: "What happens after speech is converted?",
-        a: "You get a transcript you can copy, download, or share. Speaker recognition can label who said what. Translation and an AI summary are available on the same run when you need them.",
+        a: "You get a transcript you can copy or export as TXT, DOCX, SRT, VTT, or CSV. Speaker labels can attribute dialogue when the model can tell speakers apart. After transcription you can generate notes, chapters, Ask AI answers, and a mind map. PDF export and translation are not in the current product.",
       },
       {
         q: "How many languages does it support?",
-        a: "Video Transcriber supports 200+ languages. Pick a language when you start, or let the system work from the audio you provide.",
+        a: "Choose auto language detect or a specific source language before you start. This page does not publish a language count.",
       },
       {
         q: "Do I need to install software?",
-        a: "No. It runs in the browser. File upload, paste link, and record audio all start on this page.",
+        a: "No. Video to text runs in the browser. File upload, paste link, and record audio all start on this page.",
       },
       {
         q: "Can it handle meetings with several people?",
-        a: "Yes. Speaker recognition is built for meetings, interviews, and calls so you can see who spoke, not only what was said.",
+        a: "Yes. Turn on speaker separation before you start so a meeting or interview can show who spoke, not only what was said.",
       },
       {
         q: "What can I export?",
-        a: "6 export formats so you can take the transcript into notes, captions, or a document. You can also copy the text directly.",
+        a: "TXT, DOCX, SRT, VTT, and CSV. Copy from the workspace if you only need the text on the clipboard. PDF transcript export is not available.",
       },
       {
         q: "Does it work on a YouTube link?",
-        a: "Yes. Paste the link in the link tab on this page, or use the YouTube Transcript Generator if you only have a watch URL.",
+        a: "Yes. Paste a public YouTube URL in the link tab on this page, or use the YouTube Transcript Generator if you only have a watch URL. Private or members-only videos may not fetch.",
       },
       {
         q: "Is this a live captioning studio?",
-        a: "No. This page is for files, links, and a recorded clip you capture here. It is not a live-stream captioning desk.",
+        a: "No. This page is for files, public links, and a clip you record here. It does not join a live call or caption a livestream.",
       },
     ],
   },
 
   cta: {
     kicker: "Get started",
-    title: "Ready to transcribe?",
-    titleItalic: "transcribe",
-    body: "Upload a file, paste a link, or record audio. Video Transcriber writes the transcript so you can copy, download, or share it.",
+    title: "Video transcript generator for your next file",
+    titleItalic: "transcript generator",
+    body: "Start video to text with an MP4 upload or a public link — then copy the transcript or export TXT, DOCX, SRT, VTT, or CSV. Free use follows monthly minutes, daily caps, and per-file limits on Pricing.",
     price: PRICE,
     primary: "Start transcribing",
     primaryHref: CONVERT_HREF,
     secondary: "See use cases",
     secondaryHref: "/#usecases",
-    micro: "20+ formats · 200+ languages · speaker labels · translation · AI summary.",
+    micro: "MP4 and public links · speaker labels · TXT, DOCX, SRT, VTT, CSV.",
   },
 
   // Legacy keys still imported by product-mocks

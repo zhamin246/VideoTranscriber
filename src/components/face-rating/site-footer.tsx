@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { CONVERT_HREF } from "./data";
 import { AUDIO_TO_TEXT_CONVERTER_HREF } from "@/lib/convert/audio-to-text-converter-content";
-import { VIDEO_TO_TEXT_CONVERTER_HREF } from "@/lib/convert/video-to-text-converter-content";
 import { AI_VIDEO_SUMMARIZER_HREF } from "@/lib/convert/ai-video-summarizer-content";
 import { YOUTUBE_SUBTITLE_DOWNLOADER_HREF } from "@/lib/convert/youtube-subtitle-downloader-content";
 import { YOUTUBE_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/youtube-transcript-generator-content";
+import { TIKTOK_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/tiktok-transcript-generator-content";
+import { softenToTextLabel } from "./nav-labels";
 
 type FooterLink = { label: string; href: string };
 
@@ -20,13 +21,12 @@ const COLUMNS: FooterGroup[][] = [
     {
       title: "Video Transcriber",
       links: [
-        { label: "Video to Text Converter", href: VIDEO_TO_TEXT_CONVERTER_HREF },
         { label: "AI Video Summarizer", href: AI_VIDEO_SUMMARIZER_HREF },
         { label: "Video to Word", href: CONVERT_HREF },
         { label: "Video Link to Text", href: CONVERT_HREF },
-        { label: "MP4 to Text Converter", href: CONVERT_HREF },
-        { label: "MOV to Text Converter", href: CONVERT_HREF },
-        { label: "Video to SRT Converter", href: CONVERT_HREF },
+        { label: "MP4 to Text", href: CONVERT_HREF },
+        { label: "MOV to Text", href: CONVERT_HREF },
+        { label: "Video to SRT", href: CONVERT_HREF },
         { label: "Time Code Transcription", href: CONVERT_HREF },
         { label: "Speaker Label Transcription", href: CONVERT_HREF },
       ],
@@ -36,13 +36,13 @@ const COLUMNS: FooterGroup[][] = [
     {
       title: "Audio Transcriber",
       links: [
-        { label: "Audio to Text Converter", href: AUDIO_TO_TEXT_CONVERTER_HREF },
+        { label: "Audio to Text", href: AUDIO_TO_TEXT_CONVERTER_HREF },
         { label: "AI Audio Summarizer", href: CONVERT_HREF },
         { label: "Audio to Word", href: CONVERT_HREF },
-        { label: "MP3 to Text Converter", href: CONVERT_HREF },
-        { label: "Audio to SRT Converter", href: CONVERT_HREF },
-        { label: "M4A to Text Converter", href: CONVERT_HREF },
-        { label: "WAV to Text Converter", href: CONVERT_HREF },
+        { label: "MP3 to Text", href: CONVERT_HREF },
+        { label: "Audio to SRT", href: CONVERT_HREF },
+        { label: "M4A to Text", href: CONVERT_HREF },
+        { label: "WAV to Text", href: CONVERT_HREF },
         { label: "Voicemail to Text", href: CONVERT_HREF },
         { label: "Voice Memos to Text", href: CONVERT_HREF },
         { label: "Dictation to Text", href: CONVERT_HREF },
@@ -55,7 +55,7 @@ const COLUMNS: FooterGroup[][] = [
         { label: "YouTube Video Summarizer", href: CONVERT_HREF },
         { label: "YouTube Subtitle Downloader", href: YOUTUBE_SUBTITLE_DOWNLOADER_HREF },
         { label: "YouTube to Word", href: CONVERT_HREF },
-        { label: "TikTok Transcript Generator", href: CONVERT_HREF },
+        { label: "TikTok Transcript Generator", href: TIKTOK_TRANSCRIPT_GENERATOR_HREF },
         { label: "TikTok Video Summarizer", href: CONVERT_HREF },
         { label: "Facebook Transcript Generator", href: CONVERT_HREF },
         { label: "Instagram Transcript Generator", href: CONVERT_HREF },
@@ -131,7 +131,7 @@ const LANGUAGES = [
   "Русский",
 ] as const;
 
-function BrandMark() {
+function BrandMark({ hideName = false }: { hideName?: boolean }) {
   return (
     <span className="inline-flex items-center gap-2.5">
       <img
@@ -141,9 +141,11 @@ function BrandMark() {
         height={32}
         className="h-8 w-8 object-contain"
       />
-      <span className="text-xl font-bold tracking-tight text-[#5270FF]">
-        Video Transcriber
-      </span>
+      {hideName ? null : (
+        <span className="text-xl font-bold tracking-tight text-[#5270FF]">
+          Video Transcriber
+        </span>
+      )}
     </span>
   );
 }
@@ -172,10 +174,18 @@ function YouTubeIcon({ className }: { className?: string }) {
   );
 }
 
-function FooterGroupBlock({ group }: { group: FooterGroup }) {
+function FooterGroupBlock({
+  group,
+  softenToTextAnchors = false,
+}: {
+  group: FooterGroup;
+  softenToTextAnchors?: boolean;
+}) {
   return (
     <div className="mb-8 last:mb-0">
-      <p className="mb-3 text-sm font-semibold text-[#0F172A]">{group.title}</p>
+      <p className="mb-3 text-sm font-semibold text-[#0F172A]">
+        {softenToTextAnchors ? softenToTextLabel(group.title) : group.title}
+      </p>
       <ul className="space-y-2">
         {group.links.map((l) => (
           <li key={l.label}>
@@ -183,7 +193,7 @@ function FooterGroupBlock({ group }: { group: FooterGroup }) {
               href={l.href}
               className="text-sm leading-5 text-[#64748B] transition-colors hover:text-[#0F172A] hover:underline"
             >
-              {l.label}
+              {softenToTextAnchors ? softenToTextLabel(l.label) : l.label}
             </Link>
           </li>
         ))}
@@ -202,8 +212,10 @@ function FooterGroupBlock({ group }: { group: FooterGroup }) {
 
 export default function FaceRatingSiteFooter({
   compact = false,
+  softenToTextAnchors = false,
 }: {
   compact?: boolean;
+  softenToTextAnchors?: boolean;
 }) {
   return (
     <footer
@@ -220,14 +232,19 @@ export default function FaceRatingSiteFooter({
           <Link
             href="/"
             className="inline-flex shrink-0"
-            aria-label="Go to Video Transcriber homepage"
+            aria-label={softenToTextAnchors ? "Home" : "Go to Video Transcriber homepage"}
           >
-            <BrandMark />
+            <BrandMark hideName={softenToTextAnchors} />
           </Link>
           <p className="text-sm text-slate-600 md:ml-8">
-            <span className="font-medium text-slate-800">Video Transcriber AI</span>
-            {" – "}
-            Transcribe Video to Text Online Free
+            {softenToTextAnchors ? (
+              "Transcribe video online free"
+            ) : (
+              <>
+                <span className="font-medium text-slate-800">Video Transcriber AI</span>
+                {" – Transcribe Video to Text Online Free"}
+              </>
+            )}
           </p>
           <div className="flex flex-wrap items-center gap-4 md:ml-auto">
             <Link
@@ -271,7 +288,11 @@ export default function FaceRatingSiteFooter({
           {COLUMNS.map((col, i) => (
             <div key={i}>
               {col.map((group) => (
-                <FooterGroupBlock key={group.title} group={group} />
+                <FooterGroupBlock
+                  key={group.title}
+                  group={group}
+                  softenToTextAnchors={softenToTextAnchors}
+                />
               ))}
             </div>
           ))}

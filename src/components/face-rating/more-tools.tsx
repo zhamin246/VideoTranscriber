@@ -21,6 +21,8 @@ import {
   PenTool,
 } from "lucide-react";
 import { CONVERT_HREF } from "./data";
+import { usePathname } from "next/navigation";
+import { isToTextSensitivePath, softenToTextLabel } from "./nav-labels";
 
 const TONES = ["purple", "blue", "green", "orange", "cyan", "pink"] as const;
 
@@ -30,12 +32,12 @@ const MORE_TOOLS: {
   icon: typeof Box;
   tone: (typeof TONES)[number];
 }[] = [
-  { label: "Video to text", href: "/video-to-text-converter", icon: PenTool, tone: "purple" },
   { label: "Audio to text", href: "/audio-to-text-converter", icon: Box, tone: "blue" },
   { label: "File upload", href: CONVERT_HREF, icon: PenTool, tone: "purple" },
   { label: "Paste link", href: CONVERT_HREF, icon: Box, tone: "blue" },
   { label: "Record audio", href: "/audio-to-text-converter", icon: PenLine, tone: "green" },
   { label: "YouTube to text", href: "/youtube-transcript-generator", icon: FileType, tone: "orange" },
+  { label: "TikTok transcript", href: "/tiktok-transcript-generator", icon: FileType, tone: "cyan" },
   { label: "Meetings", href: "/#usecases", icon: Pencil, tone: "cyan" },
   { label: "Interviews", href: "/#usecases", icon: Camera, tone: "pink" },
   { label: "Podcasts", href: "/#usecases", icon: Sparkles, tone: "purple" },
@@ -114,6 +116,10 @@ function ToolRow({
 }
 
 export default function MoreTools() {
+  const pathname = usePathname() || "";
+  const tools = isToTextSensitivePath(pathname)
+    ? MORE_TOOLS.map((t) => ({ ...t, label: softenToTextLabel(t.label) }))
+    : MORE_TOOLS;
   return (
     <section className="home-more-tools" aria-labelledby="home-more-tools-title">
       <div className="home-more-tools__inner">
@@ -121,8 +127,8 @@ export default function MoreTools() {
           Explore more transcription tools
         </h2>
         <nav className="home-more-tools__rows" aria-label="Transcription tools">
-          <ToolRow tools={MORE_TOOLS.slice(0, 9)} pxPerSec={28} />
-          <ToolRow tools={MORE_TOOLS.slice(9)} reverse pxPerSec={24} />
+          <ToolRow tools={tools.slice(0, 9)} pxPerSec={28} />
+          <ToolRow tools={tools.slice(9)} reverse pxPerSec={24} />
         </nav>
       </div>
     </section>

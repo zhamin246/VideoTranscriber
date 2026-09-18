@@ -10,11 +10,10 @@ import {
   FileUp,
   GraduationCap,
   Mic,
-  Podcast,
   ShieldCheck,
   Subtitles,
-  Users,
   UsersRound,
+  type LucideIcon,
 } from "lucide-react";
 import FaceRatingSiteHeader from "./site-header";
 import FaceRatingSiteFooter from "./site-footer";
@@ -31,7 +30,16 @@ import {
   audioToTextConverterSeo,
 } from "@/lib/convert/audio-to-text-converter-content";
 
-const CHIP_ICONS = [FileUp, AudioLines, Mic, UsersRound, Subtitles] as const;
+const CHIP_ICONS = [FileUp, AudioLines, FileUp, UsersRound, Subtitles] as const;
+
+const USECASE_ICONS: Record<string, LucideIcon> = {
+  AudioLines,
+  ShieldCheck,
+  FileUp,
+  Subtitles,
+  Mic,
+  GraduationCap,
+};
 
 function scrollToHero(e: React.MouseEvent) {
   e.preventDefault();
@@ -166,32 +174,7 @@ export default function AudioToTextConverterPage() {
                 </div>
                 <div className="mx-auto mt-16">
                   <div className="grid gap-20">
-                    {[
-                      {
-                        title: "Convert MP3, WAV, and M4A to text",
-                        body: "Upload a recording into this Audio to Text Converter, or capture audio in the browser. Add speaker labels and language selection when you need them. For MP4 video, use the Video to Text Converter. For a YouTube URL, use the YouTube Transcript Generator.",
-                        href: AUDIO_TO_TEXT_CONVERTER_HREF,
-                        src: "https://cdn.videotranscriber.pro/videotranscriber/landing/features/audio-feature-1-convert.webp",
-                        alt: "Convert audio to text",
-                        imageRight: true,
-                      },
-                      {
-                        title: "Generate summary and key points",
-                        body: "After transcription, generate AI notes and key points from the same recording. Use chapters, Ask AI, and mind map when you want more structure without replaying the full file.",
-                        href: AUDIO_TO_TEXT_CONVERTER_HREF,
-                        src: "https://cdn.videotranscriber.pro/videotranscriber/landing/features/audio-feature-2-summary.webp",
-                        alt: "Generate an AI summary from audio",
-                        imageRight: false,
-                      },
-                      {
-                        title: "Export your transcript",
-                        body: "Export as TXT, DOCX, SRT, VTT, or CSV. Copy the text for notes and drafts, or download subtitle files for your editor.",
-                        href: AUDIO_TO_TEXT_CONVERTER_HREF,
-                        src: "https://cdn.videotranscriber.pro/videotranscriber/landing/features/audio-feature-3-export.webp",
-                        alt: "Export a transcript",
-                        imageRight: true,
-                      },
-                    ].map((row) => (
+                    {seo.features.rows.map((row) => (
                       <div key={row.title} className="items-center md:grid md:grid-cols-12 md:gap-6">
                         <div
                           className={`mx-auto mb-8 max-w-xl md:col-span-5 md:mb-0 md:w-full md:max-w-none lg:col-span-6 ${row.imageRight ? "md:order-1" : ""}`}
@@ -246,46 +229,15 @@ export default function AudioToTextConverterPage() {
                     className="font-bold"
                     style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px", color: "#000" }}
                   >
-                    When to use this Audio to Text Converter
+                    {seo.usecases.title}
                   </h2>
                   <p className="text-lg text-slate-700" style={{ fontSize: 18, lineHeight: "27px" }}>
-                    Built for recordings you already have: voice memos, calls, interviews, and podcasts as MP3, WAV, or M4A.
+                    {seo.usecases.lead}
                   </p>
                 </div>
                 <div className="mx-auto mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {[
-                    {
-                      title: "Meeting & call recordings",
-                      body: "Turn Zoom, Teams, or phone call recordings into searchable notes. Speaker recognition labels who said what, so decisions and action items never get lost in the audio.",
-                      icon: Users,
-                    },
-                    {
-                      title: "Interviews",
-                      body: "Transcribe interview audio to text with timestamps. Quote your sources accurately and jump back to the exact moment instead of scrubbing through the whole recording.",
-                      icon: Mic,
-                    },
-                    {
-                      title: "Podcasts",
-                      body: "Convert podcast audio to text for show notes, blog posts, and quotable snippets. A full transcript also makes every episode searchable for your audience.",
-                      icon: Podcast,
-                    },
-                    {
-                      title: "Voice memos",
-                      body: "That idea you recorded on a walk? Convert voice memos from your phone into clean text notes you can actually search, edit, and share.",
-                      icon: AudioLines,
-                    },
-                    {
-                      title: "Lectures & courses",
-                      body: "Turn recorded lectures and course audio into study notes. AI summaries and key points help you review hours of material in minutes.",
-                      icon: GraduationCap,
-                    },
-                    {
-                      title: "Browser recording",
-                      body: "Capture a short clip with your microphone on this page, then transcribe it the same way as an uploaded file.",
-                      icon: Mic,
-                    },
-                  ].map((item) => {
-                    const Icon = item.icon;
+                  {seo.usecases.items.map((item) => {
+                    const Icon = USECASE_ICONS[item.icon] ?? AudioLines;
                     return (
                       <article
                         key={item.title}
@@ -391,21 +343,6 @@ export default function AudioToTextConverterPage() {
                     </div>
                   );
                 })}
-              </div>
-            </section>
-
-            <section className="ac-section-wash px-4 py-12">
-              <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-3">
-                <span className="text-sm font-medium text-slate-500">Related converters</span>
-                {seo.related.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="rounded-full border border-[#DFE4FB] bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:border-[#8882F5] hover:text-[#6F68F0]"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
               </div>
             </section>
 

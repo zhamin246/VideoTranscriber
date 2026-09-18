@@ -16,7 +16,6 @@ import {
   Subtitles,
   Users,
   UsersRound,
-  Youtube,
 } from "lucide-react";
 import FaceRatingSiteHeader from "./site-header";
 import FaceRatingSiteFooter from "./site-footer";
@@ -29,9 +28,9 @@ import MoreTools from "./more-tools";
 import ScrollCta from "./scroll-cta";
 import { V } from "./visual";
 import {
-  YOUTUBE_TRANSCRIPT_GENERATOR_HREF,
-  youtubeTranscriptGeneratorSeo,
-} from "@/lib/convert/youtube-transcript-generator-content";
+  TIKTOK_TRANSCRIPT_GENERATOR_HREF,
+  tiktokTranscriptGeneratorSeo,
+} from "@/lib/convert/tiktok-transcript-generator-content";
 
 const CHIP_ICONS = [Link2, UsersRound, Subtitles, AudioLines, FileUp] as const;
 
@@ -40,8 +39,8 @@ function scrollToHero(e: React.MouseEvent) {
   document.getElementById("landing-hero")?.scrollIntoView({ behavior: "smooth" });
 }
 
-export default function YoutubeTranscriptGeneratorPage() {
-  const seo = youtubeTranscriptGeneratorSeo;
+export default function TiktokTranscriptGeneratorPage() {
+  const seo = tiktokTranscriptGeneratorSeo;
   const [faqOpen, setFaqOpen] = useState<number | null>(null);
 
   return (
@@ -188,7 +187,7 @@ export default function YoutubeTranscriptGeneratorPage() {
                             <p className="mb-4 text-lg text-gray-600">{row.body}</p>
                             <div className="btnList mt-5 flex gap-4">
                               <Link
-                                href={YOUTUBE_TRANSCRIPT_GENERATOR_HREF}
+                                href={TIKTOK_TRANSCRIPT_GENERATOR_HREF}
                                 onClick={scrollToHero}
                                 className="inline-flex items-center gap-2 rounded-full text-white"
                                 style={{
@@ -231,7 +230,7 @@ export default function YoutubeTranscriptGeneratorPage() {
                 </div>
                 <div className="mx-auto mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {seo.usecases.items.map((item, i) => {
-                    const Icon = [GraduationCap, Youtube, Mic, Newspaper, Users, AudioLines][i] ?? Youtube;
+                    const Icon = [GraduationCap, Link2, Mic, Newspaper, Users, AudioLines][i] ?? Link2;
                     return (
                       <article
                         key={item.title}
@@ -359,7 +358,7 @@ export default function YoutubeTranscriptGeneratorPage() {
                   </p>
                   <div className="mt-4 flex justify-center">
                     <Link
-                      href={YOUTUBE_TRANSCRIPT_GENERATOR_HREF}
+                      href={TIKTOK_TRANSCRIPT_GENERATOR_HREF}
                       onClick={scrollToHero}
                       className="inline-flex items-center gap-2"
                       style={{
@@ -386,7 +385,7 @@ export default function YoutubeTranscriptGeneratorPage() {
             </section>
           </main>
 
-          <FaceRatingSiteFooter />
+          <FaceRatingSiteFooter softenToTextAnchors />
         </div>
       </div>
     </div>

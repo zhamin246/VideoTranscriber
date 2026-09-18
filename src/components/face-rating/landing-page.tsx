@@ -3,13 +3,13 @@ import Image from "next/image";
 import {
   ArrowRight,
   AudioLines,
-  Crosshair,
-  Globe2,
+  FileUp,
   GraduationCap,
-  Infinity,
+  Link2,
   Mic,
   Podcast,
-  ShieldCheck,
+  Sparkles,
+  Subtitles,
   Users,
   UsersRound,
   Youtube,
@@ -25,7 +25,6 @@ import ReviewMarquee from "./review-marquee";
 import MoreTools from "./more-tools";
 import ScrollCta from "./scroll-cta";
 import { content, CONVERT_HREF } from "./data";
-import { VIDEO_TO_TEXT_CONVERTER_HREF } from "@/lib/convert/video-to-text-converter-content";
 import { AUDIO_TO_TEXT_CONVERTER_HREF } from "@/lib/convert/audio-to-text-converter-content";
 import { YOUTUBE_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/youtube-transcript-generator-content";
 import { V } from "./visual";
@@ -132,7 +131,7 @@ export default function FaceRatingLandingPage() {
         <section id="landing-hero" className="ac-section-wash px-4 pb-6 pt-6 sm:px-8 sm:pb-8 sm:pt-10">
           <div className="mx-auto max-w-[1152px] text-center sm:pb-2.5">
             <h1 className="text-[28px] font-bold leading-[1.2] tracking-tight text-[#111827] sm:text-[36px] sm:leading-[46px] md:text-[40px] md:leading-[50px]">
-              Video Transcriber for files, links, and recordings
+              Get Video to Text from a File or Public Link
             </h1>
             <p className="mx-auto mt-2 max-w-3xl text-[15px] font-normal leading-6 text-[#4B5563] sm:mt-2 sm:text-lg sm:leading-[27px]">
               {hero.description}
@@ -140,11 +139,11 @@ export default function FaceRatingLandingPage() {
             <div className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:mt-4 sm:gap-x-5">
               {(
                 [
-                  { label: "99.9% Accuracy", icon: Crosshair, color: "#3B82F6" },
-                  { label: "200+ Languages", icon: Globe2, color: "#60A5FA" },
-                  { label: "Unlimited Minutes", icon: Infinity, color: "#38BDF8" },
-                  { label: "Speaker Recognition", icon: UsersRound, color: "#14B8A6" },
-                  { label: "Private and Secure", icon: ShieldCheck, color: "#3B82F6" },
+                  { label: "File upload", icon: FileUp, color: "#3B82F6" },
+                  { label: "Link paste", icon: Link2, color: "#60A5FA" },
+                  { label: "Speaker labels", icon: UsersRound, color: "#14B8A6" },
+                  { label: "SRT & VTT export", icon: Subtitles, color: "#38BDF8" },
+                  { label: "AI notes", icon: Sparkles, color: "#8882F5" },
                 ] as const
               ).map((item) => {
                 const Icon = item.icon;
@@ -170,10 +169,6 @@ export default function FaceRatingLandingPage() {
           </div>
           <p className="mx-auto mt-6 flex max-w-3xl flex-wrap items-center justify-center gap-2 px-4 text-sm text-slate-600">
             <span>Looking for a specific start?</span>
-            <Link href={VIDEO_TO_TEXT_CONVERTER_HREF} className="font-medium text-[#6F68F0] underline-offset-2 hover:underline">
-              Video files
-            </Link>
-            <span aria-hidden>·</span>
             <Link href={AUDIO_TO_TEXT_CONVERTER_HREF} className="font-medium text-[#6F68F0] underline-offset-2 hover:underline">
               Audio files
             </Link>
@@ -262,7 +257,7 @@ export default function FaceRatingLandingPage() {
               </div>
             </div>
 
-            <h2
+            <p
               className="text-center"
               style={{
                 marginTop: 40,
@@ -273,7 +268,7 @@ export default function FaceRatingLandingPage() {
               }}
             >
               Recognized Globally
-            </h2>
+            </p>
             <p className="mb-8 text-center text-lg text-slate-500">
               Relied on by top organizations and trusted by innovators.
             </p>
@@ -313,10 +308,10 @@ export default function FaceRatingLandingPage() {
                 className="font-bold"
                 style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px", color: "#000" }}
               >
-                How to Use Video Transcriber AI
+                How video to text works on this video transcriber
               </h2>
               <p className="text-lg text-slate-700" style={{ fontSize: 18, lineHeight: "27px" }}>
-                Upload a file, paste a link, or record audio. Video Transcriber writes the transcript so you can copy, download, or share.
+                Video to text on this video transcriber starts in the browser: add a file or a public link, transcribe speech, then copy or export. A short recording in the browser uses the same workspace. Private or login-walled media may not fetch.
               </p>
             </div>
             <div className="mx-auto mt-16 grid gap-8 md:grid-cols-3">
@@ -324,19 +319,19 @@ export default function FaceRatingLandingPage() {
                 {
                   n: "1",
                   title: "Upload your video",
-                  body: "Choose a file from your computer or drag and drop it into the upload box. MP4, YouTube links, Zoom recordings, and other common formats all work.",
+                  body: "Drop an MP4, MOV, WebM, or MKV, or paste a public link. Audio files such as MP3, WAV, and M4A work here too. This is video to text from speech you already have — not a live captioning desk.",
                   src: "/howtouse/step-1-upload.webp",
                 },
                 {
                   n: "2",
                   title: "Let AI transcribe",
-                  body: "The file is processed automatically. Spoken words become accurate text, with speaker labels and language selection when you need them.",
+                  body: "This video transcriber extracts speech with AI. Choose auto language detect or a source language, and optionally separate speakers so dialogue is easier to follow.",
                   src: "/howtouse/step-2-transcribe.webp",
                 },
                 {
                   n: "3",
                   title: "Copy, download, or share",
-                  body: "When the transcript is ready, copy it to your notes, download a file, or share it. Use it for study, meetings, or content.",
+                  body: "Copy the transcript, or export TXT, DOCX, SRT, VTT, or CSV. Generate notes, chapters, Ask AI answers, or a mind map in the same workspace. PDF export and translation are not available.",
                   src: "/howtouse/step-3-export.webp",
                 },
               ].map((step) => (
@@ -382,10 +377,10 @@ export default function FaceRatingLandingPage() {
                   className="whitespace-pre-line font-bold"
                   style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px", color: "#000" }}
                 >
-                  Convert audio and video to text
+                  Video to transcript from a file or public link
                 </h2>
                 <p className="text-center text-lg font-normal text-slate-700" style={{ fontSize: 18, lineHeight: "27px" }}>
-                  Transcribe files, links, or a live recording. Then generate an AI summary and export or share the result.
+                  Video to script here means the spoken words become a transcript you can edit — not a screenplay generator. Video to transcript keeps the full text next to notes, chapters, and Ask AI.
                 </p>
               </div>
             </div>
@@ -394,7 +389,7 @@ export default function FaceRatingLandingPage() {
                 {[
                   {
                     title: "Convert audio and video to text",
-                    body: "Turn audio and video into searchable text in minutes. Upload a file, paste a YouTube, TikTok, Instagram, Facebook, X, or Apple Podcasts link, or record in the browser. 200+ languages, 20+ formats, speaker recognition, and translation on the same run.",
+                    body: "Upload MP4, MOV, WebM, or MKV, or paste a public YouTube, TikTok, Instagram, Facebook, X, Apple Podcasts, or Bilibili link. Add speaker labels and language selection when you need them. Private or blocked media may not download.",
                     href: CONVERT_HREF,
                     src: "/features/feature-1-convert.webp",
                     alt: "Convert audio and video to text",
@@ -402,7 +397,7 @@ export default function FaceRatingLandingPage() {
                   },
                   {
                     title: "Generate summary and key points",
-                    body: "Automatically generate a short AI summary and key points from the same recording. Use them to scan what matters without replaying the full file.",
+                    body: "After video to text finishes, generate notes and key points from the same file. Use chapters, Ask AI, and a mind map when you want more structure without replaying the full runtime.",
                     href: CONVERT_HREF,
                     src: "/features/feature-2-summary.webp",
                     alt: "Generate an AI summary from audio and video",
@@ -410,7 +405,7 @@ export default function FaceRatingLandingPage() {
                   },
                   {
                     title: "Export and share",
-                    body: "Export the transcript as TXT, DOCX, PDF, SRT, VTT, or CSV. Copy the text, download a file, or share a link so others can open the transcript directly.",
+                    body: "Export as TXT, DOCX, SRT, VTT, or CSV. Copy the text for notes and drafts, or download subtitle files for an editor. PDF transcript export and translation are not in the current export set.",
                     href: CONVERT_HREF,
                     src: "/features/feature-3-export.webp",
                     alt: "Export a transcript or share a link",
@@ -470,43 +465,42 @@ export default function FaceRatingLandingPage() {
                 className="font-bold"
                 style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px", color: "#000" }}
               >
-                Convert any video and audio to text
+                MP4 to text and MP4 to transcript for real recordings
               </h2>
               <p className="text-lg text-slate-700" style={{ fontSize: 18, lineHeight: "27px" }}>
-                Whether it is a voice memo on your phone, an hour-long meeting, or an online video,
-                Video Transcriber turns it into a searchable transcript in minutes. MP3, WAV, M4A, MP4, MOV and 20+ other formats are supported.
+                MP4 to text is the usual local-file job on this video transcriber. MP4 to transcript is the same path: upload the container, transcribe speech, then search the words. MOV, WebM, and MKV follow the same steps.
               </p>
             </div>
             <div className="mx-auto mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {[
                 {
                   title: "Meeting & call recordings",
-                  body: "Turn Zoom, Teams, or phone call recordings into searchable notes. Speaker recognition labels who said what, so decisions and action items never get lost in the audio.",
+                  body: "Upload a Zoom, Teams, or phone recording and run video to text. Speaker labels help show who said what when the model can tell speakers apart. This page does not join the live meeting.",
                   icon: Users,
                 },
                 {
                   title: "Interviews",
-                  body: "Transcribe interview audio to text with timestamps. Quote your sources accurately and jump back to the exact moment instead of scrubbing through the whole recording.",
+                  body: "Use MP4 to transcript on a camera interview, or paste a public interview link. Quote from the text instead of scrubbing the player.",
                   icon: Mic,
                 },
                 {
                   title: "Podcasts",
-                  body: "Convert podcast audio to text for show notes, blog posts, and quotable snippets. A full transcript also makes every episode searchable for your audience.",
+                  body: "Turn episode video or audio into a transcript for show notes. Copy TXT or DOCX into the draft you already write.",
                   icon: Podcast,
                 },
                 {
                   title: "Voice memos",
-                  body: "That idea you recorded on a walk? Convert voice memos from your phone into clean text notes you can actually search, edit, and share.",
+                  body: "Upload an M4A or WAV memo, or record a short clip in the browser. Video to text here still means speech becomes searchable notes.",
                   icon: AudioLines,
                 },
                 {
                   title: "Lectures & online courses",
-                  body: "Turn recorded lectures and course videos into study notes. AI summaries and key points help you review hours of material in minutes.",
+                  body: "Upload a class MP4 or paste a public course link. Generate notes and chapters after transcription instead of replaying every minute.",
                   icon: GraduationCap,
                 },
                 {
                   title: "YouTube & online videos",
-                  body: "Paste a YouTube link and get the video transcript without downloading anything. Perfect for research, subtitles, and repurposing video content.",
+                  body: "Paste a public YouTube URL on this page, or use the YouTube Transcript Generator. Private or members-only videos may not fetch.",
                   icon: Youtube,
                 },
               ].map((item) => {

@@ -18,9 +18,9 @@ const STATIC_PATHS: {
   priority: number;
 }[] = [
   { path: "/", changeFrequency: "weekly", priority: 1 },
-  { path: "/video-to-text-converter", changeFrequency: "weekly", priority: 0.9 },
   { path: "/audio-to-text-converter", changeFrequency: "weekly", priority: 0.9 },
   { path: "/youtube-transcript-generator", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/tiktok-transcript-generator", changeFrequency: "weekly", priority: 0.9 },
   { path: "/ai-video-summarizer", changeFrequency: "weekly", priority: 0.9 },
   { path: "/youtube-subtitle-downloader", changeFrequency: "weekly", priority: 0.9 },
 ];

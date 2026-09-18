@@ -56,7 +56,7 @@ export default function Page() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Audio to Text Converter",
+    name: "Audio to Text",
     applicationCategory: "MultimediaApplication",
     operatingSystem: "Web",
     description: audioToTextConverterSeo.meta.description,

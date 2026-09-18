@@ -4,13 +4,14 @@ import { getLocale, setRequestLocale } from "next-intl/server";
 import { locales, defaultLocale } from "@/i18n/locale";
 import { cn } from "@/lib/utils";
 import localFont from "next/font/local";
-import { Lexend } from "next/font/google";
 import MicrosoftClarity from "@/components/analytics/microsoft-clarity";
 
-const lexend = Lexend({
-  subsets: ["latin"],
+const lexend = localFont({
+  src: "../fonts/lexend-latin.woff2",
+  weight: "100 900",
   display: "swap",
   variable: "--font-lexend",
+  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
 });
 
 const inter = localFont({

@@ -7,6 +7,7 @@ import { ChevronDown, Menu, X } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useAppContext } from "@/contexts/app";
 import { content, CONVERT_HREF, FREE_TEST_HREF, FULL_REPORT_HREF } from "./data";
+import { isToTextSensitivePath, softenToTextLabel } from "./nav-labels";
 import { btnPrimary, V } from "./visual";
 
 const DASHBOARD_HREF = "/dashboard";
@@ -205,9 +206,19 @@ export default function FaceRatingSiteHeader({
 }: {
   hideBrandOnDesktop?: boolean;
 } = {}) {
-  const { brand, nav } = content;
+  const { brand } = content;
   // next-intl pathname is without locale prefix
   const pathname = usePathname() || "";
+  const hideHomeKeyword = isToTextSensitivePath(pathname);
+  const nav = hideHomeKeyword
+    ? (JSON.parse(
+        JSON.stringify(content.nav, (key, value) =>
+          (key === "label" || key === "title") && typeof value === "string"
+            ? softenToTextLabel(value)
+            : value,
+        ),
+      ) as typeof content.nav)
+    : content.nav;
   const { data: session, status } = useSession();
   const { setShowSignModal } = useAppContext();
   const sessionEmail =
@@ -255,13 +266,13 @@ export default function FaceRatingSiteHeader({
             href="/"
             className={`shrink-0 ${hideBrandOnDesktop ? "md:hidden" : ""}`}
             style={{ color: V.ink }}
-            aria-label={`${brand.name} — home`}
+            aria-label={hideHomeKeyword ? "Home" : `${brand.name} — home`}
           >
             <span className="inline-flex items-center gap-2">
               <span className="inline-flex h-8 w-8 items-center justify-center bg-transparent">
                 <img src="/favicon.svg" alt="" width={32} height={32} className="h-8 w-8 object-contain" />
               </span>
-              <span className="sr-only">{brand.name}</span>
+              <span className="sr-only">{hideHomeKeyword ? "Home" : brand.name}</span>
             </span>
           </Link>
 

@@ -32,7 +32,10 @@ function isSelfContainedShellPath(pathname: string, locale: string) {
     clean.includes("/dashboard") ||
     clean.includes("/pricing") ||
     /\/[a-z0-9-]+-to-text-converter(?:\/|$)/.test(clean) ||
+    clean.includes("/audio-to-text") ||
+    clean.includes("/video-to-text") ||
     clean.includes("/youtube-transcript-generator") ||
+    clean.includes("/tiktok-transcript-generator") ||
     clean.includes("/ai-video-summarizer") ||
     clean.includes("/youtube-subtitle-downloader") ||
     clean.includes("/my-assets") ||
