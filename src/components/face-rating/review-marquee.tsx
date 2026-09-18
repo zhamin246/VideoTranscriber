@@ -5,6 +5,15 @@ import { content } from "./data";
 import { usePathname } from "@/i18n/navigation";
 import { isToTextSensitivePath, softenToTextLabel } from "./nav-labels";
 
+type ReviewItem = {
+  rating: number;
+  title: string;
+  quote: string;
+  name: string;
+  role: string;
+  avatar: string;
+};
+
 function StarRow({ n }: { n: number }) {
   return (
     <div className="flex">
@@ -21,7 +30,7 @@ function ReviewCard({
   item,
   hidden,
 }: {
-  item: (typeof content.usersSay.items)[number];
+  item: ReviewItem;
   hidden?: boolean;
 }) {
   return (
@@ -45,7 +54,7 @@ function ReviewColumn({
   msPerPixel,
   className = "",
 }: {
-  reviews: ReadonlyArray<(typeof content.usersSay.items)[number]>;
+  reviews: ReadonlyArray<ReviewItem>;
   msPerPixel: number;
   className?: string;
 }) {
@@ -82,13 +91,13 @@ function ReviewColumn({
 
 export default function ReviewMarquee() {
   const pathname = usePathname() || "";
-  const items = isToTextSensitivePath(pathname)
+  const items: ReviewItem[] = isToTextSensitivePath(pathname)
     ? content.usersSay.items.map((it) => ({
         ...it,
         title: softenToTextLabel(it.title),
         quote: softenToTextLabel(it.quote),
       }))
-    : content.usersSay.items;
+    : [...content.usersSay.items];
   const cols = [0, 1, 2].map((col) => items.filter((_, i) => i % 3 === col));
 
   return (
