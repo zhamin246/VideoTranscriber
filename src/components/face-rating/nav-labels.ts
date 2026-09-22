@@ -24,5 +24,8 @@ export function softenToTextLabel(label: string): string {
 }
 
 export function isToTextSensitivePath(pathname: string): boolean {
-  return pathname.includes("/tiktok-transcript-generator");
+  return (
+    pathname.includes("/tiktok-transcript-generator") ||
+    pathname.includes("/instagram-transcript-generator")
+  );
 }

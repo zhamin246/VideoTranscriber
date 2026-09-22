@@ -13,7 +13,7 @@ import { btnPrimary, V } from "./visual";
 const DASHBOARD_HREF = "/dashboard";
 
 const MEGA_MENU_CLASS =
-  "absolute left-0 top-full z-50 grid max-w-[min(96vw,960px)] grid-cols-2 gap-x-5 gap-y-4 rounded-xl border border-neutral-200 bg-white p-4 shadow-lg lg:w-[960px] lg:grid-cols-4";
+  "absolute left-0 top-full z-50 grid max-w-[min(96vw,720px)] grid-cols-2 gap-x-5 gap-y-4 rounded-xl border border-neutral-200 bg-white p-4 shadow-lg lg:w-[720px] lg:grid-cols-3";
 const SIMPLE_MENU_CLASS =
   "absolute left-0 top-full z-50 w-max min-w-[240px] rounded-xl border border-neutral-200 bg-white py-1.5 shadow-lg";
 

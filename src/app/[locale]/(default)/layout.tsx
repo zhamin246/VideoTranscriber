@@ -36,6 +36,7 @@ function isSelfContainedShellPath(pathname: string, locale: string) {
     clean.includes("/video-to-text") ||
     clean.includes("/youtube-transcript-generator") ||
     clean.includes("/tiktok-transcript-generator") ||
+    clean.includes("/instagram-transcript-generator") ||
     clean.includes("/ai-video-summarizer") ||
     clean.includes("/youtube-subtitle-downloader") ||
     clean.includes("/my-assets") ||

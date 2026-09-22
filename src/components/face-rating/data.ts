@@ -9,6 +9,7 @@ import { AI_VIDEO_SUMMARIZER_HREF } from "@/lib/convert/ai-video-summarizer-cont
 import { YOUTUBE_SUBTITLE_DOWNLOADER_HREF } from "@/lib/convert/youtube-subtitle-downloader-content";
 import { YOUTUBE_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/youtube-transcript-generator-content";
 import { TIKTOK_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/tiktok-transcript-generator-content";
+import { INSTAGRAM_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/instagram-transcript-generator-content";
 
 export const FREE_TEST_HREF = "/tools/ai-attractiveness-test";
 export const FULL_REPORT_HREF = "/tools/full-analysis";
@@ -32,85 +33,25 @@ export const content = {
           {
             title: "Video Transcriber",
             items: [
+              { label: "Video to Text", href: CONVERT_HREF },
               { label: "AI Video Summarizer", href: AI_VIDEO_SUMMARIZER_HREF },
-              { label: "Video to Word", href: CONVERT_HREF },
-              { label: "Video Link to Text", href: CONVERT_HREF },
-              { label: "MP4 to Text", href: CONVERT_HREF },
-              { label: "MOV to Text", href: CONVERT_HREF },
-              { label: "Video to SRT", href: CONVERT_HREF },
-              { label: "Time Code Transcription", href: CONVERT_HREF },
-              { label: "Speaker Label Transcription", href: CONVERT_HREF },
             ],
           },
           {
             title: "Audio Transcriber",
             items: [
               { label: "Audio to Text", href: AUDIO_TO_TEXT_CONVERTER_HREF },
-              { label: "AI Audio Summarizer", href: CONVERT_HREF },
-              { label: "Audio to Word", href: CONVERT_HREF },
-              { label: "MP3 to Text", href: CONVERT_HREF },
-              { label: "Audio to SRT", href: CONVERT_HREF },
-              { label: "M4A to Text", href: CONVERT_HREF },
-              { label: "WAV to Text", href: CONVERT_HREF },
-              { label: "Voicemail to Text", href: CONVERT_HREF },
-              { label: "Voice Memos to Text", href: CONVERT_HREF },
-              { label: "Dictation to Text", href: CONVERT_HREF },
             ],
           },
           {
             title: "Social Media Transcriber",
             items: [
               { label: "YouTube Transcript Generator", href: YOUTUBE_TRANSCRIPT_GENERATOR_HREF },
-              { label: "YouTube Video Summarizer", href: CONVERT_HREF },
               { label: "YouTube Subtitle Downloader", href: YOUTUBE_SUBTITLE_DOWNLOADER_HREF },
-              { label: "YouTube to Word", href: CONVERT_HREF },
               { label: "TikTok Transcript Generator", href: TIKTOK_TRANSCRIPT_GENERATOR_HREF },
-              { label: "TikTok Video Summarizer", href: CONVERT_HREF },
-              { label: "Facebook Transcript Generator", href: CONVERT_HREF },
-              { label: "Instagram Transcript Generator", href: CONVERT_HREF },
-              { label: "Instagram Video Summarizer", href: CONVERT_HREF },
-              { label: "X Transcript Generator", href: CONVERT_HREF },
-              { label: "Bilibili Transcript Generator", href: CONVERT_HREF },
+              { label: "Instagram Transcript Generator", href: INSTAGRAM_TRANSCRIPT_GENERATOR_HREF },
             ],
           },
-        ],
-      },
-      {
-        label: "Solutions",
-        groups: [
-          {
-            title: "Meetings & Business",
-            items: [
-              { label: "Meeting Transcription", href: "/#usecases" },
-              { label: "Zoom Transcription", href: CONVERT_HREF },
-              { label: "Google Meet Transcription", href: CONVERT_HREF },
-              { label: "Microsoft Teams Transcription", href: CONVERT_HREF },
-              { label: "Phone Call Transcription", href: CONVERT_HREF },
-              { label: "Customer Support Call Transcription", href: CONVERT_HREF },
-              { label: "Interview Transcription", href: "/#usecases" },
-              { label: "Sales Call Transcription", href: "/#usecases" },
-              { label: "Webinar Transcription", href: "/#usecases" },
-              { label: "AI Voice Recorder", href: CONVERT_HREF },
-            ],
-          },
-          {
-            title: "Learning & Content",
-            items: [
-              { label: "Study Notes Generator", href: AI_VIDEO_SUMMARIZER_HREF },
-              { label: "Online Course Transcription", href: CONVERT_HREF },
-              { label: "Podcast to Transcript", href: CONVERT_HREF },
-              { label: "Audiobook Transcription", href: CONVERT_HREF },
-              { label: "Sermon Transcription", href: CONVERT_HREF },
-            ],
-          },
-        ],
-      },
-      {
-        label: "Compare",
-        items: [
-          { label: "Video Transcriber vs Otter", href: CONVERT_HREF },
-          { label: "Video Transcriber vs Notta", href: CONVERT_HREF },
-          { label: "Video Transcriber vs TurboScribe", href: CONVERT_HREF },
         ],
       },
     ],

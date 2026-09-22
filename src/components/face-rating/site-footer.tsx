@@ -5,6 +5,7 @@ import { AI_VIDEO_SUMMARIZER_HREF } from "@/lib/convert/ai-video-summarizer-cont
 import { YOUTUBE_SUBTITLE_DOWNLOADER_HREF } from "@/lib/convert/youtube-subtitle-downloader-content";
 import { YOUTUBE_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/youtube-transcript-generator-content";
 import { TIKTOK_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/tiktok-transcript-generator-content";
+import { INSTAGRAM_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/instagram-transcript-generator-content";
 import { softenToTextLabel } from "./nav-labels";
 
 type FooterLink = { label: string; href: string };
@@ -15,20 +16,14 @@ type FooterGroup = {
   more?: FooterLink;
 };
 
-/** 4 columns matching videotranscriber.ai footer layout */
+/** Link columns: real pages only. */
 const COLUMNS: FooterGroup[][] = [
   [
     {
       title: "Video Transcriber",
       links: [
+        { label: "Video to Text", href: CONVERT_HREF },
         { label: "AI Video Summarizer", href: AI_VIDEO_SUMMARIZER_HREF },
-        { label: "Video to Word", href: CONVERT_HREF },
-        { label: "Video Link to Text", href: CONVERT_HREF },
-        { label: "MP4 to Text", href: CONVERT_HREF },
-        { label: "MOV to Text", href: CONVERT_HREF },
-        { label: "Video to SRT", href: CONVERT_HREF },
-        { label: "Time Code Transcription", href: CONVERT_HREF },
-        { label: "Speaker Label Transcription", href: CONVERT_HREF },
       ],
     },
   ],
@@ -37,81 +32,28 @@ const COLUMNS: FooterGroup[][] = [
       title: "Audio Transcriber",
       links: [
         { label: "Audio to Text", href: AUDIO_TO_TEXT_CONVERTER_HREF },
-        { label: "AI Audio Summarizer", href: CONVERT_HREF },
-        { label: "Audio to Word", href: CONVERT_HREF },
-        { label: "MP3 to Text", href: CONVERT_HREF },
-        { label: "Audio to SRT", href: CONVERT_HREF },
-        { label: "M4A to Text", href: CONVERT_HREF },
-        { label: "WAV to Text", href: CONVERT_HREF },
-        { label: "Voicemail to Text", href: CONVERT_HREF },
-        { label: "Voice Memos to Text", href: CONVERT_HREF },
-        { label: "Dictation to Text", href: CONVERT_HREF },
       ],
     },
     {
       title: "Social Media Transcriber",
       links: [
         { label: "YouTube Transcript Generator", href: YOUTUBE_TRANSCRIPT_GENERATOR_HREF },
-        { label: "YouTube Video Summarizer", href: CONVERT_HREF },
         { label: "YouTube Subtitle Downloader", href: YOUTUBE_SUBTITLE_DOWNLOADER_HREF },
-        { label: "YouTube to Word", href: CONVERT_HREF },
         { label: "TikTok Transcript Generator", href: TIKTOK_TRANSCRIPT_GENERATOR_HREF },
-        { label: "TikTok Video Summarizer", href: CONVERT_HREF },
-        { label: "Facebook Transcript Generator", href: CONVERT_HREF },
-        { label: "Instagram Transcript Generator", href: CONVERT_HREF },
-        { label: "Instagram Video Summarizer", href: CONVERT_HREF },
-        { label: "X Transcript Generator", href: CONVERT_HREF },
-        { label: "Bilibili Transcript Generator", href: CONVERT_HREF },
+        { label: "Instagram Transcript Generator", href: INSTAGRAM_TRANSCRIPT_GENERATOR_HREF },
       ],
     },
   ],
   [
-    {
-      title: "Meetings & Business",
-      links: [
-        { label: "Meeting Transcription", href: "/#usecases" },
-        { label: "Zoom Transcription", href: CONVERT_HREF },
-        { label: "Google Meet Transcription", href: CONVERT_HREF },
-        { label: "Microsoft Teams Transcription", href: CONVERT_HREF },
-        { label: "Phone Call Transcription", href: CONVERT_HREF },
-        { label: "Customer Support Call Transcription", href: CONVERT_HREF },
-        { label: "Interview Transcription", href: "/#usecases" },
-        { label: "Sales Call Transcription", href: "/#usecases" },
-        { label: "Webinar Transcription", href: "/#usecases" },
-        { label: "AI Voice Recorder", href: CONVERT_HREF },
-      ],
-    },
-    {
-      title: "Learning & Content",
-      links: [
-        { label: "Study Notes Generator", href: AI_VIDEO_SUMMARIZER_HREF },
-        { label: "Online Course Transcription", href: CONVERT_HREF },
-        { label: "Podcast to Transcript", href: CONVERT_HREF },
-        { label: "Audiobook Transcription", href: CONVERT_HREF },
-        { label: "Sermon Transcription", href: CONVERT_HREF },
-      ],
-    },
-  ],
-  [
-    {
-      title: "Compare",
-      links: [
-        { label: "Video Transcriber vs Otter", href: CONVERT_HREF },
-        { label: "Video Transcriber vs Notta", href: CONVERT_HREF },
-        { label: "Video Transcriber vs TurboScribe", href: CONVERT_HREF },
-      ],
-    },
     {
       title: "About",
       links: [
         { label: "Pricing", href: "/pricing" },
-        { label: "Blog", href: "/" },
+        { label: "Blog", href: "/posts" },
         { label: "Privacy", href: "/privacy-policy" },
-        { label: "Extension Privacy", href: "/privacy-policy" },
         { label: "Terms", href: "/terms-of-service" },
         { label: "Contact Us", href: "mailto:support@videotranscriber.pro" },
         { label: "Help Center", href: "/#faq" },
-        { label: "Copyright Claims", href: "/terms-of-service" },
       ],
     },
   ],
@@ -147,30 +89,6 @@ function BrandMark({ hideName = false }: { hideName?: boolean }) {
         </span>
       )}
     </span>
-  );
-}
-
-function XIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden fill="currentColor">
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.727-8.924L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z" />
-    </svg>
-  );
-}
-
-function DiscordIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden fill="currentColor">
-      <path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.331c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />
-    </svg>
-  );
-}
-
-function YouTubeIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden fill="currentColor">
-      <path d="M23.5 6.2a3.02 3.02 0 0 0-2.12-2.14C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.38.56A3.02 3.02 0 0 0 .5 6.2 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.8 3.02 3.02 0 0 0 2.12 2.14C4.5 20.5 12 20.5 12 20.5s7.5 0 9.38-.56a3.02 3.02 0 0 0 2.12-2.14A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.8zM9.75 15.5v-7L15.5 12l-5.75 3.5z" />
-    </svg>
   );
 }
 
@@ -253,38 +171,11 @@ export default function FaceRatingSiteFooter({
             >
               Feedback
             </Link>
-            <a
-              href="https://x.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="X"
-              className="text-slate-500 transition-colors hover:text-[#1C6CFB]"
-            >
-              <XIcon className="h-5 w-5" />
-            </a>
-            <a
-              href="https://discord.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Discord"
-              className="text-slate-500 transition-colors hover:text-[#1C6CFB]"
-            >
-              <DiscordIcon className="h-5 w-5" />
-            </a>
-            <a
-              href="https://www.youtube.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="YouTube"
-              className="text-slate-500 transition-colors hover:text-[#1C6CFB]"
-            >
-              <YouTubeIcon className="h-5 w-5" />
-            </a>
           </div>
         </div>
 
         {/* Link columns */}
-        <div className="grid grid-cols-1 gap-8 py-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10">
+        <div className="grid grid-cols-1 gap-8 py-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
           {COLUMNS.map((col, i) => (
             <div key={i}>
               {col.map((group) => (
