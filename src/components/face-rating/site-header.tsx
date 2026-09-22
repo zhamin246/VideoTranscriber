@@ -22,10 +22,18 @@ function pathOnly(href: string): string {
   return href.split("?")[0].split("#")[0] || "/";
 }
 
-function isNavMore(value: unknown): value is { label: string; href: string } {
+type NavLink = { label: string; href: string };
+
+function isNavMore(value: unknown): value is NavLink {
   if (!value || typeof value !== "object") return false;
   const rec = value as { label?: unknown; href?: unknown };
   return typeof rec.label === "string" && typeof rec.href === "string";
+}
+
+function navMenuItems(menu: object): NavLink[] | undefined {
+  if (!("items" in menu) || !Array.isArray(menu.items)) return undefined;
+  const items = menu.items.filter(isNavMore);
+  return items.length ? items : undefined;
 }
 
 function isNavActive(pathname: string, hash: string, href: string): boolean {
@@ -280,7 +288,7 @@ export default function FaceRatingSiteHeader({
             {nav.menus.map((menu) => {
               const openMenu = menuOpen === menu.label;
               const groups = "groups" in menu ? menu.groups : undefined;
-              const items = "items" in menu ? menu.items : undefined;
+              const items = navMenuItems(menu);
               const more = "more" in menu && isNavMore(menu.more) ? menu.more : undefined;
               const isMega = Boolean(groups?.length);
 
@@ -425,7 +433,7 @@ export default function FaceRatingSiteHeader({
           <div className="flex flex-col gap-1">
             {nav.menus.map((menu) => {
               const groups = "groups" in menu ? menu.groups : undefined;
-              const items = "items" in menu ? menu.items : undefined;
+              const items = navMenuItems(menu);
               const more = "more" in menu && isNavMore(menu.more) ? menu.more : undefined;
               return (
                 <div key={menu.label} className="mb-2">
