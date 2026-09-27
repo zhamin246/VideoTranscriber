@@ -6,6 +6,7 @@ import { YOUTUBE_SUBTITLE_DOWNLOADER_HREF } from "@/lib/convert/youtube-subtitle
 import { YOUTUBE_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/youtube-transcript-generator-content";
 import { TIKTOK_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/tiktok-transcript-generator-content";
 import { INSTAGRAM_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/instagram-transcript-generator-content";
+import { FACEBOOK_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/facebook-transcript-generator-content";
 import { softenToTextLabel } from "./nav-labels";
 
 type FooterLink = { label: string; href: string };
@@ -41,6 +42,7 @@ const COLUMNS: FooterGroup[][] = [
         { label: "YouTube Subtitle Downloader", href: YOUTUBE_SUBTITLE_DOWNLOADER_HREF },
         { label: "TikTok Transcript Generator", href: TIKTOK_TRANSCRIPT_GENERATOR_HREF },
         { label: "Instagram Transcript Generator", href: INSTAGRAM_TRANSCRIPT_GENERATOR_HREF },
+        { label: "Facebook Transcript Generator", href: FACEBOOK_TRANSCRIPT_GENERATOR_HREF },
       ],
     },
   ],

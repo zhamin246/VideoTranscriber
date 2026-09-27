@@ -39,6 +39,7 @@ const MORE_TOOLS: {
   { label: "YouTube to text", href: "/youtube-transcript-generator", icon: FileType, tone: "orange" },
   { label: "TikTok transcript", href: "/tiktok-transcript-generator", icon: FileType, tone: "cyan" },
   { label: "Instagram transcript", href: "/instagram-transcript-generator", icon: FileType, tone: "pink" },
+  { label: "Facebook transcript", href: "/facebook-transcript-generator", icon: FileType, tone: "blue" },
   { label: "Meetings", href: "/#usecases", icon: Pencil, tone: "cyan" },
   { label: "Interviews", href: "/#usecases", icon: Camera, tone: "pink" },
   { label: "Podcasts", href: "/#usecases", icon: Sparkles, tone: "purple" },
