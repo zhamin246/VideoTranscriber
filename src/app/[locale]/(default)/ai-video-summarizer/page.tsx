@@ -56,7 +56,7 @@ export default function Page() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "AI Video Summarizer",
+    name: aiVideoSummarizerSeo.meta.title,
     applicationCategory: "MultimediaApplication",
     operatingSystem: "Web",
     description: aiVideoSummarizerSeo.meta.description,

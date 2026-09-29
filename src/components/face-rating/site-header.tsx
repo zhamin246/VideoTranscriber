@@ -7,7 +7,7 @@ import { ChevronDown, Menu, X } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useAppContext } from "@/contexts/app";
 import { content, CONVERT_HREF, FREE_TEST_HREF, FULL_REPORT_HREF } from "./data";
-import { isToTextSensitivePath, softenToTextLabel } from "./nav-labels";
+import { isToTextSensitivePath } from "./nav-labels";
 import { btnPrimary, V } from "./visual";
 
 const DASHBOARD_HREF = "/dashboard";
@@ -218,15 +218,7 @@ export default function FaceRatingSiteHeader({
   // next-intl pathname is without locale prefix
   const pathname = usePathname() || "";
   const hideHomeKeyword = isToTextSensitivePath(pathname);
-  const nav = hideHomeKeyword
-    ? (JSON.parse(
-        JSON.stringify(content.nav, (key, value) =>
-          (key === "label" || key === "title") && typeof value === "string"
-            ? softenToTextLabel(value)
-            : value,
-        ),
-      ) as typeof content.nav)
-    : content.nav;
+  const nav = content.nav;
   const { data: session, status } = useSession();
   const { setShowSignModal } = useAppContext();
   const sessionEmail =

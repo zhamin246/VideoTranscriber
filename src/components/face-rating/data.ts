@@ -32,16 +32,16 @@ export const content = {
         label: "Transcribe",
         groups: [
           {
-            title: "Video Transcriber",
+            title: "Video Tools",
             items: [
-              { label: "Video to Text", href: CONVERT_HREF },
+              { label: "Video transcript", href: CONVERT_HREF },
               { label: "AI Video Summarizer", href: AI_VIDEO_SUMMARIZER_HREF },
             ],
           },
           {
             title: "Audio Transcriber",
             items: [
-              { label: "Audio to Text", href: AUDIO_TO_TEXT_CONVERTER_HREF },
+              { label: "Audio transcript", href: AUDIO_TO_TEXT_CONVERTER_HREF },
             ],
           },
           {

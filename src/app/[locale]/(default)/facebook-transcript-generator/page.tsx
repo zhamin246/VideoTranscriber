@@ -56,7 +56,7 @@ export default function Page() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Facebook Transcript Generator",
+    name: facebookTranscriptGeneratorSeo.meta.title,
     applicationCategory: "MultimediaApplication",
     operatingSystem: "Web",
     description: facebookTranscriptGeneratorSeo.meta.description,

@@ -1,107 +1,110 @@
 /**
  * SEO copy for /ai-video-summarizer.
- * Primary keyword: "AI Video Summarizer"
- * Claims limited to in-app capabilities. No long-form article block.
+ * Primary: "ai video summarizer" ~3% in on-page phrase tools (~16 hits).
+ * Title includes brand. Body stays distinct from homepage / social transcript URLs.
+ * Do not clone upload / SRT / format-list blocks from sister pages.
+ * Do not use homepage 2-gram "video transcriber".
+ * Do not prefix the keyword with "a" / "an" / "this".
  */
 
 export const AI_VIDEO_SUMMARIZER_HREF = "/ai-video-summarizer";
 
 export const aiVideoSummarizerSeo = {
   meta: {
-    title: "AI Video Summarizer for Key Points | Video Transcriber",
+    title: "AI Video Summarizer for Notes | Video Transcriber",
     description:
-      "Use this AI Video Summarizer after a file or public link. Get notes, chapters, and the full transcript. Export TXT, DOCX, SRT, or VTT.",
+      "AI video summarizer writes notes, chapters, and answers from speech. Skip a second full watch after the recording is in the workspace.",
   },
   hero: {
-    h1: "Get Notes from Speech with an AI Video Summarizer",
+    h1: "AI Video Summarizer for Notes, Not Another Full Watch",
     subtitle:
-      "This AI Video Summarizer turns spoken video into a transcript first, then into notes you can scan. Upload a file or paste a public media link — then generate summaries, chapters, Ask AI answers, or a mind map in your workspace.",
+      "AI video summarizer writes the recap: key points, chapter titles, and questions grounded in what was said. Speech is written first so the notes have a source. Word-for-word export lives on the home page if that is all you need.",
     chips: [
-      { label: "File upload", color: "#3B82F6" },
-      { label: "Link paste", color: "#60A5FA" },
-      { label: "AI notes", color: "#8882F5" },
-      { label: "Chapters", color: "#14B8A6" },
-      { label: "Ask AI", color: "#38BDF8" },
+      { label: "Smart Summary", color: "#8882F5" },
+      { label: "Meeting notes", color: "#14B8A6" },
+      { label: "Chapter list", color: "#38BDF8" },
+      { label: "Ask the recording", color: "#60A5FA" },
+      { label: "Mind map", color: "#3B82F6" },
     ],
   },
   how: {
-    title: "How this AI Video Summarizer works",
-    lead: "An AI Video Summarizer exists to turn a long spoken video into notes you can read without replaying every minute. On this page that means a file upload or a public link, then transcription, then notes in the same workspace. The full transcript stays next to the recap — a short summary never replaces the original words. You pick a note preset after the speech is on the page, not before the file is added.",
+    title: "How AI video summarizer turns speech into notes",
+    lead: "The job on this URL is the write-up, not a new edited clip. Put a recording in the workspace, wait until speech is on the page, then pick a note preset. AI video summarizer does not join a live call and does not detect clicks on screen.",
     steps: [
       {
         n: "1",
-        title: "Add your video",
-        body: "Upload common formats such as MP4, MOV, WebM, or MKV, or paste a public link from YouTube, TikTok, Instagram, Facebook, X, Apple Podcasts, or Bilibili. This AI Video Summarizer is built around speech in a file or a reachable public URL — private or login-walled media may not download.",
+        title: "Open the recording in the workspace",
+        body: "Drop the file you already have, or paste a URL you can open while logged out. The recap cannot start until spoken audio is reachable. Closed meetings and login walls stay out.",
         src: "https://cdn.videotranscriber.pro/videotranscriber/landing/howtouse/summarizer-step-1.webp",
       },
       {
         n: "2",
-        title: "Transcribe, then summarize",
-        body: "This AI Video Summarizer extracts speech with AI, then builds notes from that transcript. Choose auto language detect or a source language, and optionally separate speakers so dialogue is easier to follow.",
+        title: "Pick a preset in AI video summarizer",
+        body: "Presets are chosen after the words exist, not in the file picker. Smart Summary, Study Notes, Meeting Summary, Interview Notes, and Podcast Show Notes each shape the same speech differently.",
         src: "https://cdn.videotranscriber.pro/videotranscriber/landing/howtouse/summarizer-step-2.webp",
       },
       {
         n: "3",
-        title: "Read notes or export",
-        body: "Open the workspace to generate Smart Summary, Core Points, Study Notes, Meeting Summary, and other note presets. Add chapters, Ask AI, or a mind map. Copy text or download TXT, DOCX, SRT, VTT, or CSV.",
+        title: "Read the recap, then ask or copy",
+        body: "Scan the notes, jump by chapter, or ask a question that can only be answered from this recording. Copy the write-up into the doc you already use. A mind map is optional when you want topics as a tree.",
         src: "https://cdn.videotranscriber.pro/videotranscriber/landing/howtouse/summarizer-step-3.webp",
       },
     ],
   },
   features: {
-    title: "What you can do with this AI Video Summarizer",
-    lead: "Use this AI Video Summarizer to transcribe a file or a public link, then generate AI notes, chapters, and a mind map. Export TXT, DOCX, SRT, VTT, or CSV. It does not cut a new short video or join a live call. Browser recording exists on the shared upload widget, but this page is for speech you already have in a file or a reachable URL.",
+    title: "What AI video summarizer writes besides a recap",
+    lead: "Use the presets for different rooms: class, call, interview, episode. The original speech stays next to the notes so you can check a line. This is not a highlight-reel cutter.",
     rows: [
       {
-        title: "Start from a file or public link",
-        body: "This AI Video Summarizer accepts MP4, MOV, WebM, and MKV, plus audio such as MP3, WAV, and M4A. Paste a public YouTube, TikTok, Instagram, Facebook, X, Apple Podcasts, or Bilibili link. Add speaker labels and language selection when you need them. Private or blocked media may not download.",
-        src: "https://cdn.videotranscriber.pro/videotranscriber/landing/features/summarizer-feature-1-upload.webp",
-        alt: "Upload or paste a video to summarize",
+        title: "Note styles for the same speech",
+        body: "Core Points is a short list. Chapter Summary follows the timeline. Study Notes keep headings you can review later. Meeting Summary hunts decisions and owners. Interview Notes pull quotes. Pick one after AI video summarizer has the spoken track.",
+        src: "https://cdn.videotranscriber.pro/videotranscriber/landing/features/summarizer-feature-2-summary.webp",
+        alt: "Note presets for a speech recap",
         imageRight: true,
       },
       {
-        title: "Generate notes, chapters, and key points",
-        body: "After this AI Video Summarizer finishes transcription, pick a note preset such as Smart Summary, Summary, Core Points, Chapter Summary, Study Notes, Meeting Summary, Interview Notes, or Podcast Show Notes. Use chapters for a timeline, Ask AI for questions grounded in the transcript, and a mind map when you want a topic tree.",
-        src: "https://cdn.videotranscriber.pro/videotranscriber/landing/features/summarizer-feature-2-summary.webp",
-        alt: "Generate an AI summary from video",
+        title: "Questions that stay on this recording",
+        body: "Ask AI only sees the speech already in this workspace. It will not search the web, and it will not invent a scene that was never said. Run the recap job first so there is something to ask against.",
+        src: "https://cdn.videotranscriber.pro/videotranscriber/landing/features/summarizer-feature-1-upload.webp",
+        alt: "Ask questions against summarized speech",
         imageRight: false,
       },
       {
-        title: "Export the transcript and notes",
-        body: "Export as TXT, DOCX, SRT, VTT, or CSV. Copy notes for drafts, or download subtitle files for an editor. PDF transcript export and translation are not available in the current product.",
+        title: "Chapters after AI video summarizer",
+        body: "Chapters are timestamps you can click instead of dragging the playhead. A mind map groups themes from the same recap. Neither one replaces the notes; they are extra ways to move around after the write-up is done.",
         src: "https://cdn.videotranscriber.pro/videotranscriber/landing/features/summarizer-feature-3-export.webp",
-        alt: "Export a transcript and notes",
+        alt: "Chapters and mind map after a recap",
         imageRight: true,
       },
     ],
   },
   usecases: {
-    title: "When this AI Video Summarizer is the right page",
-    lead: "Use this AI Video Summarizer when you already have a class recording, a call file, a public YouTube talk, or episode audio and you want notes instead of a second full watch. MP3, WAV, M4A, MP4, MOV and other common formats are supported.",
+    title: "When AI video summarizer beats a second watch",
+    lead: "Reach for AI video summarizer when the recording is already in hand and the pain is time, not capture. If you only need every word in order, use the home page instead.",
     items: [
       {
-        title: "Lectures & courses",
-        body: "Turn a recorded lecture into Study Notes and chapter outlines with this AI Video Summarizer. Review the material with key points instead of replaying every minute. Upload the class file, or paste a public course link when the media is reachable.",
+        title: "A lecture you already saved",
+        body: "Study Notes and chapter outlines beat replaying a three-hour file. You still check the original speech when a formula or a name has to be exact.",
       },
       {
-        title: "Meetings & calls",
-        body: "Upload a Zoom, Teams, or phone recording as a file, then use Meeting Summary for decisions and follow-ups. Speaker labels help show who said what when the model can tell speakers apart. This AI Video Summarizer does not join the live meeting itself.",
+        title: "A call file after hang-up",
+        body: "Meeting Summary is for decisions and follow-ups from a Zoom or Teams recording you exported. The product never sits in the live meeting as a bot.",
       },
       {
-        title: "YouTube & online videos",
-        body: "Paste a public YouTube or other supported link. This AI Video Summarizer transcribes the spoken track, then you can generate a Smart Summary or Core Points for research.",
+        title: "A public talk you will not rewatch",
+        body: "Smart Summary or Core Points is enough for research. You are not here to download someone else’s caption file from a studio panel.",
       },
       {
-        title: "Podcasts",
-        body: "Convert episode audio or a public podcast link into Podcast Show Notes with chapter-style sections. Copy TXT or DOCX into the show notes draft you already write.",
+        title: "Episode audio for show notes",
+        body: "Podcast Show Notes draft the outline you still edit. The recap is a start, not the publish-ready description.",
       },
       {
-        title: "Interviews",
-        body: "Use Interview Notes to extract quotes, facts, and follow-up questions after this AI Video Summarizer transcribes the file or public link. Optional speaker labels keep host and guest lines easier to tell apart.",
+        title: "An interview to quote later",
+        body: "Interview Notes surface lines and follow-ups. Speaker labels help when host and guest stay on separate mics.",
       },
       {
-        title: "Tutorials",
-        body: "Capture steps from how-to videos as Core Points or a Timeline. Jump back in the workspace instead of scrubbing the player. This AI Video Summarizer still starts from speech, not from on-screen UI detection.",
+        title: "A how-to you need as a checklist",
+        body: "Timeline or Core Points lists spoken steps. Buttons and menus that only appear on screen are not read. That is not OCR.",
       },
     ],
   },
@@ -109,34 +112,34 @@ export const aiVideoSummarizerSeo = {
     title: "Frequently asked questions",
     items: [
       {
-        q: "What is an AI Video Summarizer?",
-        a: "An AI Video Summarizer turns spoken video into a shorter written recap. This page transcribes the audio first, then generates notes, chapters, Ask AI answers, and an optional mind map in the workspace. It does not produce a new short video or join a live call. You stay in the browser for the whole path.",
+        q: "What does AI video summarizer actually return?",
+        a: "A written recap from speech: notes, optional chapters, Ask AI, and a mind map. It is not a new short video and not a live meeting bot.",
       },
       {
-        q: "Do I get a transcript as well as a summary?",
-        a: "Yes. The workspace keeps the full transcript beside the notes. You can copy text or export TXT, DOCX, SRT, VTT, or CSV after this AI Video Summarizer finishes the job.",
+        q: "Is the recap the same as the full transcript?",
+        a: "No. The recap is the short write-up. The workspace still keeps the full speech next to it so you can verify a line. If you only want that full file, start on the home page.",
       },
       {
-        q: "Which files and links work?",
-        a: "Common video such as MP4, MOV, WebM, and MKV, plus audio such as MP3, WAV, and M4A. Public links from YouTube, TikTok, Instagram, Facebook, X, Apple Podcasts, and Bilibili work when the media is reachable. Private or login-walled media may fail.",
+        q: "When do I choose the note style?",
+        a: "After speech is on the page. AI video summarizer cannot shape notes from a file that has not been written out yet.",
       },
       {
-        q: "What summary styles can I generate?",
-        a: "Presets include Smart Summary, Summary, Core Points, Chapter Summary, Study Notes, Creator Repurpose, Meeting Summary, Interview Notes, Podcast Show Notes, News Brief, Timeline, and specialized modes such as SOAP and Court Summary. Choose one after transcription on this AI Video Summarizer.",
+        q: "Will Ask AI make up scenes?",
+        a: "No. Answers are limited to this recording. If it was not said, it should not appear.",
       },
       {
-        q: "Can I ask questions about the video?",
-        a: "Yes. Ask AI answers from the transcript in that workspace. It is not a general web search, and it cannot invent scenes that were never spoken. Run the AI Video Summarizer job first so the transcript exists.",
+        q: "Can it join Zoom or Teams live?",
+        a: "No. Upload a recording you already have. There is no bot that sits in the call.",
       },
       {
-        q: "Is there a free plan?",
-        a: "Yes. Free accounts get monthly minutes with daily and per-file limits, including a basic AI summary on supported jobs. See Pricing for current numbers and paid minute pools. You can run this AI Video Summarizer within those limits.",
+        q: "Is AI video summarizer free to try?",
+        a: "Yes, inside plan limits. Minutes, daily caps, and per-file size are on Pricing. This page does not reprint those numbers.",
       },
     ],
   },
   cta: {
-    title: "Run this AI Video Summarizer on your next video",
-    body: "Start the AI Video Summarizer with a file upload or a public link — then generate notes and export the transcript in the format you need. Keep the full transcript in the workspace so the recap and the original speech stay together.",
+    title: "Run AI video summarizer on the next file",
+    body: "Drop a file or a public URL, then run AI video summarizer for notes you can scan. Free use still follows Pricing.",
     button: "Start summarizing",
   },
 } as const;

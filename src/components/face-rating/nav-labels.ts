@@ -27,6 +27,8 @@ export function isToTextSensitivePath(pathname: string): boolean {
   return (
     pathname.includes("/tiktok-transcript-generator") ||
     pathname.includes("/instagram-transcript-generator") ||
-    pathname.includes("/facebook-transcript-generator")
+    pathname.includes("/facebook-transcript-generator") ||
+    pathname.includes("/ai-video-summarizer") ||
+    pathname.includes("/youtube-subtitle-downloader")
   );
 }

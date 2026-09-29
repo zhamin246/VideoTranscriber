@@ -295,45 +295,57 @@ export default function YoutubeSubtitleDownloaderPage() {
                   const isOpen = faqOpen === index;
                   return (
                     <div key={item.q}>
-                      <button
-                        type="button"
-                        onClick={() => setFaqOpen(isOpen ? null : index)}
-                        className="relative mt-4 flex w-full items-center justify-between bg-white text-left"
+                      <h3
+                        className="mt-4"
                         style={{
-                          padding: "24px",
-                          borderRadius: 8,
+                          margin: 0,
+                          marginTop: 16,
                           fontSize: 20,
                           fontWeight: 700,
                           lineHeight: 1.25,
                           letterSpacing: "-0.02em",
                           color: "rgb(76, 76, 76)",
                         }}
-                        aria-expanded={isOpen}
                       >
-                        <span>{item.q}</span>
-                        <ChevronDown
-                          className="h-10 w-10 shrink-0"
+                        <button
+                          type="button"
+                          onClick={() => setFaqOpen(isOpen ? null : index)}
+                          className="relative flex w-full items-center justify-between bg-white text-left"
                           style={{
-                            color: "rgb(136, 130, 245)",
-                            transform: isOpen ? "rotate(180deg)" : "none",
-                            transition: "transform 200ms",
+                            padding: "24px",
+                            borderRadius: 8,
+                            font: "inherit",
+                            color: "inherit",
+                            backgroundColor: "#fff",
+                            cursor: "pointer",
+                            border: "none",
                           }}
-                        />
-                      </button>
-                      {isOpen ? (
-                        <div
-                          className="mt-2"
-                          style={{
-                            padding: "8px 24px 16px",
-                            fontSize: 16,
-                            lineHeight: "24px",
-                            fontWeight: 400,
-                            color: "rgb(76, 76, 76)",
-                          }}
+                          aria-expanded={isOpen}
                         >
-                          {item.a}
-                        </div>
-                      ) : null}
+                          <span>{item.q}</span>
+                          <ChevronDown
+                            className="h-10 w-10 shrink-0"
+                            style={{
+                              color: "rgb(136, 130, 245)",
+                              transform: isOpen ? "rotate(180deg)" : "none",
+                              transition: "transform 200ms",
+                            }}
+                          />
+                        </button>
+                      </h3>
+                      <div
+                        hidden={!isOpen}
+                        className="mt-2"
+                        style={{
+                          padding: "8px 24px 16px",
+                          fontSize: 16,
+                          lineHeight: "24px",
+                          fontWeight: 400,
+                          color: "rgb(76, 76, 76)",
+                        }}
+                      >
+                        {item.a}
+                      </div>
                     </div>
                   );
                 })}
@@ -386,7 +398,7 @@ export default function YoutubeSubtitleDownloaderPage() {
             </section>
           </main>
 
-          <FaceRatingSiteFooter />
+          <FaceRatingSiteFooter softenToTextAnchors />
         </div>
       </div>
     </div>

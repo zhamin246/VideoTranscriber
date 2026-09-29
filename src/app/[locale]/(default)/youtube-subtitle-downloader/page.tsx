@@ -56,7 +56,7 @@ export default function Page() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "YouTube Subtitle Downloader",
+    name: youtubeSubtitleDownloaderSeo.meta.title,
     applicationCategory: "MultimediaApplication",
     operatingSystem: "Web",
     description: youtubeSubtitleDownloaderSeo.meta.description,

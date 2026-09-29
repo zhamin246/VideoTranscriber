@@ -1,13 +1,5 @@
 import Link from "next/link";
-import { CONVERT_HREF } from "./data";
-import { AUDIO_TO_TEXT_CONVERTER_HREF } from "@/lib/convert/audio-to-text-converter-content";
-import { AI_VIDEO_SUMMARIZER_HREF } from "@/lib/convert/ai-video-summarizer-content";
-import { YOUTUBE_SUBTITLE_DOWNLOADER_HREF } from "@/lib/convert/youtube-subtitle-downloader-content";
-import { YOUTUBE_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/youtube-transcript-generator-content";
-import { TIKTOK_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/tiktok-transcript-generator-content";
-import { INSTAGRAM_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/instagram-transcript-generator-content";
-import { FACEBOOK_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/facebook-transcript-generator-content";
-import { softenToTextLabel } from "./nav-labels";
+import { content } from "./data";
 
 type FooterLink = { label: string; href: string };
 
@@ -17,33 +9,24 @@ type FooterGroup = {
   more?: FooterLink;
 };
 
-/** Link columns: real pages only. */
+const transcribeGroups = content.nav.menus[0].groups;
+
+/** Link columns: same labels as the Transcribe header menu. */
 const COLUMNS: FooterGroup[][] = [
   [
     {
-      title: "Video Transcriber",
-      links: [
-        { label: "Video to Text", href: CONVERT_HREF },
-        { label: "AI Video Summarizer", href: AI_VIDEO_SUMMARIZER_HREF },
-      ],
+      title: transcribeGroups[0].title,
+      links: transcribeGroups[0].items,
     },
   ],
   [
     {
-      title: "Audio Transcriber",
-      links: [
-        { label: "Audio to Text", href: AUDIO_TO_TEXT_CONVERTER_HREF },
-      ],
+      title: transcribeGroups[1].title,
+      links: transcribeGroups[1].items,
     },
     {
-      title: "Social Media Transcriber",
-      links: [
-        { label: "YouTube Transcript Generator", href: YOUTUBE_TRANSCRIPT_GENERATOR_HREF },
-        { label: "YouTube Subtitle Downloader", href: YOUTUBE_SUBTITLE_DOWNLOADER_HREF },
-        { label: "TikTok Transcript Generator", href: TIKTOK_TRANSCRIPT_GENERATOR_HREF },
-        { label: "Instagram Transcript Generator", href: INSTAGRAM_TRANSCRIPT_GENERATOR_HREF },
-        { label: "Facebook Transcript Generator", href: FACEBOOK_TRANSCRIPT_GENERATOR_HREF },
-      ],
+      title: transcribeGroups[2].title,
+      links: transcribeGroups[2].items,
     },
   ],
   [
@@ -96,15 +79,13 @@ function BrandMark({ hideName = false }: { hideName?: boolean }) {
 
 function FooterGroupBlock({
   group,
-  softenToTextAnchors = false,
 }: {
   group: FooterGroup;
-  softenToTextAnchors?: boolean;
 }) {
   return (
     <div className="mb-8 last:mb-0">
       <p className="mb-3 text-sm font-semibold text-[#0F172A]">
-        {softenToTextAnchors ? softenToTextLabel(group.title) : group.title}
+        {group.title}
       </p>
       <ul className="space-y-2">
         {group.links.map((l) => (
@@ -113,7 +94,7 @@ function FooterGroupBlock({
               href={l.href}
               className="text-sm leading-5 text-[#64748B] transition-colors hover:text-[#0F172A] hover:underline"
             >
-              {softenToTextAnchors ? softenToTextLabel(l.label) : l.label}
+              {l.label}
             </Link>
           </li>
         ))}
@@ -184,7 +165,6 @@ export default function FaceRatingSiteFooter({
                 <FooterGroupBlock
                   key={group.title}
                   group={group}
-                  softenToTextAnchors={softenToTextAnchors}
                 />
               ))}
             </div>

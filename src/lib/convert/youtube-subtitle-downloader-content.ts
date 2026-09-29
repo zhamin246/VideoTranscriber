@@ -1,108 +1,110 @@
 /**
  * SEO copy for /youtube-subtitle-downloader.
- * Primary keyword: "YouTube Subtitle Downloader"
- * Claims limited to in-app capabilities. No long-form article block.
- * Honest boundary: AI speech-to-text → SRT/VTT export, not YouTube caption-track scraping.
+ * Primary: "youtube subtitle downloader" ~3% (hits / words).
+ * Distinct from /youtube-transcript-generator (full text) and homepage.
+ * Honest: AI speech → timed SRT/VTT, not YouTube caption-track scraping, not an MP4 download.
+ * Do not prefix the keyword with "a" / "this" / "our".
+ * Do not use homepage 2-gram "video transcriber" in body.
  */
 
 export const YOUTUBE_SUBTITLE_DOWNLOADER_HREF = "/youtube-subtitle-downloader";
 
 export const youtubeSubtitleDownloaderSeo = {
   meta: {
-    title: "YouTube Subtitle Downloader — SRT & VTT from a Link",
+    title: "YouTube Subtitle Downloader | Video Transcriber",
     description:
-      "Use our YouTube Subtitle Downloader to paste a public YouTube link, transcribe speech with AI, and export SRT or VTT. Also download TXT, DOCX, or CSV.",
+      "YouTube Subtitle Downloader writes timed SRT or VTT from public speech. It does not copy YouTube’s caption panel and does not save the video file.",
   },
   hero: {
-    h1: "YouTube Subtitle Downloader",
+    h1: "YouTube Subtitle Downloader for Timed SRT and VTT",
     subtitle:
-      "This YouTube Subtitle Downloader turns speech from a public YouTube video into SRT or VTT you can use in an editor. Paste a watch, Shorts, or youtu.be link. We transcribe the audio with AI — captions do not need to exist on the watch page. You can also export TXT, DOCX, or CSV from the same job.",
+      "YouTube Subtitle Downloader is for a caption file you can drop on a timeline. Speech is timed first. If you only want a readable script, use the YouTube transcript page instead.",
     chips: [
-      { label: "Link paste", color: "#60A5FA" },
-      { label: "SRT & VTT export", color: "#38BDF8" },
-      { label: "AI transcription", color: "#8882F5" },
-      { label: "Speaker labels", color: "#14B8A6" },
-      { label: "TXT & DOCX", color: "#3B82F6" },
+      { label: "SRT for editors", color: "#38BDF8" },
+      { label: "VTT for players", color: "#60A5FA" },
+      { label: "From speech", color: "#8882F5" },
+      { label: "Public watch URL", color: "#14B8A6" },
+      { label: "Not an MP4 grab", color: "#3B82F6" },
     ],
   },
   how: {
-    title: "How this YouTube Subtitle Downloader works",
-    lead: "Three steps take you from a public YouTube URL to SRT or VTT. Spoken audio is transcribed first, so you still get a file when there is no caption panel to copy. Review the cues in the workspace before you import them.",
+    title: "How YouTube Subtitle Downloader builds cues",
+    lead: "It listens to reachable audio, then writes in- and out-times. Empty CC on the watch page is fine. Closed or age-gated videos will not fetch. Playlists are not one job.",
     steps: [
       {
         n: "1",
-        title: "Paste your YouTube link",
-        body: "Copy a public watch, Shorts, or youtu.be URL into the link tab. Private, age-gated, or login-walled videos may not fetch. Playlists are not one job.",
+        title: "Give it one public watch URL",
+        body: "Paste the video you can open while logged out. One URL per run. A channel page or a mix of many ids will not produce a single caption file.",
         src: "https://cdn.videotranscriber.pro/videotranscriber/landing/howtouse/subtitle-step-1.webp",
       },
       {
         n: "2",
-        title: "Transcribe the spoken audio",
-        body: "This YouTube Subtitle Downloader fetches reachable audio and transcribes speech with AI. It does not scrape every caption language track YouTube stores. Pick auto detect or a source language, and optionally separate speakers.",
+        title: "Let YouTube Subtitle Downloader time the speech",
+        body: "Cues come from audio, not from YouTube Studio and not from a scraped language list. Pick a source language if you already know it. Two speakers can be split when the voices stay distinct.",
         src: "https://cdn.videotranscriber.pro/videotranscriber/landing/howtouse/subtitle-step-2.webp",
       },
       {
         n: "3",
-        title: "Download SRT or VTT",
-        body: "Review timed text in the workspace, then export SRT or VTT. TXT, DOCX, and CSV are also available. PDF, translation, and burning captions into a video are not in the current product.",
+        title: "Take SRT or VTT off the workspace",
+        body: "Check names and numbers, then export. SRT is the usual editor file. VTT is the usual web-player file. This page does not burn captions onto a picture and does not hand you the MP4.",
         src: "https://cdn.videotranscriber.pro/videotranscriber/landing/howtouse/subtitle-step-3.webp",
       },
     ],
   },
   features: {
-    title: "What you can do with this YouTube Subtitle Downloader",
-    lead: "Paste a public link, transcribe speech with AI, then export SRT or VTT — or TXT, DOCX, and CSV from the same workspace.",
+    title: "What YouTube Subtitle Downloader is for",
+    lead: "The file has timestamps. That is the difference from a transcript you read top to bottom. Proof the cues before you publish anyone else’s video.",
     rows: [
       {
-        title: "Paste a public YouTube link",
-        body: "This YouTube Subtitle Downloader accepts public watch URLs, Shorts, and youtu.be links when the video is reachable. No extension or desktop app. Add speaker labels and language before you start. Private or blocked media may fail.",
-        src: "https://cdn.videotranscriber.pro/videotranscriber/landing/features/subtitle-feature-1-link.webp",
-        alt: "Paste a YouTube link to download subtitles",
+        title: "A caption file, not a studio dump",
+        body: "It does not list every auto-translated track from the player menu. If the watch page has no CC, you can still get timed text from speech. That file is new. It is not YouTube’s official sidecar.",
+        src: "https://cdn.videotranscriber.pro/videotranscriber/landing/features/subtitle-feature-2-transcribe.webp",
+        alt: "Timed cues from speech, not a copied YouTube track",
         imageRight: true,
       },
       {
-        title: "AI captions even without a YouTube track",
-        body: "Many tools only copy a track that already exists. Ours transcribes spoken audio, so a caption file is possible when the watch page has nothing to copy. We do not list every auto-translated language YouTube may show.",
-        src: "https://cdn.videotranscriber.pro/videotranscriber/landing/features/subtitle-feature-2-transcribe.webp",
-        alt: "Transcribe YouTube audio into timed subtitles",
+        title: "SRT in the cut, VTT on the web",
+        body: "Premiere, Resolve, and CapCut expect SRT. HTML5 players expect VTT. Both files come from the same cue list. ASS, LRC, and burned-in captions are out of scope.",
+        src: "https://cdn.videotranscriber.pro/videotranscriber/landing/features/subtitle-feature-3-export.webp",
+        alt: "Export SRT or VTT subtitle files",
         imageRight: false,
       },
       {
-        title: "Export SRT, VTT, and documents",
-        body: "Download SRT for editors and players, VTT for web players, plus TXT, DOCX, or CSV. We do not export PDF or JSON, and we do not download the video file.",
-        src: "https://cdn.videotranscriber.pro/videotranscriber/landing/features/subtitle-feature-3-export.webp",
-        alt: "Export SRT or VTT subtitle files",
+        title: "Proof before you ship the captions",
+        body: "Jargon, names, and overlapping talk still need a pass. You get a timed draft. You still fix lines that would embarrass a speaker on screen.",
+        src: "https://cdn.videotranscriber.pro/videotranscriber/landing/features/subtitle-feature-1-link.webp",
+        alt: "Review timed subtitle cues before export",
         imageRight: true,
       },
     ],
   },
   usecases: {
-    title: "Get SRT and VTT from public YouTube videos",
-    lead: "Editors, students, and researchers use this YouTube Subtitle Downloader for a subtitle file or a searchable transcript from a public talk, tutorial, interview, or lecture.",
+    title: "When YouTube Subtitle Downloader is the right export",
+    lead: "Use this page when the next step is an editor or a player. Use the transcript URL when you only need to search the words.",
     items: [
       {
-        title: "Video editors",
-        body: "Export SRT beside your timeline for Premiere, Resolve, or CapCut. VTT is for HTML5 players. We do not download the YouTube video file for you.",
+        title: "A cut already on a timeline",
+        body: "Drop SRT next to the picture. You still download the video yourself. This page never fetches the MP4.",
       },
       {
-        title: "Lectures & courses",
-        body: "Paste a public lecture and download SRT or VTT for study, plus TXT or DOCX for a readable script. Login-walled course sites will not fetch.",
+        title: "A player that wants VTT",
+        body: "Web players read VTT. Export that, not a novel-length script, when the job is on-screen captions.",
       },
       {
-        title: "Tutorials",
-        body: "Turn how-to videos into caption files you can search. Jump with timestamps in the workspace instead of scrubbing the player.",
+        title: "A talk with no CC button",
+        body: "Empty caption panel is the usual reason people land here. Speech still has to be clear enough to time.",
       },
       {
-        title: "Interviews & podcasts",
-        body: "Optional speaker labels help when two voices talk. Export SRT for a cut, or DOCX when you are quoting for an article.",
+        title: "Captions you are allowed to publish",
+        body: "If you own the video or have permission, review the cues, then upload SRT. Borrowed talks still need a rights check.",
       },
       {
-        title: "Accessibility captions",
-        body: "If you have the right to caption the video, export SRT or VTT and review names and jargon before you publish.",
+        title: "An interview you will subtitle, not quote",
+        body: "Speaker labels help when two mics are clean. If you want a quote sheet, that is the transcript page.",
       },
       {
-        title: "Research notes",
-        body: "Use TXT or DOCX for the words, SRT when you still need timings, CSV when you want cue rows.",
+        title: "A how-to that must stay in sync",
+        body: "Spoken steps get in-times. Menus that only appear as graphics are not read. That is not screen OCR.",
       },
     ],
   },
@@ -110,34 +112,34 @@ export const youtubeSubtitleDownloaderSeo = {
     title: "Frequently asked questions",
     items: [
       {
-        q: "What is a YouTube Subtitle Downloader?",
-        a: "A YouTube Subtitle Downloader gives you a subtitle file from a YouTube video. Ours pastes a public link, transcribes audio with AI, then exports SRT or VTT — not every caption track YouTube stores.",
+        q: "What is YouTube Subtitle Downloader?",
+        a: "YouTube Subtitle Downloader returns timed SRT or VTT from public speech. It is not a copy of YouTube’s caption store and not a video downloader.",
       },
       {
-        q: "Does this copy YouTube’s existing captions?",
-        a: "No. We transcribe the audio. Existing captions on the watch page are not required. We do not list uploader tracks the way yt-dlp does.",
+        q: "Does YouTube Subtitle Downloader scrape existing CC?",
+        a: "No. Cues are written from audio. A watch-page track is not required, and we do not expose yt-dlp-style language lists.",
       },
       {
-        q: "Which YouTube links work?",
-        a: "Public watch URLs, Shorts, and youtu.be links when the media is reachable. Private, age-gated, or geo-blocked videos may fail. Paste one URL per job — playlists are not batched.",
+        q: "SRT or VTT — which file should I take?",
+        a: "SRT for most editors. VTT for most browsers. Both come from the same cue list after the job finishes.",
       },
       {
-        q: "What formats can I download?",
-        a: "SRT and VTT for subtitle files, plus TXT, DOCX, and CSV. ASS, LRC, PDF, JSON, and the video file itself are not available.",
+        q: "Is this the same as the YouTube transcript page?",
+        a: "No. That page is for reading and searching the full text. This page is for a caption file with timestamps.",
       },
       {
-        q: "Can I pick a YouTube caption language?",
-        a: "You can pick auto detect or a source language for transcription. That is not selecting every official YouTube caption track from the player menu. Translation is not in this version.",
+        q: "Can YouTube Subtitle Downloader save the MP4?",
+        a: "No. Only timed text. Fetching the picture is outside this product.",
       },
       {
-        q: "Is there a free plan?",
-        a: "Yes. Sign-in is required so minutes and history stay on your account. Free accounts get monthly minutes with daily and per-file limits. See Pricing for current numbers.",
+        q: "Is YouTube Subtitle Downloader free to try?",
+        a: "Yes, inside plan limits. Minutes and file caps are on Pricing. This page does not reprint the numbers.",
       },
     ],
   },
   cta: {
-    title: "Download SRT or VTT from your next YouTube video",
-    body: "Paste a public link into this YouTube Subtitle Downloader — then export SRT or VTT, or take TXT, DOCX, or CSV from the same workspace.",
+    title: "Run YouTube Subtitle Downloader on the next public URL",
+    body: "Paste one watch link, then export SRT or VTT. This page stays on captions. Free use follows Pricing.",
     button: "Start converting",
   },
 } as const;

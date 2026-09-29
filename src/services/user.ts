@@ -1,9 +1,10 @@
 import { CreditsAmount, CreditsTransType } from "./credit";
 import {
-  findUserByEmail,
-  findUserByEmailAndProvider,
+  canonicalAuthProvider,
   findUserByUuid,
+  findUserForSignIn,
   insertUser,
+  resolveCanonicalUserUuid,
   updateUserOnboarding,
 } from "@/models/user";
 import { findCreditByUserAndType } from "@/models/credit";
@@ -25,10 +26,15 @@ export async function saveUser(user: User) {
       throw new Error("invalid user email");
     }
 
-    // Find user by email and provider (since we have unique index on email + provider)
-    const existUser = user.signin_provider
-      ? await findUserByEmailAndProvider(user.email, user.signin_provider)
-      : await findUserByEmail(user.email);
+    if (user.signin_provider) {
+      user.signin_provider = canonicalAuthProvider(user.signin_provider);
+    }
+
+    // Google button and One Tap share one identity; unique index is still email+provider.
+    const existUser = await findUserForSignIn(
+      user.email,
+      user.signin_provider
+    );
 
     if (!existUser) {
       // user not exist, create a new user
@@ -61,9 +67,16 @@ export async function saveUser(user: User) {
         console.error("new user credit grant failed:", creditErr);
       }
     } else {
-      // user exist, return user info in db
+      const canonicalUuid = await resolveCanonicalUserUuid(
+        existUser.uuid!,
+        user.email
+      );
+      const canonicalUser =
+        canonicalUuid !== existUser.uuid
+          ? await findUserByUuid(canonicalUuid)
+          : existUser;
       user = {
-        ...(existUser as unknown as User),
+        ...((canonicalUser || existUser) as unknown as User),
       };
     }
 
@@ -124,7 +137,10 @@ export async function getUserUuid() {
 
   const session = await auth();
   if (session && session.user && session.user.uuid) {
-    user_uuid = session.user.uuid;
+    user_uuid = await resolveCanonicalUserUuid(
+      session.user.uuid,
+      session.user.email
+    );
   }
 
   return user_uuid;
