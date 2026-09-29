@@ -5,7 +5,7 @@ type FooterLink = { label: string; href: string };
 
 type FooterGroup = {
   title: string;
-  links: FooterLink[];
+  links: readonly FooterLink[];
   more?: FooterLink;
 };
 
