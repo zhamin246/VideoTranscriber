@@ -24,6 +24,7 @@ const STATIC_PATHS: {
   { path: "/instagram-transcript-generator", changeFrequency: "weekly", priority: 0.9 },
   { path: "/facebook-transcript-generator", changeFrequency: "weekly", priority: 0.9 },
   { path: "/ai-video-summarizer", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/video-transcript-generator", changeFrequency: "weekly", priority: 0.9 },
   { path: "/youtube-subtitle-downloader", changeFrequency: "weekly", priority: 0.9 },
 ];
 

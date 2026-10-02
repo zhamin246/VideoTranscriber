@@ -1,7 +1,7 @@
-import Blog from "@/components/blocks/blog";
-import { BlogItem, Blog as BlogType } from "@/types/blocks/blog";
-import { getPostsByLocale } from "@/models/post";
+import BlogListPage from "@/components/face-rating/blog-list-page";
+import { getPostsByLocale, PostStatus } from "@/models/post";
 import { getTranslations } from "next-intl/server";
+import type { Post } from "@/types/post";
 
 export async function generateMetadata({
   params,
@@ -9,7 +9,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations();
+  const t = await getTranslations({ locale, namespace: "blog" });
 
   let canonicalUrl = `${process.env.NEXT_PUBLIC_WEB_URL}/posts`;
 
@@ -18,8 +18,8 @@ export async function generateMetadata({
   }
 
   return {
-    title: t("blog.title"),
-    description: t("blog.description"),
+    title: t("meta_title"),
+    description: t("description"),
     alternates: {
       canonical: canonicalUrl,
     },
@@ -32,16 +32,22 @@ export default async function PostsPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations();
+  const t = await getTranslations({ locale, namespace: "blog" });
 
-  const posts = await getPostsByLocale(locale);
+  const rows = (await getPostsByLocale(locale)) || [];
+  const posts = rows.filter((p) => p.status === PostStatus.Online) as Post[];
 
-  const blog: BlogType = {
-    title: t("blog.title"),
-    description: t("blog.description"),
-    items: posts as unknown as BlogItem[],
-    read_more_text: t("blog.read_more_text"),
-  };
-
-  return <Blog blog={blog} />;
+  return (
+    <BlogListPage
+      posts={posts}
+      labels={{
+        label: t("label"),
+        title: t("title"),
+        description: t("description"),
+        minRead: t("min_read"),
+        authorRole: t("author_role"),
+        empty: t("empty"),
+      }}
+    />
+  );
 }

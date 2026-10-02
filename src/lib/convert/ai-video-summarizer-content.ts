@@ -1,7 +1,7 @@
 /**
  * SEO copy for /ai-video-summarizer.
- * Primary: "ai video summarizer" ~3% in on-page phrase tools (~16 hits).
- * Title includes brand. Body stays distinct from homepage / social transcript URLs.
+ * Primary: "ai video summarizer" in Title / H1 / H2 / H3 / FAQ.
+ * Body rotates summary / key points / notes / recap so density stays under stuffing.
  * Do not clone upload / SRT / format-list blocks from sister pages.
  * Do not use homepage 2-gram "video transcriber".
  * Do not prefix the keyword with "a" / "an" / "this".
@@ -18,7 +18,7 @@ export const aiVideoSummarizerSeo = {
   hero: {
     h1: "AI Video Summarizer for Notes, Not Another Full Watch",
     subtitle:
-      "AI video summarizer writes the recap: key points, chapter titles, and questions grounded in what was said. Speech is written first so the notes have a source. Word-for-word export lives on the home page if that is all you need.",
+      "The recap writes key points, chapter titles, and questions grounded in what was said. Speech is written first so the notes have a source. Word-for-word export lives on the home page if that is all you need.",
     chips: [
       { label: "Smart Summary", color: "#8882F5" },
       { label: "Meeting notes", color: "#14B8A6" },
@@ -29,7 +29,7 @@ export const aiVideoSummarizerSeo = {
   },
   how: {
     title: "How AI video summarizer turns speech into notes",
-    lead: "The job on this URL is the write-up, not a new edited clip. Put a recording in the workspace, wait until speech is on the page, then pick a note preset. AI video summarizer does not join a live call and does not detect clicks on screen.",
+    lead: "The job on this URL is the write-up, not a new edited clip. Put a recording in the workspace, wait until speech is on the page, then pick a note preset. The summary job does not join a live call and does not detect clicks on screen.",
     steps: [
       {
         n: "1",
@@ -57,7 +57,7 @@ export const aiVideoSummarizerSeo = {
     rows: [
       {
         title: "Note styles for the same speech",
-        body: "Core Points is a short list. Chapter Summary follows the timeline. Study Notes keep headings you can review later. Meeting Summary hunts decisions and owners. Interview Notes pull quotes. Pick one after AI video summarizer has the spoken track.",
+        body: "Core Points is a short list. Chapter Summary follows the timeline. Study Notes keep headings you can review later. Meeting Summary hunts decisions and owners. Interview Notes pull quotes. Pick one after the notes have the spoken track.",
         src: "https://cdn.videotranscriber.pro/videotranscriber/landing/features/summarizer-feature-2-summary.webp",
         alt: "Note presets for a speech recap",
         imageRight: true,
@@ -80,7 +80,7 @@ export const aiVideoSummarizerSeo = {
   },
   usecases: {
     title: "When AI video summarizer beats a second watch",
-    lead: "Reach for AI video summarizer when the recording is already in hand and the pain is time, not capture. If you only need every word in order, use the home page instead.",
+    lead: "Reach for notes and key points when the recording is already in hand and the pain is time, not capture. If you only need every word in order, use the home page instead.",
     items: [
       {
         title: "A lecture you already saved",
@@ -121,7 +121,7 @@ export const aiVideoSummarizerSeo = {
       },
       {
         q: "When do I choose the note style?",
-        a: "After speech is on the page. AI video summarizer cannot shape notes from a file that has not been written out yet.",
+        a: "After speech is on the page. A summary cannot shape notes from a file that has not been written out yet.",
       },
       {
         q: "Will Ask AI make up scenes?",
@@ -139,7 +139,7 @@ export const aiVideoSummarizerSeo = {
   },
   cta: {
     title: "Run AI video summarizer on the next file",
-    body: "Drop a file or a public URL, then run AI video summarizer for notes you can scan. Free use still follows Pricing.",
+    body: "Drop a file or a public URL, then write a recap you can scan. Free use still follows Pricing.",
     button: "Start summarizing",
   },
 } as const;

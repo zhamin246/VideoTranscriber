@@ -12,12 +12,12 @@ export const FACEBOOK_TRANSCRIPT_GENERATOR_HREF = "/facebook-transcript-generato
 
 export const facebookTranscriptGeneratorSeo = {
   meta: {
-    title: "Facebook Transcript from a Public Video or Reel",
+    title: "Facebook Transcript Generator – Public Video & Reel to Text",
     description:
-      "Get facebook transcript from a public facebook.com or fb.watch URL. Copy or export TXT, DOCX, SRT, or VTT. Friends-only and login-walled posts will not fetch.",
+      "Facebook Transcript Generator turns a public facebook.com or fb.watch URL into text. Copy or export TXT, DOCX, SRT, or VTT. Friends-only and login-walled posts will not fetch.",
   },
   hero: {
-    h1: "Get Facebook Transcript from a Public Video or Reel",
+    h1: "Facebook Transcript Generator – Public Video & Reel to Text",
     subtitle:
       "Facebook transcript is spoken audio from a public Facebook video or Reel. Paste a facebook.com or fb.watch link, run transcription, then copy or export. The caption under the post is not included.",
     chips: [

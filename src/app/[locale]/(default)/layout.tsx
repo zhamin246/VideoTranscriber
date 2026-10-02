@@ -39,13 +39,15 @@ function isSelfContainedShellPath(pathname: string, locale: string) {
     clean.includes("/instagram-transcript-generator") ||
     clean.includes("/facebook-transcript-generator") ||
     clean.includes("/ai-video-summarizer") ||
+    clean.includes("/video-transcript-generator") ||
     clean.includes("/youtube-subtitle-downloader") ||
     clean.includes("/my-assets") ||
     clean.includes("/auth/") ||
     clean.includes("/my-orders") ||
     clean.includes("/my-credits") ||
     clean.includes("/my-invites") ||
-    clean.includes("/user-generation-records");
+    clean.includes("/user-generation-records") ||
+    clean.includes("/posts");
   return isToolPage;
 }
 

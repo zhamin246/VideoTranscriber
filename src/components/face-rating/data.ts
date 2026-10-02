@@ -6,6 +6,7 @@
 import { useCaseAsset } from "@/lib/convert/use-case-assets";
 import { AUDIO_TO_TEXT_CONVERTER_HREF } from "@/lib/convert/audio-to-text-converter-content";
 import { AI_VIDEO_SUMMARIZER_HREF } from "@/lib/convert/ai-video-summarizer-content";
+import { VIDEO_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/video-transcript-generator-content";
 import { YOUTUBE_SUBTITLE_DOWNLOADER_HREF } from "@/lib/convert/youtube-subtitle-downloader-content";
 import { YOUTUBE_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/youtube-transcript-generator-content";
 import { TIKTOK_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/tiktok-transcript-generator-content";
@@ -26,6 +27,7 @@ export const content = {
   },
 
   nav: {
+    home: { label: "Home", href: CONVERT_HREF },
     /** Top nav mirrors footer taxonomy (merged for header capacity). */
     menus: [
       {
@@ -34,7 +36,10 @@ export const content = {
           {
             title: "Video Tools",
             items: [
-              { label: "Video transcript", href: CONVERT_HREF },
+              {
+                label: "Video Transcript Generator",
+                href: VIDEO_TRANSCRIPT_GENERATOR_HREF,
+              },
               { label: "AI Video Summarizer", href: AI_VIDEO_SUMMARIZER_HREF },
             ],
           },

@@ -1,8 +1,8 @@
-import { PostStatus, findPostBySlug } from "@/models/post";
-
-import BlogDetail from "@/components/blocks/blog-detail";
+import BlogArticlePage from "@/components/face-rating/blog-article-page";
 import Empty from "@/components/blocks/empty";
-import { Post } from "@/types/post";
+import { PostStatus, findPostBySlug } from "@/models/post";
+import { getTranslations } from "next-intl/server";
+import type { Post } from "@/types/post";
 
 export async function generateMetadata({
   params,
@@ -28,17 +28,28 @@ export async function generateMetadata({
   };
 }
 
-export default async function ({
+export default async function PostDetailPage({
   params,
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
+  const t = await getTranslations({ locale, namespace: "blog" });
   const post = await findPostBySlug(slug, locale);
 
   if (!post || post.status !== PostStatus.Online) {
     return <Empty message="Post not found" />;
   }
 
-  return <BlogDetail post={post as unknown as Post} />;
+  return (
+    <BlogArticlePage
+      post={post as unknown as Post}
+      labels={{
+        backToBlog: t("back_to_blog"),
+        onThisPage: t("on_this_page"),
+        minRead: t("min_read"),
+        authorRole: t("author_role"),
+      }}
+    />
+  );
 }

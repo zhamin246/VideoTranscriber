@@ -95,9 +95,16 @@
     }
   },
   "blog": {
-    "title": "Blog",
-    "description": "Notícias, recursos e atualizações do NeonLights AI",
-    "read_more_text": "Ler mais"
+    "label": "Our Blog",
+    "title": "Video Transcriber Blog Center",
+    "meta_title": "Video Transcriber Blog — Transcription Tips & Guides",
+    "description": "Guides on transcription, subtitles, and AI notes — practical tips for video and audio workflows.",
+    "read_more_text": "Ler mais",
+    "min_read": "{minutes} min read",
+    "back_to_blog": "Back to blog",
+    "on_this_page": "On this page",
+    "author_role": "Editor",
+    "empty": "No posts yet. Check back soon."
   },
   "my_invites": {
     "title": "Minhas Indicações",

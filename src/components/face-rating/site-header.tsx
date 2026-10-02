@@ -17,6 +17,15 @@ const MEGA_MENU_CLASS =
 const SIMPLE_MENU_CLASS =
   "absolute left-0 top-full z-50 w-max min-w-[240px] rounded-xl border border-neutral-200 bg-white py-1.5 shadow-lg";
 
+const TOP_NAV_LINK_STYLE: React.CSSProperties = {
+  height: 40,
+  padding: "0 12px",
+  fontSize: 15,
+  fontWeight: 400,
+  lineHeight: "20px",
+  color: "rgb(101, 100, 132)",
+};
+
 /** Strip query/hash; treat locale-prefixed paths from raw location if needed. */
 function pathOnly(href: string): string {
   return href.split("?")[0].split("#")[0] || "/";
@@ -277,6 +286,13 @@ export default function FaceRatingSiteHeader({
           </Link>
 
           <nav className="hidden items-center md:flex" ref={menusRef}>
+            <Link
+              href={nav.home.href}
+              className="inline-flex items-center hover:text-[#635BFF]"
+              style={TOP_NAV_LINK_STYLE}
+            >
+              {nav.home.label}
+            </Link>
             {nav.menus.map((menu) => {
               const openMenu = menuOpen === menu.label;
               const groups = "groups" in menu ? menu.groups : undefined;
@@ -376,14 +392,7 @@ export default function FaceRatingSiteHeader({
                 key={item.label}
                 href={item.href}
                 className="inline-flex items-center hover:text-[#635BFF]"
-                style={{
-                  height: 40,
-                  padding: "0 12px",
-                  fontSize: 15,
-                  fontWeight: 400,
-                  lineHeight: "20px",
-                  color: "rgb(101, 100, 132)",
-                }}
+                style={TOP_NAV_LINK_STYLE}
               >
                 {item.label}
               </Link>
@@ -423,6 +432,14 @@ export default function FaceRatingSiteHeader({
           style={{ borderColor: V.line, backgroundColor: V.bg }}
         >
           <div className="flex flex-col gap-1">
+            <Link
+              href={nav.home.href}
+              onClick={() => setOpen(false)}
+              className="rounded-[10px] px-3 py-3 text-[15px] font-medium"
+              style={{ color: V.ink }}
+            >
+              {nav.home.label}
+            </Link>
             {nav.menus.map((menu) => {
               const groups = "groups" in menu ? menu.groups : undefined;
               const items = navMenuItems(menu);
