@@ -1,7 +1,6 @@
 import BlogListPage from "@/components/face-rating/blog-list-page";
-import { getPostsByLocale, PostStatus } from "@/models/post";
+import { getPostsByLocale, postRowToPost } from "@/models/post";
 import { getTranslations } from "next-intl/server";
-import type { Post } from "@/types/post";
 
 export async function generateMetadata({
   params,
@@ -35,7 +34,7 @@ export default async function PostsPage({
   const t = await getTranslations({ locale, namespace: "blog" });
 
   const rows = (await getPostsByLocale(locale)) || [];
-  const posts = rows.filter((p) => p.status === PostStatus.Online) as Post[];
+  const posts = rows.map(postRowToPost);
 
   return (
     <BlogListPage

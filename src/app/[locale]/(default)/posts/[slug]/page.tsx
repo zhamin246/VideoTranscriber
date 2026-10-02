@@ -1,8 +1,7 @@
 import BlogArticlePage from "@/components/face-rating/blog-article-page";
 import Empty from "@/components/blocks/empty";
-import { PostStatus, findPostBySlug } from "@/models/post";
+import { PostStatus, findPostBySlug, postRowToPost } from "@/models/post";
 import { getTranslations } from "next-intl/server";
-import type { Post } from "@/types/post";
 
 export async function generateMetadata({
   params,
@@ -43,7 +42,7 @@ export default async function PostDetailPage({
 
   return (
     <BlogArticlePage
-      post={post as unknown as Post}
+      post={postRowToPost(post)}
       labels={{
         backToBlog: t("back_to_blog"),
         onThisPage: t("on_this_page"),
