@@ -1,37 +1,19 @@
 import { NextRequest } from "next/server";
 import {
+  claimOrphanWorkspaces,
   getTranscriptByWorkspaceId,
   getWorkspaceByPublicId,
   updateWorkspaceAskMessages,
 } from "@/models/workspace";
 import { respData, respErr } from "@/lib/resp";
+import { getUserUuid } from "@/services/user";
 import {
   parseAskMessages,
   serializeAskMessages,
 } from "@/lib/media/ask";
+import { parseTranscriptSegments } from "@/lib/media/workspace-mock";
 
 export const runtime = "nodejs";
-
-type Segment = { startSeconds: number; text: string };
-
-function parseSegments(raw: string | null | undefined): Segment[] {
-  if (!raw) return [];
-  try {
-    const parsed = JSON.parse(raw) as unknown;
-    if (!Array.isArray(parsed)) return [];
-    return parsed
-      .map((s) => {
-        const seg = s as { startSeconds?: number; text?: string };
-        return {
-          startSeconds: Number(seg?.startSeconds) || 0,
-          text: String(seg?.text || ""),
-        };
-      })
-      .filter((s) => s.text);
-  } catch {
-    return [];
-  }
-}
 
 /** GET /api/workspaces/:id — load one workspace + transcript + ask history */
 export async function GET(
@@ -43,9 +25,15 @@ export async function GET(
     const workspaceId = String(id || "").trim();
     if (!workspaceId) return respErr("id required");
 
-    const row = await getWorkspaceByPublicId(workspaceId);
+    let row = await getWorkspaceByPublicId(workspaceId);
     if (!row || row.status === "deleted") {
       return respErr("Workspace not found");
+    }
+
+    const userUuid = (await getUserUuid()) || "";
+    if (userUuid && !String(row.user_uuid || "").trim()) {
+      await claimOrphanWorkspaces(userUuid, [workspaceId]);
+      row = (await getWorkspaceByPublicId(workspaceId)) || row;
     }
 
     const tr = await getTranscriptByWorkspaceId(workspaceId);
@@ -63,7 +51,7 @@ export async function GET(
       noteMode: row.note_mode,
       separateSpeaker: row.separate_speaker,
       createdAt: row.created_at?.getTime?.() || Date.now(),
-      transcript: parseSegments(tr?.segments_json),
+      transcript: parseTranscriptSegments(tr?.segments_json),
       transcriptText: tr?.text || "",
       detectedLanguage: row.detected_language || tr?.language || null,
       mediaExpiresAt: row.media_expires_at?.toISOString?.() || null,

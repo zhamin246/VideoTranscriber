@@ -3,13 +3,57 @@ import { formatDuration } from "@/lib/media/preview-types";
 export type TranscriptSegment = {
   startSeconds: number;
   text: string;
+  /** Gladia diarization index (0-based); shown as Speaker 1, 2, … in the UI. */
+  speaker?: number;
 };
 
 export type TranscriptSentence = {
   startSeconds: number;
   endSeconds: number;
   text: string;
+  speaker?: number;
 };
+
+/** Human label for diarization index (Gladia uses 0, 1, 2…). */
+export function formatSpeakerLabel(speaker: number): string {
+  if (!Number.isFinite(speaker) || speaker < 0) return "Speaker";
+  return `Speaker ${Math.floor(speaker) + 1}`;
+}
+
+export function transcriptHasSpeakerLabels(
+  segments: TranscriptSegment[] | undefined | null,
+): boolean {
+  return Boolean(segments?.some((s) => typeof s.speaker === "number"));
+}
+
+export function parseTranscriptSegments(
+  raw: string | null | undefined,
+): TranscriptSegment[] {
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .map((s) => {
+        const seg = s as {
+          startSeconds?: number;
+          text?: string;
+          speaker?: number;
+        };
+        const out: TranscriptSegment = {
+          startSeconds: Number(seg?.startSeconds) || 0,
+          text: String(seg?.text || ""),
+        };
+        if (typeof seg?.speaker === "number" && Number.isFinite(seg.speaker)) {
+          out.speaker = seg.speaker;
+        }
+        return out;
+      })
+      .filter((s) => s.text);
+  } catch {
+    return [];
+  }
+}
 
 export type TranscriptBlock = {
   startSeconds: number;
@@ -54,20 +98,27 @@ export function mergeIntoSentences(
   let bucketStart = segments[0]!.startSeconds;
   let bucketEnd = bucketStart;
   let texts: string[] = [];
+  let bucketSpeaker: number | undefined;
 
   const flush = (endHint?: number) => {
     if (!texts.length) return;
     const text = joinChunkTexts(texts);
     if (!text) {
       texts = [];
+      bucketSpeaker = undefined;
       return;
     }
-    out.push({
+    const sentence: TranscriptSentence = {
       startSeconds: Math.max(0, bucketStart),
       endSeconds: Math.max(bucketStart, endHint ?? bucketEnd),
       text,
-    });
+    };
+    if (typeof bucketSpeaker === "number") {
+      sentence.speaker = bucketSpeaker;
+    }
+    out.push(sentence);
     texts = [];
+    bucketSpeaker = undefined;
   };
 
   for (let i = 0; i < segments.length; i++) {
@@ -75,14 +126,29 @@ export function mergeIntoSentences(
     const t = seg.text?.trim();
     if (!t) continue;
 
+    const segSpeaker =
+      typeof seg.speaker === "number" && Number.isFinite(seg.speaker)
+        ? seg.speaker
+        : undefined;
+
     const next = segments[i + 1];
     const segEnd =
       typeof next?.startSeconds === "number" && next.startSeconds > seg.startSeconds
         ? next.startSeconds
         : seg.startSeconds + 1.5;
 
+    if (
+      texts.length &&
+      segSpeaker !== undefined &&
+      bucketSpeaker !== undefined &&
+      segSpeaker !== bucketSpeaker
+    ) {
+      flush(segEnd);
+    }
+
     if (!texts.length) {
       bucketStart = seg.startSeconds;
+      bucketSpeaker = segSpeaker;
     }
 
     texts.push(t);

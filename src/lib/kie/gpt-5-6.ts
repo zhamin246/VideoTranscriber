@@ -89,7 +89,7 @@ export async function gpt56Respond(opts: {
   };
 }
 
-function extractAssistantText(raw: any): string {
+export function extractAssistantText(raw: any): string {
   if (!raw || typeof raw !== "object") return "";
 
   // Shape A: { output: [ { type: "message", content: [ { type: "output_text", text } ] } ] }

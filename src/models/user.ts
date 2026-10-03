@@ -165,14 +165,10 @@ export async function resolveCanonicalUserUuid(
 
   const me = await findUserByUuid(uuid);
   const lookupEmail = (email || me?.email || "").trim();
-  if (!lookupEmail || !isGoogleAuthProvider(me?.signin_provider)) {
-    return uuid;
-  }
+  if (!lookupEmail) return uuid;
 
-  const family = (await findUsersByEmail(lookupEmail)).filter((row) =>
-    isGoogleAuthProvider(row.signin_provider)
-  );
-  if (family.length <= 1) return uuid;
+  const allFamily = await findUsersByEmail(lookupEmail);
+  if (allFamily.length <= 1) return uuid;
 
   const paidRows = await db()
     .select({ user_uuid: orders.user_uuid })
@@ -181,17 +177,31 @@ export async function resolveCanonicalUserUuid(
       and(
         inArray(
           orders.user_uuid,
-          family.map((row) => row.uuid)
+          allFamily.map((row) => row.uuid),
         ),
-        eq(orders.status, "paid")
-      )
+        eq(orders.status, "paid"),
+      ),
     );
-  const canonical = pickCanonicalGoogleUuid(
-    family,
-    new Set(paidRows.map((row) => row.user_uuid))
-  );
+  const paidSet = new Set(paidRows.map((row) => row.user_uuid));
 
-  for (const row of family) {
+  let canonical = uuid;
+
+  if (paidSet.size > 0) {
+    canonical =
+      allFamily.find((row) => paidSet.has(row.uuid))?.uuid ||
+      allFamily.find((row) => row.uuid === uuid)?.uuid ||
+      allFamily[0].uuid;
+  } else if (isGoogleAuthProvider(me?.signin_provider)) {
+    const googleFamily = allFamily.filter((row) =>
+      isGoogleAuthProvider(row.signin_provider),
+    );
+    if (googleFamily.length <= 1) return uuid;
+    canonical = pickCanonicalGoogleUuid(googleFamily, paidSet);
+  } else {
+    return uuid;
+  }
+
+  for (const row of allFamily) {
     if (row.uuid !== canonical) {
       await reassignOwnedRows(row.uuid, canonical);
     }

@@ -1,4 +1,4 @@
-import { and, desc, eq, gte, ne, sql } from "drizzle-orm";
+import { and, desc, eq, gte, inArray, ne, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { mediaAssets, transcripts, workspaces } from "@/db/schema";
 
@@ -38,8 +38,49 @@ export async function listWorkspacesByUser(userUuid: string, limit = 24) {
     .where(
       and(eq(workspaces.user_uuid, userUuid), eq(workspaces.status, "ready")),
     )
-    .orderBy(desc(workspaces.created_at))
+    .orderBy(desc(workspaces.updated_at), desc(workspaces.created_at))
     .limit(limit);
+}
+
+export async function countWorkspacesByUser(userUuid: string) {
+  if (!userUuid) return 0;
+  const [row] = await db()
+    .select({ n: sql<number>`count(*)::int` })
+    .from(workspaces)
+    .where(
+      and(eq(workspaces.user_uuid, userUuid), eq(workspaces.status, "ready")),
+    );
+  return Number(row?.n || 0);
+}
+
+/** Legacy saves with no user — attach to signed-in account when id is known. */
+export async function claimOrphanWorkspaces(
+  userUuid: string,
+  workspaceIds: string[],
+) {
+  if (!userUuid || !workspaceIds.length) return 0;
+  const ids = [
+    ...new Set(
+      workspaceIds
+        .map((id) => id.trim())
+        .filter((id) => /^[\w-]{8,64}$/.test(id)),
+    ),
+  ].slice(0, 32);
+  if (!ids.length) return 0;
+
+  const rows = await db()
+    .update(workspaces)
+    .set({ user_uuid: userUuid, updated_at: new Date() })
+    .where(
+      and(
+        eq(workspaces.status, "ready"),
+        eq(workspaces.user_uuid, ""),
+        inArray(workspaces.workspace_id, ids),
+      ),
+    )
+    .returning({ workspace_id: workspaces.workspace_id });
+
+  return rows.length;
 }
 
 /** Files started today (UTC calendar day) — used for free daily limit UI/enforcement. */

@@ -294,25 +294,11 @@ export async function userHasPaidSubscription(
   return byEmail.length > 0;
 }
 
-/** Latest paid subscription that still looks active for plan UI. */
-export async function getActiveSubscriptionOrder(
-  user_uuid: string,
-): Promise<typeof orders.$inferSelect | undefined> {
-  if (!user_uuid) return undefined;
+function pickActiveSubscriptionFromRows(
+  rows: (typeof orders.$inferSelect)[],
+): typeof orders.$inferSelect | undefined {
   const nowUnix = Math.floor(Date.now() / 1000);
   const now = new Date();
-  const rows = await db()
-    .select()
-    .from(orders)
-    .where(
-      and(
-        eq(orders.user_uuid, user_uuid),
-        eq(orders.status, OrderStatus.Paid),
-        or(eq(orders.interval, "month"), eq(orders.interval, "year")),
-      ),
-    )
-    .orderBy(desc(orders.created_at));
-
   for (const row of rows) {
     const id = String(row.product_id || "");
     if (!id || id.startsWith("minutes_") || id === "free") continue;
@@ -323,25 +309,76 @@ export async function getActiveSubscriptionOrder(
   return undefined;
 }
 
+/** Latest paid subscription that still looks active for plan UI. */
+export async function getActiveSubscriptionOrder(
+  user_uuid: string,
+  paid_email?: string | null,
+): Promise<typeof orders.$inferSelect | undefined> {
+  if (user_uuid) {
+    const rows = await db()
+      .select()
+      .from(orders)
+      .where(
+        and(
+          eq(orders.user_uuid, user_uuid),
+          eq(orders.status, OrderStatus.Paid),
+          or(eq(orders.interval, "month"), eq(orders.interval, "year")),
+        ),
+      )
+      .orderBy(desc(orders.created_at));
+    const picked = pickActiveSubscriptionFromRows(rows);
+    if (picked) return picked;
+  }
+
+  const email = paid_email?.trim();
+  if (!email) return undefined;
+  const byPaid = (await getOrdersByPaidEmail(email)) || [];
+  const byUser = (await getOrdersByUserEmail(email)) || [];
+  const seen = new Set<number>();
+  const merged = [...byPaid, ...byUser].filter((row) => {
+    if (seen.has(row.id)) return false;
+    seen.add(row.id);
+    return row.interval === "month" || row.interval === "year";
+  });
+  return pickActiveSubscriptionFromRows(merged);
+}
+
 /** Latest paid minute-pack order (no active subscription required). */
 export async function getLatestPaidPackOrder(
   user_uuid: string,
+  paid_email?: string | null,
 ): Promise<typeof orders.$inferSelect | undefined> {
-  if (!user_uuid) return undefined;
-  const rows = await db()
-    .select()
-    .from(orders)
-    .where(
-      and(
-        eq(orders.user_uuid, user_uuid),
-        eq(orders.status, OrderStatus.Paid),
-        eq(orders.interval, "one-time"),
-      ),
-    )
-    .orderBy(desc(orders.created_at))
-    .limit(20);
+  const pickPack = (rows: (typeof orders.$inferSelect)[]) =>
+    rows.find((r) => String(r.product_id || "").startsWith("minutes_"));
 
-  return rows.find((r) => String(r.product_id || "").startsWith("minutes_"));
+  if (user_uuid) {
+    const rows = await db()
+      .select()
+      .from(orders)
+      .where(
+        and(
+          eq(orders.user_uuid, user_uuid),
+          eq(orders.status, OrderStatus.Paid),
+          eq(orders.interval, "one-time"),
+        ),
+      )
+      .orderBy(desc(orders.created_at))
+      .limit(20);
+    const picked = pickPack(rows);
+    if (picked) return picked;
+  }
+
+  const email = paid_email?.trim();
+  if (!email) return undefined;
+  const byPaid = (await getOrdersByPaidEmail(email)) || [];
+  const byUser = (await getOrdersByUserEmail(email)) || [];
+  const seen = new Set<number>();
+  const merged = [...byPaid, ...byUser].filter((row) => {
+    if (seen.has(row.id)) return false;
+    seen.add(row.id);
+    return true;
+  });
+  return pickPack(merged);
 }
 
 export async function getOrdersByUserEmail(

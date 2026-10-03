@@ -15,7 +15,7 @@ import { Link, useRouter } from "@/i18n/navigation";
 import WorkspaceNav from "@/components/face-rating/workspace-nav";
 import {
   deleteUserWorkspace,
-  fetchUserRecentMedia,
+  fetchUserRecentMediaWithMeta,
   type RecentMediaItem,
 } from "@/lib/media/recent-media";
 import { PlatformMark } from "@/components/face-rating/platform-mark";
@@ -96,6 +96,7 @@ export default function MyAssetsPage() {
   const { user } = useAppContext();
   const [tab, setTab] = useState<AssetTab>("transcription");
   const [items, setItems] = useState<RecentMediaItem[]>([]);
+  const [libraryTotal, setLibraryTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [pendingDelete, setPendingDelete] = useState<RecentMediaItem | null>(
     null,
@@ -108,7 +109,9 @@ export default function MyAssetsPage() {
   const refresh = async () => {
     setLoading(true);
     try {
-      setItems(await fetchUserRecentMedia(100));
+      const { items: rows, total } = await fetchUserRecentMediaWithMeta(200);
+      setItems(rows);
+      setLibraryTotal(total);
     } finally {
       setLoading(false);
     }
@@ -247,9 +250,16 @@ export default function MyAssetsPage() {
             })}
           </div>
 
-          <h2 className="hidden h-16 items-center border-b border-slate-200 px-8 text-2xl font-bold text-slate-500 md:flex">
-            {title}
-          </h2>
+          <div className="hidden h-16 items-center justify-between gap-4 border-b border-slate-200 px-8 md:flex">
+            <h2 className="text-2xl font-bold text-slate-500">{title}</h2>
+            {tab === "transcription" && !loading ? (
+              <p className="text-sm text-slate-400">
+                {libraryTotal === filtered.length
+                  ? `${libraryTotal} file${libraryTotal === 1 ? "" : "s"} in your library`
+                  : `Showing ${filtered.length} of ${libraryTotal} files`}
+              </p>
+            ) : null}
+          </div>
 
           <div className="min-h-0 flex-1 overflow-auto px-4 pt-4 md:px-8">
             <div

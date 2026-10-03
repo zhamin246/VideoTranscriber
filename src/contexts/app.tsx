@@ -66,7 +66,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
 
       updateInvite(data);
     } catch (e) {
-      console.log("fetch user info failed");
+      console.warn("fetch user info failed", e);
     }
   };
 
@@ -137,10 +137,12 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    if (session && session.user) {
-      fetchUserInfo();
+    if (session?.user?.email || session?.user?.uuid) {
+      void fetchUserInfo();
+    } else {
+      setUser(null);
     }
-  }, [session]);
+  }, [session?.user?.email, session?.user?.uuid]);
 
   const refreshUserInfo = async () => {
     await fetchUserInfo();

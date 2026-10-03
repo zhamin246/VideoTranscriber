@@ -19,8 +19,10 @@ import {
 import {
   buildMockTranscript,
   buildTranscriptBlocks,
+  formatSpeakerLabel,
   formatTimestamp,
   mergeIntoSentences,
+  transcriptHasSpeakerLabels,
 } from "@/lib/media/workspace-mock";
 import {
   chaptersAreComplete,
@@ -55,7 +57,7 @@ import {
   type SearchHit,
 } from "@/components/workspace/transcript-search";
 import type { AskMessage } from "@/lib/media/ask";
-import { resolveMediaEmbed } from "@/lib/media/embed";
+import { canEmbedPlayback, resolveMediaEmbed } from "@/lib/media/embed";
 import { toProxiedPlaybackUrl } from "@/lib/media/stream-proxy";
 import CompactAudioPlayer, {
   type MediaSeekRequest,
@@ -526,6 +528,15 @@ export default function TranscriptWorkspace({ id }: { id: string }) {
     () => mergeIntoSentences(rawTranscript),
     [rawTranscript],
   );
+  const showSpeakerLabels = useMemo(
+    () => transcriptHasSpeakerLabels(rawTranscript),
+    [rawTranscript],
+  );
+
+  const speakerAccent = (speaker: number) => {
+    const palette = ["#0D9488", "#2563EB", "#CA8A04", "#DB2777", "#7C3AED"];
+    return palette[Math.abs(Math.floor(speaker)) % palette.length]!;
+  };
   const searchHits = useTranscriptSearchHits(
     leftTab,
     searchQuery,
@@ -577,6 +588,9 @@ export default function TranscriptWorkspace({ id }: { id: string }) {
   }
 
   const audioSrc = (() => {
+    if (payload.url && canEmbedPlayback(payload.url)) {
+      return "";
+    }
     if (payload.mediaKind === "audio") {
       return payload.playbackUrl || payload.url || "";
     }
@@ -740,7 +754,8 @@ export default function TranscriptWorkspace({ id }: { id: string }) {
             ) : (
             <div className="w-full overflow-hidden rounded-xl bg-black">
               <div className="mx-auto w-full max-w-[400px]">
-                {embed.kind === "iframe" && !payload.playbackUrl ? (
+                {embed.kind === "iframe" &&
+                (!payload.playbackUrl || canEmbedPlayback(payload.url)) ? (
                   <div className="relative aspect-video w-full min-w-0 bg-black">
                     <iframe
                       ref={youtubeRef}
@@ -923,38 +938,56 @@ export default function TranscriptWorkspace({ id }: { id: string }) {
                           {block.sentences.map((sent, si) => {
                             const key = `${bi}-${si}-${sent.startSeconds}`;
                             const on = activeSentence === key;
+                            const prev = block.sentences[si - 1];
+                            const showLabel =
+                              showSpeakerLabels &&
+                              typeof sent.speaker === "number" &&
+                              sent.speaker !== prev?.speaker;
                             return (
-                              <span
-                                key={key}
-                                role="button"
-                                tabIndex={0}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  seekToSentence(bi, key, sent.startSeconds);
-                                }}
-                                onKeyDown={(e) => {
-                                  if (e.key === "Enter" || e.key === " ") {
-                                    e.preventDefault();
+                              <span key={key} className="inline">
+                                {showLabel ? (
+                                  <span
+                                    className="mr-1.5 inline-block align-baseline text-sm font-semibold"
+                                    style={{
+                                      color: speakerAccent(sent.speaker!),
+                                    }}
+                                  >
+                                    {formatSpeakerLabel(sent.speaker!)}
+                                  </span>
+                                ) : null}
+                                <span
+                                  role="button"
+                                  tabIndex={0}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
                                     seekToSentence(bi, key, sent.startSeconds);
+                                  }}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter" || e.key === " ") {
+                                      e.preventDefault();
+                                      seekToSentence(bi, key, sent.startSeconds);
+                                    }
+                                  }}
+                                  className="inline cursor-pointer rounded-md px-0.5 py-0.5 transition-colors hover:bg-gray-100 hover:text-[#3C82F6]"
+                                  style={
+                                    on
+                                      ? {
+                                          backgroundColor:
+                                            "rgba(59,130,246,0.12)",
+                                          color: "#3C82F6",
+                                        }
+                                      : undefined
                                   }
-                                }}
-                                className="inline cursor-pointer rounded-md px-0.5 py-0.5 transition-colors hover:bg-gray-100 hover:text-[#3C82F6]"
-                                style={
-                                  on
-                                    ? {
-                                        backgroundColor: "rgba(59,130,246,0.12)",
-                                        color: "#3C82F6",
-                                      }
-                                    : undefined
-                                }
-                                title={formatTimestamp(sent.startSeconds)}
-                              >
-                                <HighlightedText
-                                  text={sent.text}
-                                  containerKey={key}
-                                  hits={searchHits}
-                                  activeHitId={activeSearchHitId}
-                                />
+                                  title={formatTimestamp(sent.startSeconds)}
+                                >
+                                  <HighlightedText
+                                    text={sent.text}
+                                    containerKey={key}
+                                    hits={searchHits}
+                                    activeHitId={activeSearchHitId}
+                                  />
+                                </span>
+                                {si < block.sentences.length - 1 ? " " : null}
                               </span>
                             );
                           })}
@@ -980,9 +1013,20 @@ export default function TranscriptWorkspace({ id }: { id: string }) {
                             : undefined
                         }
                       >
-                        <span className="shrink-0 text-base font-medium text-[#2563EB] tabular-nums">
-                          {formatTimestamp(cue.startSeconds)}
-                        </span>
+                        <div className="flex w-28 shrink-0 flex-col gap-0.5 tabular-nums">
+                          <span className="text-base font-medium text-[#2563EB]">
+                            {formatTimestamp(cue.startSeconds)}
+                          </span>
+                          {showSpeakerLabels &&
+                          typeof cue.speaker === "number" ? (
+                            <span
+                              className="text-xs font-semibold"
+                              style={{ color: speakerAccent(cue.speaker) }}
+                            >
+                              {formatSpeakerLabel(cue.speaker)}
+                            </span>
+                          ) : null}
+                        </div>
                         <span
                           className="min-w-0 flex-1 text-base leading-relaxed text-slate-500 group-hover:text-blue-500"
                           style={on ? { color: "#3C82F6" } : undefined}

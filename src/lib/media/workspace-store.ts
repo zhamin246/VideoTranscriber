@@ -20,6 +20,8 @@ export type WorkspacePayload = {
   sourceLanguage: string;
   noteMode: string;
   separateSpeaker: boolean;
+  /** Transcript source for DB provider column */
+  transcriptionProvider?: "gladia" | "supadata" | "replicate";
   createdAt: number;
   /** Real Whisper output when available */
   transcript?: TranscriptSegment[];
@@ -69,7 +71,7 @@ export function loadWorkspace(id: string): WorkspacePayload | null {
 export async function persistWorkspace(
   payload: WorkspacePayload,
   file?: File | null,
-): Promise<{ playbackUrl?: string | null } | null> {
+): Promise<{ playbackUrl?: string | null; error?: string } | null> {
   try {
     if (file && file.size > 0) {
       const form = new FormData();
@@ -96,10 +98,11 @@ export async function persistWorkspace(
       const res = await fetch("/api/workspaces", { method: "POST", body: form });
       const json = (await res.json()) as {
         code?: number;
+        message?: string;
         data?: { playbackUrl?: string | null };
       };
       if (res.ok && json.code === 0) return json.data || {};
-      return null;
+      return { error: json.message || "Failed to save workspace" };
     }
 
     const res = await fetch("/api/workspaces", {
@@ -109,12 +112,18 @@ export async function persistWorkspace(
     });
     const json = (await res.json()) as {
       code?: number;
+      message?: string;
       data?: { playbackUrl?: string | null };
     };
     if (res.ok && json.code === 0) return json.data || {};
-    return null;
-  } catch {
-    return null;
+    console.error(
+      "[persistWorkspace] failed:",
+      json.message || res.status,
+    );
+    return { error: json.message || "Failed to save workspace" };
+  } catch (e) {
+    console.error("[persistWorkspace]", e);
+    return { error: e instanceof Error ? e.message : "Failed to save workspace" };
   }
 }
 

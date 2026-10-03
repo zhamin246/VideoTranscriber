@@ -1,4 +1,7 @@
-import { formatTimestamp } from "@/lib/media/workspace-mock";
+import {
+  formatSpeakerLabel,
+  formatTimestamp,
+} from "@/lib/media/workspace-mock";
 import type { TranscriptSentence } from "@/lib/media/workspace-mock";
 import type { ChapterItem } from "@/lib/media/chapters";
 import type { TranscriptBlock } from "@/lib/media/workspace-mock";
@@ -36,7 +39,14 @@ export type ExportCue = {
   startSeconds: number;
   endSeconds: number;
   text: string;
+  speaker?: number;
 };
+
+function cueLineText(cue: ExportCue, withSpeakers: boolean): string {
+  const body = cue.text.trim();
+  if (!withSpeakers || typeof cue.speaker !== "number") return body;
+  return `${formatSpeakerLabel(cue.speaker)}: ${body}`;
+}
 
 /** Flatten transcript blocks into timed cues for export. */
 export function cuesFromBlocks(blocks: TranscriptBlock[]): ExportCue[] {
@@ -50,31 +60,47 @@ export function cuesFromBlocks(blocks: TranscriptBlock[]): ExportCue[] {
         blocks[bi + 1]?.startSeconds ??
         s.endSeconds ??
         s.startSeconds + 3;
-      out.push({
+      const cue: ExportCue = {
         startSeconds: s.startSeconds,
         endSeconds: Math.max(next, s.startSeconds + 0.4),
         text: s.text,
-      });
+      };
+      if (typeof s.speaker === "number") cue.speaker = s.speaker;
+      out.push(cue);
     }
   }
   return out;
 }
 
 export function cuesFromSentences(cues: TranscriptSentence[]): ExportCue[] {
-  return cues.map((c) => ({
-    startSeconds: c.startSeconds,
-    endSeconds: Math.max(c.endSeconds || c.startSeconds + 2, c.startSeconds + 0.4),
-    text: c.text,
-  }));
+  return cues.map((c) => {
+    const cue: ExportCue = {
+      startSeconds: c.startSeconds,
+      endSeconds: Math.max(
+        c.endSeconds || c.startSeconds + 2,
+        c.startSeconds + 0.4,
+      ),
+      text: c.text,
+    };
+    if (typeof c.speaker === "number") cue.speaker = c.speaker;
+    return cue;
+  });
 }
 
-export function buildTxtFromCues(cues: ExportCue[], withTimestamps: boolean) {
+export function buildTxtFromCues(
+  cues: ExportCue[],
+  withTimestamps: boolean,
+  withSpeakers = cues.some((c) => typeof c.speaker === "number"),
+) {
   if (withTimestamps) {
     return cues
-      .map((c) => `${formatTimestamp(c.startSeconds)}\n${c.text}`)
+      .map(
+        (c) =>
+          `${formatTimestamp(c.startSeconds)}\n${cueLineText(c, withSpeakers)}`,
+      )
       .join("\n\n");
   }
-  return cues.map((c) => c.text).join("\n");
+  return cues.map((c) => cueLineText(c, withSpeakers)).join("\n");
 }
 
 export function buildChaptersTxt(
@@ -91,31 +117,61 @@ export function buildChaptersTxt(
     .join("\n\n");
 }
 
-export function buildSrt(cues: ExportCue[]) {
+export function buildSrt(
+  cues: ExportCue[],
+  withSpeakers = cues.some((c) => typeof c.speaker === "number"),
+) {
   return cues
     .map((c, i) => {
-      return `${i + 1}\n${formatSrtTime(c.startSeconds, ",")} --> ${formatSrtTime(c.endSeconds, ",")}\n${c.text}\n`;
+      return `${i + 1}\n${formatSrtTime(c.startSeconds, ",")} --> ${formatSrtTime(c.endSeconds, ",")}\n${cueLineText(c, withSpeakers)}\n`;
     })
     .join("\n");
 }
 
-export function buildVtt(cues: ExportCue[]) {
+export function buildVtt(
+  cues: ExportCue[],
+  withSpeakers = cues.some((c) => typeof c.speaker === "number"),
+) {
   const body = cues
     .map((c) => {
-      return `${formatSrtTime(c.startSeconds, ".")} --> ${formatSrtTime(c.endSeconds, ".")}\n${c.text}\n`;
+      return `${formatSrtTime(c.startSeconds, ".")} --> ${formatSrtTime(c.endSeconds, ".")}\n${cueLineText(c, withSpeakers)}\n`;
     })
     .join("\n");
   return `WEBVTT\n\n${body}`;
 }
 
-export function buildCsv(cues: ExportCue[], withTimestamps: boolean) {
+export function buildCsv(
+  cues: ExportCue[],
+  withTimestamps: boolean,
+  withSpeakers = cues.some((c) => typeof c.speaker === "number"),
+) {
   if (withTimestamps) {
+    const header = withSpeakers ? "start,end,speaker,text" : "start,end,text";
     const rows = [
-      "start,end,text",
-      ...cues.map(
-        (c) =>
-          `${formatTimestamp(c.startSeconds)},${formatTimestamp(c.endSeconds)},${escapeCsv(c.text)}`,
-      ),
+      header,
+      ...cues.map((c) => {
+        const speaker =
+          withSpeakers && typeof c.speaker === "number"
+            ? formatSpeakerLabel(c.speaker)
+            : "";
+        if (withSpeakers) {
+          return `${formatTimestamp(c.startSeconds)},${formatTimestamp(c.endSeconds)},${escapeCsv(speaker)},${escapeCsv(c.text)}`;
+        }
+        return `${formatTimestamp(c.startSeconds)},${formatTimestamp(c.endSeconds)},${escapeCsv(c.text)}`;
+      }),
+    ];
+    return rows.join("\n");
+  }
+  if (withSpeakers) {
+    const rows = [
+      "speaker,text",
+      ...cues.map((c) => {
+        const speaker =
+          typeof c.speaker === "number"
+            ? formatSpeakerLabel(c.speaker)
+            : "";
+        return `${escapeCsv(speaker)},${escapeCsv(c.text)}`;
+      }),
     ];
     return rows.join("\n");
   }

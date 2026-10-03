@@ -4,11 +4,6 @@ import {
   needsResolvedPlayback,
 } from "@/lib/media/embed";
 import {
-  downloadResolvedMedia,
-  resolveCobaltAudio,
-  resolveCobaltMedia,
-} from "@/lib/media/cobalt";
-import {
   extractAudioBuffer,
   isLikelyAudio,
   isLikelyVideo,
@@ -19,13 +14,18 @@ import {
   uploadMediaToR2,
 } from "@/lib/media/r2-media";
 import { putPlaybackCache } from "@/lib/media/playback-cache";
-import { downloadMediaViaReplicate } from "@/lib/media/replicate-download";
-import { parsePublicHttpsUrl } from "@/lib/media/source-url";
 import {
-  extractAudioViaYtdlp,
-  ytdlpWorkerConfigured,
-} from "@/lib/media/ytdlp-worker";
-import { runWhisper, type WhisperResult } from "@/lib/media/whisper";
+  fetchGladiaJobStatus,
+  gladiaConfigured,
+  startGladiaTranscriptionJob,
+} from "@/lib/media/gladia";
+import {
+  fetchMediaViaGenDownload,
+  gendownloadDisabled,
+} from "@/lib/media/gendownload";
+import { replicateConfigured, runWhisper } from "@/lib/media/whisper";
+import { parsePublicHttpsUrl } from "@/lib/media/source-url";
+import type { WhisperResult } from "@/lib/media/whisper";
 import { insertMediaAsset } from "@/models/workspace";
 
 export type PrepareTranscribeResult = WhisperResult & {
@@ -36,6 +36,189 @@ export type PrepareTranscribeResult = WhisperResult & {
   storage: "r2" | "memory" | "none";
   mediaExpiresAt: string | null;
 };
+
+type BeginTranscribeMeta = {
+  workspaceId: string;
+  audioUrl: string | null;
+  playbackUrl: string | null;
+  mediaKind: "audio" | "video" | null;
+  storage: "r2" | "memory" | "none";
+  mediaExpiresAt: string | null;
+};
+
+/** Gladia async job — client polls `/api/media/transcribe/status`. */
+export type BeginTranscribeProcessing = BeginTranscribeMeta & {
+  status: "processing";
+  provider: "gladia";
+  gladiaJobId: string;
+};
+
+/** Sync transcript (Replicate Whisper on R2 URL). */
+export type BeginTranscribeDone = BeginTranscribeMeta & {
+  status: "done";
+  provider: "replicate";
+  text: string;
+  segments: WhisperResult["segments"];
+  language: string | null;
+};
+
+export type BeginTranscribeResult =
+  | BeginTranscribeProcessing
+  | BeginTranscribeDone;
+
+async function beginGladiaForUrl(input: {
+  audioUrl: string;
+  workspaceId: string;
+  language: string;
+  separateSpeaker: boolean;
+  playbackUrl: string | null;
+  mediaKind: "audio" | "video" | null;
+}): Promise<BeginTranscribeProcessing> {
+  const { id } = await startGladiaTranscriptionJob({
+    audioUrl: input.audioUrl,
+    language: input.language,
+    diarise: input.separateSpeaker,
+  });
+  console.info("[gladia] link job started (fallback)", {
+    id,
+    workspaceId: input.workspaceId,
+  });
+  return {
+    status: "processing",
+    provider: "gladia",
+    gladiaJobId: id,
+    workspaceId: input.workspaceId,
+    audioUrl: null,
+    playbackUrl: input.playbackUrl,
+    mediaKind: input.mediaKind,
+    storage: "none",
+    mediaExpiresAt: null,
+  };
+}
+
+async function beginGenDownloadReplicateForUrl(input: {
+  sourceUrl: string;
+  workspaceId: string;
+  language: string;
+  separateSpeaker: boolean;
+  playbackUrl: string | null;
+  mediaKind: "audio" | "video" | null;
+}): Promise<BeginTranscribeDone> {
+  if (!replicateConfigured()) {
+    throw new Error("REPLICATE_API_TOKEN is not configured for link transcription");
+  }
+
+  const fetched = await fetchMediaViaGenDownload(input.sourceUrl);
+  const audio = await extractAudioBuffer({
+    buf: fetched.buf,
+    filename: fetched.filename,
+    contentType: fetched.contentType,
+  });
+
+  let audioUrl: string | null = null;
+  let storage: "r2" | "memory" | "none" = "none";
+  let expires: Date | null = null;
+
+  const audioAsset = await persistAsset({
+    workspaceId: input.workspaceId,
+    buf: audio.buf,
+    contentType: audio.contentType,
+    filename: audio.filename,
+    kind: "audio",
+  });
+  if (audioAsset.url) {
+    audioUrl = audioAsset.url;
+    storage = audioAsset.storage;
+    expires = audioAsset.expiresAt;
+  }
+
+  // YouTube / TikTok / Bilibili: keep playback on iframe; R2 MP3 is for Whisper only.
+  const playbackUrl = canEmbedPlayback(input.sourceUrl)
+    ? null
+    : audioUrl || input.playbackUrl;
+
+  const publicAudioUrl =
+    audioUrl && /^https:\/\//i.test(audioUrl) ? audioUrl : undefined;
+
+  const transcript = publicAudioUrl
+    ? await runWhisper({
+        audioUrl: publicAudioUrl,
+        language: input.language,
+        diarise: input.separateSpeaker,
+      })
+    : await runWhisper({
+        file: new Blob([new Uint8Array(audio.buf)], {
+          type: audio.contentType,
+        }),
+        language: input.language,
+        diarise: input.separateSpeaker,
+      });
+
+  console.info("[gendownload] link transcribe done", {
+    workspaceId: input.workspaceId,
+    viaR2: Boolean(publicAudioUrl),
+    durationSeconds: fetched.durationSeconds,
+  });
+
+  return {
+    status: "done",
+    provider: "replicate",
+    workspaceId: input.workspaceId,
+    audioUrl,
+    playbackUrl,
+    mediaKind: input.mediaKind,
+    storage,
+    mediaExpiresAt: expires?.toISOString() || null,
+    text: transcript.text,
+    segments: transcript.segments,
+    language: transcript.language,
+  };
+}
+
+async function beginLinkTranscription(input: {
+  sourceUrl: string;
+  workspaceId: string;
+  language: string;
+  separateSpeaker: boolean;
+}): Promise<BeginTranscribeResult> {
+  const { mediaKind, playbackUrl } = playbackForRemoteSource(input.sourceUrl);
+
+  const tryGenDownload =
+    !gendownloadDisabled() && replicateConfigured();
+
+  if (tryGenDownload) {
+    try {
+      return await beginGenDownloadReplicateForUrl({
+        sourceUrl: input.sourceUrl,
+        workspaceId: input.workspaceId,
+        language: input.language,
+        separateSpeaker: input.separateSpeaker,
+        playbackUrl,
+        mediaKind,
+      });
+    } catch (e) {
+      console.warn("[gendownload] link path failed, trying Gladia:", e);
+      if (!gladiaConfigured()) {
+        throw e instanceof Error
+          ? e
+          : new Error("GenDownload failed and GLADIA_API_KEY is not configured.");
+      }
+    }
+  } else if (!gladiaConfigured()) {
+    throw new Error(
+      "Configure REPLICATE_API_TOKEN (GenDownload path) and/or GLADIA_API_KEY (fallback) for link transcription.",
+    );
+  }
+
+  return beginGladiaForUrl({
+    audioUrl: input.sourceUrl,
+    workspaceId: input.workspaceId,
+    language: input.language,
+    separateSpeaker: input.separateSpeaker,
+    playbackUrl,
+    mediaKind,
+  });
+}
 
 function newWorkspaceId() {
   return randomBytes(8).toString("hex");
@@ -49,89 +232,6 @@ function looksDirectMediaUrl(url: string) {
     );
   } catch {
     return false;
-  }
-}
-
-async function downloadDirect(url: string) {
-  const res = await fetch(url, { headers: { Accept: "*/*" } });
-  if (!res.ok) throw new Error(`Download failed (HTTP ${res.status})`);
-  const buf = Buffer.from(await res.arrayBuffer());
-  if (buf.byteLength > 200 * 1024 * 1024) {
-    const mb = Math.round(buf.byteLength / (1024 * 1024));
-    throw new Error(
-      `That media is too large to download here (${mb} MB). Try a shorter clip, or upload an audio file instead.`,
-    );
-  }
-  const contentType = res.headers.get("content-type") || "application/octet-stream";
-  const pathName = (() => {
-    try {
-      return new URL(url).pathname.split("/").pop() || "media.bin";
-    } catch {
-      return "media.bin";
-    }
-  })();
-  return { buf, contentType, filename: pathName };
-}
-
-/**
- * Fetch audio for transcription.
- * Prefer yt-dlp (audio-only) → Cobalt audio → Replicate download-media.
- * YouTube used to call Replicate first, which often returns a full video
- * and trips the 80 MB guard before ffmpeg can extract audio.
- */
-async function fetchSocialAudio(sourceUrl: string) {
-  let lastError: unknown;
-
-  if (ytdlpWorkerConfigured()) {
-    try {
-      return await extractAudioViaYtdlp(sourceUrl);
-    } catch (e) {
-      lastError = e;
-      console.warn("[prepare] ytdlp audio failed:", e);
-    }
-  }
-
-  try {
-    const resolved = await resolveCobaltAudio(sourceUrl);
-    const file = await downloadResolvedMedia(resolved.url);
-    return {
-      buf: file.buf,
-      contentType: file.contentType,
-      filename: resolved.filename || "audio.mp3",
-    };
-  } catch (e) {
-    lastError = e;
-    console.warn("[prepare] cobalt audio failed, trying Replicate:", e);
-  }
-
-  try {
-    return await downloadMediaViaReplicate(sourceUrl);
-  } catch (e) {
-    const primary =
-      lastError instanceof Error ? lastError.message : "Could not fetch audio";
-    const fallback = e instanceof Error ? e.message : String(e);
-    throw new Error(`${primary} (Replicate fallback: ${fallback})`);
-  }
-}
-
-async function fetchSocialVideo(sourceUrl: string) {
-  try {
-    const resolved = await resolveCobaltMedia(sourceUrl);
-    const file = await downloadResolvedMedia(resolved.url);
-    return {
-      buf: file.buf,
-      contentType: file.contentType,
-      filename: resolved.filename || "video.mp4",
-    };
-  } catch (e) {
-    console.warn("[prepare] cobalt video failed, trying Replicate:", e);
-    try {
-      return await downloadMediaViaReplicate(sourceUrl);
-    } catch (e2) {
-      const primary = e instanceof Error ? e.message : "Could not fetch video";
-      const fallback = e2 instanceof Error ? e2.message : String(e2);
-      throw new Error(`${primary} (Replicate fallback: ${fallback})`);
-    }
   }
 }
 
@@ -185,117 +285,86 @@ async function persistAsset(input: {
     };
   }
 
-  // Audio without R2: Whisper can take a data-less path via File below
   return { url: "", storage: "memory", expiresAt: mediaExpiresAt() };
 }
 
+function playbackForRemoteSource(source: string) {
+  if (canEmbedPlayback(source)) {
+    return { mediaKind: "video" as const, playbackUrl: null };
+  }
+  if (needsResolvedPlayback(source)) {
+    return { mediaKind: "video" as const, playbackUrl: null };
+  }
+  if (looksDirectMediaUrl(source)) {
+    const pathName = (() => {
+      try {
+        return new URL(source).pathname.split("/").pop() || "";
+      } catch {
+        return "";
+      }
+    })();
+    if (isLikelyVideo(pathName, "")) {
+      return { mediaKind: "video" as const, playbackUrl: source };
+    }
+    return { mediaKind: "audio" as const, playbackUrl: source };
+  }
+  return { mediaKind: "video" as const, playbackUrl: null };
+}
+
 /**
- * Download / accept media → ffmpeg MP3 → R2 → Whisper.
- * Local uploads: never store the raw video on R2 (audio only).
- * YouTube / TikTok / Bilibili: audio only (iframe for playback).
- * Instagram / Facebook / X: may store resolved video on R2 for <video>.
+ * Start Gladia async job (returns immediately). Poll `/api/media/transcribe/status`.
  */
-export async function prepareAndTranscribe(input: {
+export async function beginTranscription(input: {
   workspaceId?: string;
   sourceUrl?: string;
   file?: File | Blob;
   filename?: string;
   language?: string;
   separateSpeaker?: boolean;
-}): Promise<PrepareTranscribeResult> {
+}): Promise<BeginTranscribeResult> {
   const workspaceId =
     (input.workspaceId || "").replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 64) ||
     newWorkspaceId();
   const language = input.language || "auto";
   const separateSpeaker = Boolean(input.separateSpeaker);
 
-  let mediaBuf: Buffer | null = null;
-  let mediaCt = "";
-  let mediaName = "";
-  let storeVideo = false;
-  let mediaKind: "audio" | "video" | null = null;
+  if (input.sourceUrl && !input.file) {
+    const parsed = parsePublicHttpsUrl(input.sourceUrl);
+    const sourceUrl = parsed.toString();
+
+    return beginLinkTranscription({
+      sourceUrl,
+      workspaceId,
+      language,
+      separateSpeaker,
+    });
+  }
+
+  if (!input.file) {
+    throw new Error("Provide a file upload or sourceUrl");
+  }
+
+  const mediaCt =
+    (input.file instanceof File ? input.file.type : "") ||
+    "application/octet-stream";
+  const mediaName =
+    input.filename ||
+    (input.file instanceof File ? input.file.name : "upload.bin");
+  const mediaKind: "audio" | "video" | null = isLikelyAudio(mediaName, mediaCt)
+    ? "audio"
+    : isLikelyVideo(mediaName, mediaCt)
+      ? "video"
+      : "audio";
+
+  const mediaBuf = Buffer.from(await input.file.arrayBuffer());
+  if (!mediaBuf.byteLength) {
+    throw new Error("Empty media");
+  }
+
   let playbackUrl: string | null = null;
   let storage: "r2" | "memory" | "none" = "none";
   let expires: Date | null = null;
 
-  if (input.file) {
-    mediaBuf = Buffer.from(await input.file.arrayBuffer());
-    mediaCt =
-      (input.file instanceof File ? input.file.type : "") ||
-      "application/octet-stream";
-    mediaName =
-      input.filename ||
-      (input.file instanceof File ? input.file.name : "upload.bin");
-    // Local file: ffmpeg → MP3 → R2 only. Do not upload the original video.
-    storeVideo = false;
-    mediaKind = isLikelyAudio(mediaName, mediaCt)
-      ? "audio"
-      : isLikelyVideo(mediaName, mediaCt)
-        ? "video"
-        : "audio";
-  } else if (input.sourceUrl) {
-    const parsed = parsePublicHttpsUrl(input.sourceUrl);
-    const source = parsed.toString();
-
-    if (canEmbedPlayback(source)) {
-      // YouTube / TikTok / Bilibili — iframe playback, audio-only to R2
-      const audio = await fetchSocialAudio(source);
-      mediaBuf = audio.buf;
-      mediaCt = audio.contentType;
-      mediaName = audio.filename;
-      storeVideo = false;
-      mediaKind = "video"; // page is video; player is embed
-      playbackUrl = null;
-    } else if (needsResolvedPlayback(source)) {
-      const video = await fetchSocialVideo(source);
-      mediaBuf = video.buf;
-      mediaCt = video.contentType;
-      mediaName = video.filename;
-      storeVideo = isLikelyVideo(mediaName, mediaCt) || !isLikelyAudio(mediaName, mediaCt);
-      mediaKind = storeVideo ? "video" : "audio";
-    } else if (looksDirectMediaUrl(source)) {
-      const direct = await downloadDirect(source);
-      mediaBuf = direct.buf;
-      mediaCt = direct.contentType;
-      mediaName = direct.filename;
-      storeVideo = isLikelyVideo(mediaName, mediaCt);
-      mediaKind = storeVideo ? "video" : "audio";
-      if (!storeVideo && isLikelyAudio(mediaName, mediaCt)) {
-        // Direct audio URL can also be playback
-        playbackUrl = source;
-      }
-    } else {
-      // Unknown platform page — try audio extract
-      const audio = await fetchSocialAudio(source);
-      mediaBuf = audio.buf;
-      mediaCt = audio.contentType;
-      mediaName = audio.filename;
-      storeVideo = false;
-      mediaKind = "audio";
-    }
-  } else {
-    throw new Error("Provide a file upload or sourceUrl");
-  }
-
-  if (!mediaBuf?.byteLength) {
-    throw new Error("Empty media");
-  }
-
-  // Social / direct video that needs <video> playback — store before ffmpeg
-  if (storeVideo) {
-    const videoAsset = await persistAsset({
-      workspaceId,
-      buf: mediaBuf,
-      contentType: mediaCt || "video/mp4",
-      filename: mediaName || "video.mp4",
-      kind: "video",
-    });
-    playbackUrl = videoAsset.url;
-    storage = videoAsset.storage;
-    expires = videoAsset.expiresAt;
-  }
-
-  // Always: extract MP3 → R2 → Whisper (local video never skips this path)
   const audio = await extractAudioBuffer({
     buf: mediaBuf,
     filename: mediaName,
@@ -312,43 +381,87 @@ export async function prepareAndTranscribe(input: {
   });
   if (audioAsset.url) {
     audioUrl = audioAsset.url;
-    if (storage === "none") storage = audioAsset.storage;
-    expires = audioAsset.expiresAt || expires;
+    storage = audioAsset.storage;
+    expires = audioAsset.expiresAt;
   }
-  // Local uploads / pure audio: play the R2 MP3 (no raw video on R2).
-  // Embed platforms (YouTube/TikTok/…) keep playbackUrl null → iframe.
   if (mediaKind === "audio" && audioUrl) {
     playbackUrl = audioUrl;
-  } else if (input.file && audioUrl) {
+  } else if (audioUrl) {
     playbackUrl = audioUrl;
   }
 
-  let whisper: WhisperResult;
-  if (audioUrl && storageConfigured()) {
-    whisper = await runWhisper({
-      audioUrl,
-      language,
-      diarise: separateSpeaker,
-    });
-  } else {
-    // Dev fallback without R2: send bytes directly to Replicate
-    const blob = new Blob([new Uint8Array(audio.buf)], {
-      type: audio.contentType,
-    });
-    whisper = await runWhisper({
-      file: blob,
-      language,
-      diarise: separateSpeaker,
-    });
+  if (!replicateConfigured()) {
+    throw new Error("REPLICATE_API_TOKEN is not configured for file transcription");
   }
 
+  const publicAudioUrl =
+    audioUrl && /^https:\/\//i.test(audioUrl) ? audioUrl : undefined;
+
+  const transcript = publicAudioUrl
+    ? await runWhisper({
+        audioUrl: publicAudioUrl,
+        language,
+        diarise: separateSpeaker,
+      })
+    : await runWhisper({
+        file: new Blob([new Uint8Array(audio.buf)], {
+          type: audio.contentType,
+        }),
+        language,
+        diarise: separateSpeaker,
+      });
+
+  console.info("[replicate] file transcribe done", {
+    workspaceId,
+    viaR2: Boolean(publicAudioUrl),
+  });
+
   return {
-    ...whisper,
+    status: "done",
+    provider: "replicate",
     workspaceId,
     audioUrl,
     playbackUrl,
     mediaKind,
     storage,
     mediaExpiresAt: expires?.toISOString() || null,
+    text: transcript.text,
+    segments: transcript.segments,
+    language: transcript.language,
   };
+}
+
+/**
+ * File / recording → ffmpeg MP3 → R2 → Replicate Whisper (public audio URL).
+ * Public link → GenDownload extract + R2 + Replicate; Gladia fallback on failure.
+ */
+export async function prepareAndTranscribe(input: {
+  workspaceId?: string;
+  sourceUrl?: string;
+  file?: File | Blob;
+  filename?: string;
+  language?: string;
+  separateSpeaker?: boolean;
+}): Promise<PrepareTranscribeResult> {
+  const begun = await beginTranscription(input);
+  if (begun.status === "done") {
+    const { status: _s, provider: _p, text, segments, language, ...meta } =
+      begun;
+    return { text, segments, language, ...meta };
+  }
+  const deadline = Date.now() + 780_000;
+  while (Date.now() < deadline) {
+    const st = await fetchGladiaJobStatus(begun.gladiaJobId);
+    if (st.status === "error") {
+      throw new Error(st.error || "Gladia transcription failed.");
+    }
+    if (st.status === "done" && st.result) {
+      const { status: _s, gladiaJobId: _id, ...meta } = begun;
+      return { ...st.result, ...meta };
+    }
+    await new Promise((r) => setTimeout(r, 2_500));
+  }
+  throw new Error(
+    `Gladia job ${begun.gladiaJobId} is still processing. Poll /api/media/transcribe/status?jobId=${begun.gladiaJobId}`,
+  );
 }

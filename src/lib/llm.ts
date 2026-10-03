@@ -1,15 +1,15 @@
 /**
  * Default LLM for Video Transcriber (Chapter, AI Notes, Ask AI, …).
- * Provider: Kie.ai Gemini 2.5 Flash
- * https://kie.ai/gemini-2.5-flash
+ * Provider: Kie.ai DeepSeek V4.1 Flash
+ * https://kie.ai/deepseek-v4-1-Flash
  */
 
 export {
-  gemini25FlashChat as llmChat,
-  gemini25FlashChatStream as llmChatStream,
-  gemini25FlashText as llmText,
+  deepseekV41Chat as llmChat,
+  deepseekV41ChatStream as llmChatStream,
+  deepseekV41Text as llmText,
   parseJsonFromModelText,
-  GEMINI_25_FLASH_MODEL as LLM_MODEL,
+  DEEPSEEK_V41_MODEL as LLM_MODEL,
   type GeminiChatMessage as LlmMessage,
   type GeminiResponseFormat as LlmResponseFormat,
-} from "@/lib/kie/gemini-2.5-flash";
+} from "@/lib/kie/deepseek-v4-1-flash";

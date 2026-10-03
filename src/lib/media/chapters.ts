@@ -2,7 +2,7 @@
  * AI chapter outline for workspace Chapter tab (videotranscriber.ai style).
  * Accordion rows: timestamp + title + expandable summary.
  * Timestamps must track real video topic shifts (not Whisper 1–2s chunks).
- * Uses Kie Gemini 2.5 Flash via `@/lib/llm`.
+ * Uses Kie DeepSeek V4.1 Flash via `@/lib/llm`.
  */
 
 import {

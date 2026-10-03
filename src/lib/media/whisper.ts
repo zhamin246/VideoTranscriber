@@ -11,6 +11,10 @@ export type WhisperResult = {
   language: string | null;
 };
 
+export function replicateConfigured() {
+  return Boolean(process.env.REPLICATE_API_TOKEN?.trim());
+}
+
 function getClient() {
   const token = process.env.REPLICATE_API_TOKEN;
   if (!token) {

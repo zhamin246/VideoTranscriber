@@ -7,15 +7,16 @@ import { formatDuration, type MediaPreview } from "@/lib/media/preview-types";
 import { EXAMPLE_CARDS, openExampleWorkspace } from "@/lib/media/examples";
 import {
   deleteUserWorkspace,
-  fetchUserRecentMedia,
+  fetchUserRecentMediaWithMeta,
   finishTranscribeJob,
   listTranscribeJobs,
+  MY_FILES_STRIP_VISIBLE,
   TRANSCRIBE_JOBS_EVENT,
   type RecentMediaItem,
   type TranscribeJob,
 } from "@/lib/media/recent-media";
 import { PlatformMark } from "@/components/face-rating/platform-mark";
-import { useAppContext } from "@/contexts/app";
+import { useSignedIn } from "@/hooks/useSignedIn";
 import {
   Dialog,
   DialogContent,
@@ -118,8 +119,7 @@ function ProgressCard({ job }: { job: TranscribeJob }) {
 
 export default function MediaFilesStrip() {
   const router = useRouter();
-  const { user } = useAppContext();
-  const signedIn = Boolean(user?.uuid);
+  const { user, signedIn } = useSignedIn();
   const [tab, setTab] = useState<"mine" | "examples">("examples");
   const [recent, setRecent] = useState<RecentMediaItem[]>([]);
   const [jobs, setJobs] = useState<TranscribeJob[]>([]);
@@ -127,6 +127,7 @@ export default function MediaFilesStrip() {
     null,
   );
   const [loadingMine, setLoadingMine] = useState(false);
+  const [libraryTotal, setLibraryTotal] = useState(0);
 
   useEffect(() => {
     setTab(signedIn ? "mine" : "examples");
@@ -142,8 +143,11 @@ export default function MediaFilesStrip() {
     const refreshRecent = async () => {
       setLoadingMine(true);
       try {
-        const items = await fetchUserRecentMedia(24);
-        if (!cancelled) setRecent(items);
+        const { items, total } = await fetchUserRecentMediaWithMeta(48);
+        if (!cancelled) {
+          setRecent(items);
+          setLibraryTotal(total);
+        }
       } finally {
         if (!cancelled) setLoadingMine(false);
       }
@@ -198,13 +202,15 @@ export default function MediaFilesStrip() {
     setPendingDelete(null);
     finishTranscribeJob(id);
     await deleteUserWorkspace(id);
-    setRecent(await fetchUserRecentMedia(24));
+    const { items, total } = await fetchUserRecentMediaWithMeta(48);
+    setRecent(items);
+    setLibraryTotal(total);
   };
 
   const runningJobs = signedIn
     ? jobs.filter((j) => j.status === "running")
     : [];
-  const recentSlots = Math.max(0, 4 - runningJobs.length);
+  const recentSlots = Math.max(0, MY_FILES_STRIP_VISIBLE - runningJobs.length);
   const recentVisible = recent.slice(0, recentSlots);
   const hasMine = runningJobs.length > 0 || recent.length > 0;
   const activeTab = signedIn ? tab : "examples";
@@ -257,13 +263,20 @@ export default function MediaFilesStrip() {
           })}
         </div>
         {signedIn ? (
-          <Link
-            href="/my-assets"
-            className="text-sm font-medium"
-            style={{ color: "#2563EB" }}
-          >
-            All files &gt;
-          </Link>
+          <div className="flex flex-col items-end gap-0.5">
+            {libraryTotal > MY_FILES_STRIP_VISIBLE ? (
+              <span className="text-xs text-slate-400">
+                Latest {MY_FILES_STRIP_VISIBLE} of {libraryTotal}
+              </span>
+            ) : null}
+            <Link
+              href="/my-assets"
+              className="text-sm font-medium"
+              style={{ color: "#2563EB" }}
+            >
+              All files &gt;
+            </Link>
+          </div>
         ) : null}
       </div>
 

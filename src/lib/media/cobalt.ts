@@ -121,18 +121,44 @@ function tooLargeDownloadMessage(bytes: number) {
 }
 
 export async function downloadResolvedMedia(fileUrl: string) {
-  const res = await fetch(fileUrl, {
-    headers: { Accept: "*/*" },
-    redirect: "follow",
-  });
+  let res: Response;
+  try {
+    res = await fetch(fileUrl, {
+      headers: {
+        Accept: "*/*",
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+      },
+      redirect: "follow",
+    });
+  } catch (e) {
+    const raw = e instanceof Error ? e.message : String(e);
+    if (/terminated|abort|ECONNRESET|ETIMEDOUT/i.test(raw)) {
+      throw new Error(
+        `Media download connection closed (${raw}). Direct URLs expire quickly—retry soon or upload the file.`,
+      );
+    }
+    throw e;
+  }
   if (!res.ok) {
-    throw new Error("Could not download the audio from that link.");
+    throw new Error(`Could not download media (HTTP ${res.status}).`);
   }
   const len = Number(res.headers.get("content-length") || 0);
   if (len > MAX_DOWNLOAD_BYTES) {
     throw new Error(tooLargeDownloadMessage(len));
   }
-  const buf = Buffer.from(await res.arrayBuffer());
+  let buf: Buffer;
+  try {
+    buf = Buffer.from(await res.arrayBuffer());
+  } catch (e) {
+    const raw = e instanceof Error ? e.message : String(e);
+    if (/terminated|abort|ECONNRESET|ETIMEDOUT/i.test(raw)) {
+      throw new Error(
+        `Media download interrupted (${raw}). The host may have closed the connection.`,
+      );
+    }
+    throw e;
+  }
   if (buf.byteLength > MAX_DOWNLOAD_BYTES) {
     throw new Error(tooLargeDownloadMessage(buf.byteLength));
   }

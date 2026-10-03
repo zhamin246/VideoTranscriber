@@ -12,6 +12,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useAppContext } from "@/contexts/app";
+import { useSignedIn } from "@/hooks/useSignedIn";
 import { CONVERT_HREF } from "./data";
 import { isToTextSensitivePath } from "./nav-labels";
 import type { PlanSummary } from "@/lib/plan/summary";
@@ -125,8 +126,17 @@ function CurrentPlanCard({
 }: {
   onUpgrade: (reason?: UpgradePricingReason) => void;
 }) {
-  const { user } = useAppContext();
-  const plan = user?.plan || guestPlan();
+  const { user, signedIn, sessionLoading } = useSignedIn();
+  const plan =
+    user?.plan || (signedIn && sessionLoading ? null : guestPlan());
+  if (!plan) {
+    return (
+      <div className="hidden w-full flex-col rounded-2xl border border-[#EEF0F5] bg-white p-3.5 text-sm text-[#94A3B8] group-hover/nav:flex">
+        Loading plan…
+      </div>
+    );
+  }
+
   const dailyUnlimited = plan.dailyFiles.limit == null;
   const badgeLabel =
     plan.badge === "PACK"

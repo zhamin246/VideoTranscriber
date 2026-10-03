@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { getUserUuid } from "@/services/user";
 import {
+  countWorkspacesByUser,
   insertMediaAsset,
   listWorkspacesByUser,
   softDeleteWorkspace,
@@ -31,11 +32,15 @@ function normalizeSegments(raw: unknown): string {
   if (!Array.isArray(raw)) return "[]";
   const cleaned = raw
     .map((s) => {
-      const seg = s as SegmentIn;
-      return {
+      const seg = s as SegmentIn & { speaker?: number };
+      const out: SegmentIn & { speaker?: number } = {
         startSeconds: Number(seg?.startSeconds) || 0,
         text: String(seg?.text || "").slice(0, 4000),
       };
+      if (typeof seg?.speaker === "number" && Number.isFinite(seg.speaker)) {
+        out.speaker = seg.speaker;
+      }
+      return out;
     })
     .slice(0, 5000);
   const json = JSON.stringify(cleaned);
@@ -56,7 +61,9 @@ export async function GET(req: NextRequest) {
       ? Math.min(100, Math.max(1, Math.floor(limitRaw)))
       : 48;
     const rows = await listWorkspacesByUser(userUuid, limit);
+    const total = await countWorkspacesByUser(userUuid);
     return respData({
+      total,
       workspaces: rows.map((r) => ({
         id: r.workspace_id,
         url: r.source_url,
@@ -100,6 +107,7 @@ export async function POST(req: NextRequest) {
     let detectedLanguage = "";
     let transcriptText = "";
     let segmentsJson = "[]";
+    let transcriptProvider = "gladia";
     let file: File | null = null;
 
     if (contentType.includes("multipart/form-data")) {
@@ -126,6 +134,10 @@ export async function POST(req: NextRequest) {
       } catch {
         segmentsJson = "[]";
       }
+      const prov = String(form.get("transcriptionProvider") || "").trim();
+      if (prov === "supadata" || prov === "gladia" || prov === "replicate") {
+        transcriptProvider = prov;
+      }
       const f = form.get("file");
       if (f instanceof File && f.size > 0) file = f;
     } else {
@@ -149,6 +161,10 @@ export async function POST(req: NextRequest) {
       detectedLanguage = String(body.detectedLanguage || "").trim();
       transcriptText = String(body.transcriptText || "");
       segmentsJson = normalizeSegments(body.transcript);
+      const prov = String(body.transcriptionProvider || "").trim();
+      if (prov === "supadata" || prov === "gladia" || prov === "replicate") {
+        transcriptProvider = prov;
+      }
     }
 
     if (!workspaceId || !/^[\w-]{8,64}$/.test(workspaceId)) {
@@ -159,6 +175,9 @@ export async function POST(req: NextRequest) {
     }
 
     const userUuid = (await getUserUuid()) || "";
+    if (!userUuid) {
+      return respErr("Please sign in to save to My files");
+    }
     let expires = mediaExpiresAt();
 
     if (file && storageConfigured()) {
@@ -252,7 +271,7 @@ export async function POST(req: NextRequest) {
       text: transcriptText.slice(0, MAX_TEXT),
       segments_json: segmentsJson,
       language: detectedLanguage.slice(0, 32),
-      provider: "replicate",
+      provider: transcriptProvider,
       updated_at: new Date(),
     });
 

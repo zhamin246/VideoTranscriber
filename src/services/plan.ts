@@ -13,6 +13,7 @@ import {
   getFirstPaidOrderByUserUuid,
   getLatestPaidPackOrder,
 } from "@/models/order";
+import { findUserByUuid } from "@/models/user";
 import { countWorkspacesCreatedToday } from "@/models/workspace";
 import { getUserCredits } from "@/services/credit";
 
@@ -90,12 +91,15 @@ export async function assertCanStartTranscription(
 }
 
 export async function getPlanSummary(user_uuid: string): Promise<PlanSummary> {
+  const dbUser = await findUserByUuid(user_uuid);
+  const billingEmail = dbUser?.email?.trim() || null;
+
   const [credits, dailyUsed, subOrder, packOrder, firstPaid] =
     await Promise.all([
       getUserCredits(user_uuid),
       countWorkspacesCreatedToday(user_uuid),
-      getActiveSubscriptionOrder(user_uuid),
-      getLatestPaidPackOrder(user_uuid),
+      getActiveSubscriptionOrder(user_uuid, billingEmail),
+      getLatestPaidPackOrder(user_uuid, billingEmail),
       getFirstPaidOrderByUserUuid(user_uuid),
     ]);
 

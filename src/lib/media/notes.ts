@@ -1,7 +1,7 @@
 /**
  * AI Notes (videotranscriber.ai right panel).
  * Prompt Library modes → structured notes with seekable timestamps.
- * Uses Kie Gemini 2.5 Flash via `@/lib/llm`.
+ * Uses Kie DeepSeek V4.1 Flash via `@/lib/llm`.
  */
 
 import {

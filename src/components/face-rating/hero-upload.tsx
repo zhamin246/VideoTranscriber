@@ -32,6 +32,11 @@ import {
 } from "@/lib/media/workspace-store";
 import { extractYoutubeId } from "@/lib/media/youtube-id";
 import {
+  pollTranscriptionUntilDone,
+  type TranscribeWorkspaceMeta,
+} from "@/lib/media/transcribe-client";
+import { toast } from "sonner";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -40,6 +45,7 @@ import {
 } from "@/components/ui/select";
 import { useAppContext } from "@/contexts/app";
 import { isAuthEnabled } from "@/lib/auth";
+import { useSignedIn } from "@/hooks/useSignedIn";
 import UpgradePricingModal, {
   upgradeReasonFromMessage,
   type UpgradePricingReason,
@@ -259,6 +265,7 @@ export default function HeroUpload({
   defaultTab?: "upload" | "link" | "record";
 } = {}) {
   const { user, setShowSignModal, refreshUserInfo } = useAppContext();
+  const { sessionAuthed, sessionLoading: sessionStatusLoading } = useSignedIn();
   const inputRef = useRef<HTMLInputElement>(null);
   const [tab, setTab] = useState<"upload" | "link" | "record">(defaultTab);
   const [drag, setDrag] = useState(false);
@@ -302,7 +309,8 @@ export default function HeroUpload({
 
   const requireSignIn = () => {
     if (!isAuthEnabled()) return false;
-    if (user) return false;
+    if (sessionStatusLoading) return true;
+    if (sessionAuthed || user) return false;
     setShowSignModal(true);
     return true;
   };
@@ -310,6 +318,10 @@ export default function HeroUpload({
   /** Client-side gate mirroring server plan limits (daily + minutes). */
   const requirePlanCapacity = (durationSeconds?: number | null) => {
     if (requireSignIn()) return false;
+    if (sessionAuthed && !user?.plan) {
+      void refreshUserInfo();
+      return true;
+    }
     const plan = user?.plan;
     const left =
       user?.credits?.left_credits ?? plan?.minutes.left ?? 0;
@@ -481,6 +493,9 @@ export default function HeroUpload({
     file?: File | null;
     /** Prefer this id (e.g. already used for R2 resolve key) */
     workspaceId?: string;
+    transcriptionProvider?: "gladia" | "supadata" | "replicate";
+    /** Server already upserted Postgres (transcribe / status route). */
+    savedToDatabase?: boolean;
   }) => {
     setError("");
     try {
@@ -498,6 +513,7 @@ export default function HeroUpload({
         sourceLanguage,
         noteMode,
         separateSpeaker,
+        transcriptionProvider: payload.transcriptionProvider,
         createdAt: Date.now(),
         transcript: payload.transcript,
         transcriptText: payload.transcriptText,
@@ -507,9 +523,16 @@ export default function HeroUpload({
       updateTranscribeJob(id, { percent: 100, status: "done" });
       finishTranscribeJob(id);
 
-      const persisted = await persistWorkspace(stored, payload.file);
-      if (persisted?.playbackUrl && persisted.playbackUrl !== stored.playbackUrl) {
-        saveWorkspace({ ...stored, playbackUrl: persisted.playbackUrl });
+      if (!payload.savedToDatabase) {
+        const persisted = await persistWorkspace(stored, payload.file);
+        if (persisted && "error" in persisted && persisted.error) {
+          toast.error(persisted.error);
+        } else if (
+          persisted?.playbackUrl &&
+          persisted.playbackUrl !== stored.playbackUrl
+        ) {
+          saveWorkspace({ ...stored, playbackUrl: persisted.playbackUrl });
+        }
       }
 
       // After DB write so My files syncs across devices for the same account
@@ -598,6 +621,54 @@ export default function HeroUpload({
     };
   };
 
+  type TranscribeApiData = {
+    status?: "processing" | "done";
+    provider?: "gladia" | "supadata" | "replicate";
+    gladiaJobId?: string;
+    text?: string;
+    segments?: { startSeconds: number; text: string; speaker?: number }[];
+    language?: string | null;
+    playbackUrl?: string | null;
+    audioUrl?: string | null;
+    mediaKind?: "audio" | "video" | null;
+    workspaceId?: string;
+    savedToDatabase?: boolean;
+    minutesDebitFailed?: boolean;
+  };
+
+  const awaitGladiaTranscript = async (
+    data: TranscribeApiData,
+    workspaceId: string,
+    durationSeconds: number | null,
+    workspace: TranscribeWorkspaceMeta,
+  ) => {
+    if (data.status === "done") {
+      return {
+        text: data.text || "",
+        segments: data.segments || [],
+        language: data.language ?? null,
+        savedToDatabase: Boolean(data.savedToDatabase),
+        minutesDebitFailed: data.minutesDebitFailed,
+      };
+    }
+    if (data.status === "processing" && data.gladiaJobId) {
+      return pollTranscriptionUntilDone({
+        gladiaJobId: data.gladiaJobId,
+        workspaceId: data.workspaceId || workspaceId,
+        durationSeconds,
+        workspace,
+      });
+    }
+    if (data.text != null) {
+      return {
+        text: data.text,
+        segments: data.segments || [],
+        language: data.language ?? null,
+      };
+    }
+    throw new Error("Transcription did not return a job or transcript.");
+  };
+
   const resetComposerAfterStart = () => {
     setPreview(null);
     setFilePreview(null);
@@ -635,29 +706,52 @@ export default function HeroUpload({
           language: sourceLanguage,
           separateSpeaker,
           durationSeconds,
+          title,
+          platform,
+          thumbnailUrl,
+          noteMode,
+          youtubeId: extractYoutubeId(sourceUrl) || undefined,
+          pageUrl: sourceUrl,
         }),
       });
       const json = (await res.json()) as {
         code?: number;
         message?: string;
-        data?: {
-          text?: string;
-          segments?: { startSeconds: number; text: string }[];
-          language?: string | null;
-          playbackUrl?: string | null;
-          audioUrl?: string | null;
-          mediaKind?: "audio" | "video" | null;
-          workspaceId?: string;
-        };
+        data?: TranscribeApiData;
       };
-      // Ensure card is visible before completing / failing
-      progress.revealNow();
-      progress.stopProgress();
       if (!res.ok || json.code !== 0 || !json.data) {
+        progress.revealNow();
+        progress.stopProgress();
         finishTranscribeJob(workspaceId);
         handlePlanOrApiError(json.message || "Transcription failed");
         setTranscribeBusy(false);
         return;
+      }
+
+      const transcript = await awaitGladiaTranscript(
+        json.data,
+        json.data.workspaceId || workspaceId,
+        durationSeconds,
+        {
+          url: sourceUrl,
+          playbackUrl: json.data.playbackUrl ?? null,
+          thumbnailUrl,
+          title,
+          platform,
+          youtubeId: extractYoutubeId(sourceUrl),
+          mediaKind: json.data.mediaKind ?? null,
+          sourceLanguage,
+          noteMode,
+          separateSpeaker,
+        },
+      );
+      progress.revealNow();
+      progress.stopProgress();
+
+      if (transcript.minutesDebitFailed) {
+        toast.message(
+          "Transcript saved. Your plan minutes could not be updated — check billing.",
+        );
       }
 
       await finishTranscription({
@@ -669,16 +763,22 @@ export default function HeroUpload({
         platform,
         youtubeId: extractYoutubeId(sourceUrl),
         mediaKind: json.data.mediaKind ?? null,
-        transcript: json.data.segments,
-        transcriptText: json.data.text,
-        detectedLanguage: json.data.language,
+        transcript: transcript.segments,
+        transcriptText: transcript.text,
+        detectedLanguage: transcript.language,
         workspaceId: json.data.workspaceId || workspaceId,
+        transcriptionProvider: json.data.provider ?? "gladia",
+        savedToDatabase: Boolean(
+          json.data.savedToDatabase ?? transcript.savedToDatabase,
+        ),
       });
-    } catch {
+    } catch (e) {
       progress.revealNow();
       progress.stopProgress();
       finishTranscribeJob(workspaceId);
-      setError("Could not transcribe that link.");
+      setError(
+        e instanceof Error ? e.message : "Could not transcribe that link.",
+      );
       setTranscribeBusy(false);
     }
   };
@@ -712,6 +812,11 @@ export default function HeroUpload({
       if (durationSeconds != null) {
         form.append("durationSeconds", String(durationSeconds));
       }
+      form.append("title", title);
+      form.append("platform", "Upload");
+      form.append("thumbnailUrl", thumbnailUrl || "");
+      form.append("noteMode", noteMode);
+      form.append("pageUrl", `upload:${workspaceId}`);
 
       const res = await fetch("/api/media/transcribe", {
         method: "POST",
@@ -720,23 +825,41 @@ export default function HeroUpload({
       const json = (await res.json()) as {
         code?: number;
         message?: string;
-        data?: {
-          text?: string;
-          segments?: { startSeconds: number; text: string }[];
-          language?: string | null;
-          playbackUrl?: string | null;
-          audioUrl?: string | null;
-          mediaKind?: "audio" | "video" | null;
-          workspaceId?: string;
-        };
+        data?: TranscribeApiData;
       };
-      progress.revealNow();
-      progress.stopProgress();
       if (!res.ok || json.code !== 0 || !json.data) {
+        progress.revealNow();
+        progress.stopProgress();
         finishTranscribeJob(workspaceId);
         handlePlanOrApiError(json.message || "Transcription failed");
         setTranscribeBusy(false);
         return;
+      }
+
+      const transcript = await awaitGladiaTranscript(
+        json.data,
+        json.data.workspaceId || workspaceId,
+        durationSeconds,
+        {
+          url: json.data.playbackUrl || objectUrl,
+          playbackUrl: json.data.playbackUrl ?? null,
+          thumbnailUrl,
+          title,
+          platform: "Upload",
+          youtubeId: null,
+          mediaKind: json.data.mediaKind || mediaKind,
+          sourceLanguage,
+          noteMode,
+          separateSpeaker,
+        },
+      );
+      progress.revealNow();
+      progress.stopProgress();
+
+      if (transcript.minutesDebitFailed) {
+        toast.message(
+          "Transcript saved. Your plan minutes could not be updated — check billing.",
+        );
       }
 
       await finishTranscription({
@@ -748,11 +871,15 @@ export default function HeroUpload({
         platform: "Upload",
         youtubeId: null,
         mediaKind: json.data.mediaKind || mediaKind,
-        transcript: json.data.segments,
-        transcriptText: json.data.text,
-        detectedLanguage: json.data.language,
+        transcript: transcript.segments,
+        transcriptText: transcript.text,
+        detectedLanguage: transcript.language,
         workspaceId: json.data.workspaceId || workspaceId,
+        transcriptionProvider: json.data.provider ?? "gladia",
         file: null,
+        savedToDatabase: Boolean(
+          json.data.savedToDatabase ?? transcript.savedToDatabase,
+        ),
       });
       if (filePreviewUrlRef.current === objectUrl) {
         filePreviewUrlRef.current = null;

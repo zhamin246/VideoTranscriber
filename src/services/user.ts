@@ -3,6 +3,7 @@ import {
   canonicalAuthProvider,
   findUserByUuid,
   findUserForSignIn,
+  findUsersByEmail,
   insertUser,
   resolveCanonicalUserUuid,
   updateUserOnboarding,
@@ -136,11 +137,16 @@ export async function getUserUuid() {
   }
 
   const session = await auth();
-  if (session && session.user && session.user.uuid) {
+  if (session?.user?.uuid) {
     user_uuid = await resolveCanonicalUserUuid(
       session.user.uuid,
-      session.user.email
+      session.user.email,
     );
+  } else if (session?.user?.email) {
+    const email = session.user.email.trim();
+    const cred = await findUserForSignIn(email, "credentials");
+    const row = cred || (await findUsersByEmail(email))[0];
+    user_uuid = row?.uuid || "";
   }
 
   return user_uuid;
