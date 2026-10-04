@@ -9,6 +9,7 @@ import { AI_VIDEO_SUMMARIZER_HREF } from "@/lib/convert/ai-video-summarizer-cont
 import { VIDEO_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/video-transcript-generator-content";
 import { YOUTUBE_SUBTITLE_DOWNLOADER_HREF } from "@/lib/convert/youtube-subtitle-downloader-content";
 import { YOUTUBE_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/youtube-transcript-generator-content";
+import { YOUTUBE_VIDEO_SUMMARIZER_HREF } from "@/lib/convert/youtube-video-summarizer-content";
 import { TIKTOK_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/tiktok-transcript-generator-content";
 import { INSTAGRAM_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/instagram-transcript-generator-content";
 import { FACEBOOK_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/facebook-transcript-generator-content";
@@ -21,9 +22,9 @@ export const PRICE_NOTE = "One-time · web report + emailed PDF";
 
 export const content = {
   brand: {
-    name: "video transcriber",
-    mark: "video",
-    rest: "transcriber",
+    name: "Video Transcriber",
+    mark: "Video",
+    rest: "Transcriber",
   },
 
   nav: {
@@ -53,6 +54,7 @@ export const content = {
             title: "Social Media Transcriber",
             items: [
               { label: "YouTube Transcript Generator", href: YOUTUBE_TRANSCRIPT_GENERATOR_HREF },
+              { label: "YouTube Video Summarizer", href: YOUTUBE_VIDEO_SUMMARIZER_HREF },
               { label: "YouTube Subtitle Downloader", href: YOUTUBE_SUBTITLE_DOWNLOADER_HREF },
               { label: "TikTok Transcript Generator", href: TIKTOK_TRANSCRIPT_GENERATOR_HREF },
               { label: "Instagram Transcript Generator", href: INSTAGRAM_TRANSCRIPT_GENERATOR_HREF },

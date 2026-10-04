@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useAppContext } from "@/contexts/app";
-import { content, CONVERT_HREF, FREE_TEST_HREF, FULL_REPORT_HREF } from "./data";
+import { content, CONVERT_HREF } from "./data";
 import { isToTextSensitivePath } from "./nav-labels";
 import { btnPrimary, V } from "./visual";
 
@@ -59,23 +59,6 @@ function isNavActive(pathname: string, hash: string, href: string): boolean {
 
   if (path === CONVERT_HREF || href === CONVERT_HREF) {
     return pathname === CONVERT_HREF || pathname.startsWith(`${CONVERT_HREF}/`);
-  }
-
-  // Rate My Face / free tool
-  if (path === FREE_TEST_HREF || href === FREE_TEST_HREF) {
-    return (
-      pathname === FREE_TEST_HREF ||
-      pathname.startsWith(`${FREE_TEST_HREF}/`) ||
-      pathname.includes("/tools/ai-attractiveness-test")
-    );
-  }
-
-  if (path === FULL_REPORT_HREF || href === FULL_REPORT_HREF) {
-    return (
-      pathname === FULL_REPORT_HREF ||
-      pathname.startsWith(`${FULL_REPORT_HREF}/`) ||
-      pathname.includes("/tools/full-analysis")
-    );
   }
 
   return pathname === path || pathname.startsWith(`${path}/`);
@@ -281,7 +264,13 @@ export default function FaceRatingSiteHeader({
               <span className="inline-flex h-8 w-8 items-center justify-center bg-transparent">
                 <img src="/favicon.svg" alt="" width={32} height={32} className="h-8 w-8 object-contain" />
               </span>
-              <span className="sr-only">{hideHomeKeyword ? "Home" : brand.name}</span>
+              {hideBrandOnDesktop ? (
+                <span className="sr-only">{hideHomeKeyword ? "Home" : "Video Transcriber"}</span>
+              ) : (
+                <span className="text-lg font-bold tracking-tight text-[#5270FF]">
+                  Video Transcriber
+                </span>
+              )}
             </span>
           </Link>
 

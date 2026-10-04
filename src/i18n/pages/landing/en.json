@@ -1,33 +1,33 @@
 {
-  "template": "face rating",
+  "template": "video transcriber",
   "theme": "light",
   "header": {
     "brand": {
-      "title": "Face Rating",
+      "title": "Video Transcriber",
       "logo": {
-        "src": "/web-app-manifest-192x192.png",
-        "alt": "Face Rating — Free AI Face Analyzer & Facial Beauty Report"
+        "src": "/favicon.svg",
+        "alt": "Video Transcriber — video and audio transcription"
       },
-      "url": "/#hero"
+      "url": "/"
     },
     "nav": {
       "items": [
         {
-          "title": "Rate My Face",
-          "url": "/#analyze",
-          "icon": "RiUserSmileLine",
+          "title": "Home",
+          "url": "/",
+          "icon": "RiHomeLine",
           "style": "text-lg text-foreground hover:text-foreground/80 transition-colors"
         },
         {
-          "title": "How it works",
-          "url": "/#how-it-works",
-          "icon": "RiListCheck2",
+          "title": "Video Transcript Generator",
+          "url": "/video-transcript-generator",
+          "icon": "RiVideoLine",
           "style": "text-lg text-foreground hover:text-foreground/80 transition-colors"
         },
         {
-          "title": "Free Tests",
-          "url": "/#free-tests",
-          "icon": "RiFlaskLine",
+          "title": "YouTube Transcript",
+          "url": "/youtube-transcript-generator",
+          "icon": "RiYoutubeLine",
           "style": "text-lg text-foreground hover:text-foreground/80 transition-colors"
         },
         {
@@ -40,8 +40,8 @@
     },
     "buttons": [
       {
-        "title": "Create my Face Report",
-        "url": "/pricing",
+        "title": "Start transcribing",
+        "url": "/",
         "target": "_self",
         "variant": "default"
       }
@@ -51,7 +51,8 @@
     "show_locale": true
   },
   "hero": {
-    "title": "Your face, decoded",
+    "disabled": true,
+    "title": "Video to text",
     "highlight_text": "decoded",
     "description": "Get your 0–100 face score, see your best feature, and find your highest-leverage area — all in seconds. Free, private, and built for real facial analysis.",
     "status_badge": {
@@ -616,32 +617,31 @@
   "footer": {
     "name": "footer",
     "brand": {
-      "title": "Face Rating",
-      "description": "AI face analyzer for attractiveness scores, symmetry, proportions, face shape, and actionable style insights — free, private, and instant.",
+      "title": "Video Transcriber",
+      "description": "Transcribe video and audio from files or public links. Export TXT, DOCX, SRT, VTT, and CSV in the workspace.",
       "logo": {
-        "src": "/web-app-manifest-192x192.png",
-        "alt": "Face Rating logo"
+        "src": "/favicon.svg",
+        "alt": "Video Transcriber logo"
       },
       "url": "/"
     },
-    "copyright": "© 2026 • Face Rating All rights reserved.",
+    "copyright": "© 2026 • Video Transcriber. All rights reserved.",
     "nav": {
       "items": [
         {
-          "title": "Product",
+          "title": "Transcribe",
           "children": [
-            { "title": "Free face score" },
-            { "title": "Symmetry analysis" },
-            { "title": "Face shape" },
-            { "title": "Private by default" }
+            { "title": "Video Transcript Generator", "url": "/video-transcript-generator" },
+            { "title": "YouTube Transcript Generator", "url": "/youtube-transcript-generator" },
+            { "title": "Audio to text", "url": "/audio-to-text-converter" }
           ]
         },
         {
           "title": "Tools",
           "children": [
-            { "title": "Rate My Face", "url": "/#hero" },
-            { "title": "How it works", "url": "/#how-it-works" },
-            { "title": "Free tests", "url": "/#free-tests" }
+            { "title": "AI Video Summarizer", "url": "/ai-video-summarizer" },
+            { "title": "YouTube Video Summarizer", "url": "/youtube-video-summarizer" },
+            { "title": "My files", "url": "/my-assets" }
           ]
         },
         {
@@ -666,7 +666,7 @@
         {
           "title": "Email",
           "icon": "RiMailLine",
-          "url": "mailto:support@facerating.com",
+          "url": "mailto:support@videotranscriber.pro",
           "target": "_self"
         }
       ]

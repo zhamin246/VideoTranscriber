@@ -34,7 +34,7 @@
   },
   "my_orders": {
     "title": "My Orders",
-    "description": "paid orders with Face Rating.",
+    "description": "Paid orders for Video Transcriber.",
     "no_orders": "No orders found",
     "tip": "",
     "activate_order": "Activate Order",
@@ -140,7 +140,7 @@
     "submit": "Submit",
     "loading": "Submitting...",
     "contact_tip": "Other ways to contact",
-    "rating_tip": "How do you feel about AI Photo Restoration?",
+    "rating_tip": "How do you feel about Video Transcriber?",
     "placeholder": "Leave your comment here..."
   },
   "user_generation_records": {
@@ -162,9 +162,9 @@
     "no_records": "No records found"
   },
   "home": {
-    "title": "Welcome to AI Photo Restoration",
-    "description": "Your AI-powered photo restoration center",
-    "welcome_message": "Welcome back! Choose below to start your restoration journey.",
+    "title": "Welcome to Video Transcriber",
+    "description": "Your transcription workspace",
+    "welcome_message": "Welcome back! Upload a file or paste a link to start.",
     "quick_access": "Quick Access",
     "tools": {
       "video_ai": "Video AI",
@@ -175,20 +175,20 @@
     "learn_more": "Learn More"
   },
   "testimonial": {
-    "ctaButton": "Rate my face — free"
+    "ctaButton": "Start transcribing"
   },
   "memoryCards": {
     "card1": {
-      "title": "Score your face with real metrics",
-      "description": "Get a 0–100 face score plus symmetry, proportions, and face-shape signals you can actually understand."
+      "title": "Files and public links",
+      "description": "Upload MP4, MOV, WebM, MKV, or paste a YouTube, TikTok, or podcast URL."
     },
     "card2": {
-      "title": "Find your highest-leverage area",
-      "description": "See which feature already works for you — and which change is most likely to improve your look first."
+      "title": "Searchable transcripts",
+      "description": "Copy text or export TXT, DOCX, SRT, VTT, and CSV from the workspace."
     },
     "card3": {
-      "title": "Style guidance matched to your face",
-      "description": "Turn analysis into action with face-shape hairstyle ideas, grooming direction, and a clear next-step plan."
+      "title": "Notes and summaries",
+      "description": "Generate chapters, notes, and Ask AI answers on top of your transcript."
     }
   }
 }

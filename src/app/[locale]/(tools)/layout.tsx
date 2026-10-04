@@ -1,8 +1,9 @@
 import { ReactNode } from "react";
 import ToolsSidebar from "@/components/tools/sidebar";
-import Header from "@/components/blocks/header";
-import { getLandingPage, getFeaturesPage } from "@/services/page";
+import FaceRatingSiteHeader from "@/components/face-rating/site-header";
+import { getFeaturesPage } from "@/services/page";
 import ConditionalContent from "@/components/tools/conditional-content";
+import FaceRatingSiteFooter from "@/components/face-rating/site-footer";
 
 export default async function ToolsLayout({
   children,
@@ -12,15 +13,12 @@ export default async function ToolsLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const page = await getLandingPage(locale);
-  
-  // 获取所有页面的数据
+
   const featuresPage = await getFeaturesPage(locale);
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
-      {/* 使用首页的 Header */}
-      {page.header && <Header header={page.header} />}
+      <FaceRatingSiteHeader />
       
       {/* 固定定位的侧边栏 */}
       <ToolsSidebar />
@@ -33,10 +31,8 @@ export default async function ToolsLayout({
         </div>
         
         {/* 条件渲染组件 */}
-        <ConditionalContent
-          featuresPage={featuresPage}
-          footer={page.footer}
-        />
+        <ConditionalContent featuresPage={featuresPage} footer={null} />
+        <FaceRatingSiteFooter />
       </div>
     </div>
   );

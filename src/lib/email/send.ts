@@ -4,8 +4,8 @@
  * Default / recommended: Resend
  *   EMAIL_TRANSPORT=resend
  *   RESEND_API_KEY=re_...
- *   RESEND_SENDER_EMAIL=Face Rating <onboarding@resend.dev>  (dev)
- *   EMAIL_FROM=Face Rating <noreply@face-rating.app>         (prod, verified domain)
+ *   RESEND_SENDER_EMAIL=Video Transcriber <onboarding@resend.dev>  (dev)
+ *   EMAIL_FROM=Video Transcriber <noreply@videotranscriber.pro>   (prod, verified domain)
  *
  * Optional: zeptomail | zoho (SMTP) | smtp
  */
@@ -25,7 +25,7 @@ function fromAddress(): string {
     process.env.EMAIL_FROM ||
     process.env.RESEND_SENDER_EMAIL ||
     process.env.ZOHO_SMTP_USER ||
-    "Face Rating <noreply@localhost>"
+    "Video Transcriber <noreply@localhost>"
   );
 }
 
@@ -43,11 +43,11 @@ function parseFrom(raw: string): { name: string; address: string } {
   const m = raw.match(/^\s*(.*?)\s*<([^>]+)>\s*$/);
   if (m) {
     return {
-      name: m[1].replace(/^["']|["']$/g, "").trim() || "Face Rating",
+      name: m[1].replace(/^["']|["']$/g, "").trim() || "Video Transcriber",
       address: m[2].trim(),
     };
   }
-  return { name: "Face Rating", address: raw.trim() };
+  return { name: "Video Transcriber", address: raw.trim() };
 }
 
 function transport(): "zeptomail" | "resend" | "zoho" | "smtp" {
@@ -171,7 +171,7 @@ async function sendViaZeptoMail(input: SendEmailInput) {
     }
     if (/from|sender|domain|not allowed|unauthorized/i.test(detail)) {
       throw new Error(
-        `ZeptoMail rejected sender (${detail}). EMAIL_FROM must be a verified address on domain face-rating.app (e.g. noreply@face-rating.app).`
+        `ZeptoMail rejected sender (${detail}). EMAIL_FROM must be a verified address on your sending domain (e.g. noreply@videotranscriber.pro).`
       );
     }
     throw new Error(`ZeptoMail ${res.status}: ${detail}`);
@@ -207,7 +207,7 @@ async function sendViaResend(input: SendEmailInput) {
     // Common: domain not verified → use onboarding@resend.dev in dev
     if (/domain|not verified|from/i.test(msg)) {
       throw new Error(
-        `${msg} — For testing use EMAIL_FROM / RESEND_SENDER_EMAIL = Face Rating <onboarding@resend.dev> (can only send to your Resend account email until face-rating.app is verified).`
+        `${msg} — For testing use EMAIL_FROM / RESEND_SENDER_EMAIL = Video Transcriber <onboarding@resend.dev> (Resend dev sender until your domain is verified).`
       );
     }
     throw new Error(msg);
@@ -380,23 +380,16 @@ export function buildPaidReportEmail(opts: {
   tierName?: string;
   dashboardUrl?: string;
 }): { subject: string; html: string; text: string } {
-  const brand = process.env.NEXT_PUBLIC_PROJECT_NAME || "Face Rating";
-  const scoreLine =
-    opts.outOfTen || opts.score != null
-      ? `Your score: ${opts.outOfTen || (opts.score! / 10).toFixed(1)}/10${
-          opts.tierName ? ` · ${opts.tierName}` : ""
-        }`
-      : "";
-  const subject = `Your ${brand} full report is ready`;
+  const brand = process.env.NEXT_PUBLIC_PROJECT_NAME || "Video Transcriber";
+  const subject = `Your ${brand} purchase is ready`;
   const text = [
     `Thanks for your purchase.`,
-    scoreLine,
     ``,
-    `Open your full Face Report:`,
+    `Open your link:`,
     opts.reportUrl,
-    opts.dashboardUrl ? `\nOr view all reports: ${opts.dashboardUrl}` : "",
+    opts.dashboardUrl ? `\nOr open Dashboard: ${opts.dashboardUrl}` : "",
     ``,
-    `Sign in with this email (${opts.email}) to open reports from Dashboard anytime.`,
+    `Sign in with this email (${opts.email}) anytime.`,
   ]
     .filter(Boolean)
     .join("\n");
@@ -408,24 +401,20 @@ export function buildPaidReportEmail(opts: {
     <tr><td align="center">
       <table width="100%" style="max-width:440px;background:#ffffff;border:1px solid #e5e5e5;border-radius:12px;padding:32px;">
         <tr><td>
-          <p style="margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#9f1239;">${brand}</p>
-          <h1 style="margin:0 0 12px;font-size:22px;font-weight:800;color:#0a0a0a;">Your full report is ready</h1>
+          <p style="margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#635bff;">${brand}</p>
+          <h1 style="margin:0 0 12px;font-size:22px;font-weight:800;color:#0a0a0a;">Your purchase is ready</h1>
           <p style="margin:0 0 8px;font-size:14px;line-height:1.5;color:#525252;">
-            Thanks for your purchase. Your Full Face Report is unlocked and saved to your account.
+            Thanks for your purchase. Your content is saved to your account.
           </p>
-          ${
-            scoreLine
-              ? `<p style="margin:0 0 20px;font-size:15px;font-weight:700;color:#0a0a0a;">${scoreLine}</p>`
-              : `<div style="height:12px"></div>`
-          }
+          <div style="height:12px"></div>
           <a href="${opts.reportUrl}"
-             style="display:inline-block;background:#9f1239;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 22px;border-radius:8px;">
-            Open your Face Report
+             style="display:inline-block;background:#635bff;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 22px;border-radius:8px;">
+            Open in ${brand}
           </a>
           ${
             opts.dashboardUrl
               ? `<p style="margin:20px 0 0;font-size:13px;line-height:1.5;color:#525252;">
-            Or open <a href="${opts.dashboardUrl}" style="color:#9f1239;font-weight:600;">Dashboard</a> to see all your reports.
+            Or open <a href="${opts.dashboardUrl}" style="color:#635bff;font-weight:600;">Dashboard</a>.
           </p>`
               : ""
           }

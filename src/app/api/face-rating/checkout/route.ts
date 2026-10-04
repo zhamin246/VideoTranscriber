@@ -128,7 +128,7 @@ export async function POST(req: Request) {
       customer_email: user_email,
       client_reference_id: order_no,
       metadata: {
-        project: process.env.NEXT_PUBLIC_PROJECT_NAME || "Face Rating",
+        project: process.env.NEXT_PUBLIC_PROJECT_NAME || "Video Transcriber",
         product_id: PRODUCT_ID,
         product_name: PRODUCT_NAME,
         product_type: "face_report",

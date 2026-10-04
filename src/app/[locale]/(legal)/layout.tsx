@@ -15,7 +15,7 @@ export async function generateMetadata({
 
   return {
     title: {
-      template: `%s | imagetocad`,
+      template: `%s | Video Transcriber`,
       default: t("metadata.title"),
     },
     description: t("metadata.description"),

@@ -1,97 +1,17 @@
-import Footer from "@/components/blocks/footer";
-import Header from "@/components/blocks/header";
-import HeroWrapper from "@/components/blocks/hero-wrapper";
 import { ReactNode } from "react";
-import { getLandingPage } from "@/services/page";
-import Feedback from "@/components/feedback";
 import HashScrollHandler from "@/components/hash-scroll-handler";
-import { headers } from "next/headers";
-import { defaultLocale } from "@/i18n/locale";
 
-function isHomePath(pathname: string, locale: string) {
-  const clean = (pathname || "").split("?")[0].replace(/\/$/, "") || "/";
-  if (clean === "/" || clean === "") return true;
-  if (locale && locale !== defaultLocale) {
-    return clean === `/${locale}` || clean === `/${locale}/`;
-  }
-  // also accept /en if used
-  return clean === "/en" || clean === `/${locale}`;
-}
-
-/** Product pages that ship their own header/footer — skip the leftover Face Rating chrome. */
-function isSelfContainedShellPath(pathname: string, locale: string) {
-  if (isHomePath(pathname, locale)) return true;
-  const clean = (pathname || "").split("?")[0].replace(/\/$/, "") || "/";
-  const isToolPage =
-    clean.includes("/tools/ai-attractiveness-test") ||
-    clean.includes("/tools/attractiveness") ||
-    clean.includes("/tools/full-analysis") ||
-    clean.includes("/results/") ||
-    clean.includes("/report/") ||
-    clean.includes("/workspace/") ||
-    clean.includes("/dashboard") ||
-    clean.includes("/pricing") ||
-    /\/[a-z0-9-]+-to-text-converter(?:\/|$)/.test(clean) ||
-    clean.includes("/audio-to-text") ||
-    clean.includes("/video-to-text") ||
-    clean.includes("/youtube-transcript-generator") ||
-    clean.includes("/tiktok-transcript-generator") ||
-    clean.includes("/instagram-transcript-generator") ||
-    clean.includes("/facebook-transcript-generator") ||
-    clean.includes("/ai-video-summarizer") ||
-    clean.includes("/video-transcript-generator") ||
-    clean.includes("/youtube-subtitle-downloader") ||
-    clean.includes("/my-assets") ||
-    clean.includes("/auth/") ||
-    clean.includes("/my-orders") ||
-    clean.includes("/my-credits") ||
-    clean.includes("/my-invites") ||
-    clean.includes("/user-generation-records") ||
-    clean.includes("/posts");
-  return isToolPage;
-}
-
+/** All (default) routes ship Video Transcriber chrome in-page — no legacy landing header/footer. */
 export default async function DefaultLayout({
   children,
-  params,
 }: {
   children: ReactNode;
   params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
-  const page = await getLandingPage(locale);
-  const h = await headers();
-  const pathname = h.get("x-pathname") || "";
-  const home = isHomePath(pathname, locale);
-
-  // Homepage + converter/tool pages use their own header/footer
-  if (home || isSelfContainedShellPath(pathname, locale)) {
-    return (
-      <>
-        <HashScrollHandler />
-        {children}
-      </>
-    );
-  }
-
   return (
     <>
       <HashScrollHandler />
-      {page.header && !page.header.disabled && <Header header={page.header} />}
-      {page.hero && <HeroWrapper hero={page.hero} />}
-
-      <main
-        className="overflow-x-hidden"
-        style={{
-          WebkitTransform: "translateZ(0)",
-          transform: "translateZ(0)",
-        }}
-      >
-        {children}
-      </main>
-
-      {page.footer && !page.footer.disabled && <Footer footer={page.footer} />}
-      <Feedback socialLinks={page.footer?.social?.items} />
+      {children}
     </>
   );
 }

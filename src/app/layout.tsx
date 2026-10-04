@@ -75,7 +75,7 @@ export default async function RootLayout({
           <meta name="google-adsense-account" content={googleAdsenseCode} />
         )}
 
-        {/* Face Rating brand icons — mesh mark on burgundy #9F1239 */}
+        {/* Video Transcriber favicons */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="icon" href="/favicon-96x96.png" type="image/png" sizes="96x96" />

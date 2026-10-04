@@ -4,14 +4,17 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
-  AudioLines,
+  BookOpen,
   FileUp,
   GraduationCap,
+  Link2,
+  ListOrdered,
   Mic,
+  Newspaper,
   ShieldCheck,
-  Subtitles,
-  UsersRound,
-  type LucideIcon,
+  Sparkles,
+  Users,
+  Youtube,
 } from "lucide-react";
 import FaceRatingSiteHeader from "./site-header";
 import FaceRatingSiteFooter from "./site-footer";
@@ -19,34 +22,24 @@ import HeroUpload from "./hero-upload";
 import MediaFilesStrip from "./media-files-strip";
 import WorkspaceNav from "./workspace-nav";
 import PromoBanner from "./promo-banner";
-import ReviewMarquee from "./review-marquee";
 import MoreTools from "./more-tools";
 import ScrollCta from "./scroll-cta";
 import { LandingFaqSection } from "./landing-faq-section";
 import { V } from "./visual";
 import {
-  AUDIO_TO_TEXT_CONVERTER_HREF,
-  audioToTextConverterSeo,
-} from "@/lib/convert/audio-to-text-converter-content";
+  YOUTUBE_VIDEO_SUMMARIZER_HREF,
+  youtubeVideoSummarizerSeo,
+} from "@/lib/convert/youtube-video-summarizer-content";
 
-const CHIP_ICONS = [FileUp, AudioLines, FileUp, UsersRound, Subtitles] as const;
-
-const USECASE_ICONS: Record<string, LucideIcon> = {
-  AudioLines,
-  ShieldCheck,
-  FileUp,
-  Subtitles,
-  Mic,
-  GraduationCap,
-};
+const CHIP_ICONS = [Sparkles, ListOrdered, Link2, BookOpen, Youtube] as const;
 
 function scrollToHero(e: React.MouseEvent) {
   e.preventDefault();
   document.getElementById("landing-hero")?.scrollIntoView({ behavior: "smooth" });
 }
 
-export default function AudioToTextConverterPage() {
-  const seo = audioToTextConverterSeo;
+export default function YoutubeVideoSummarizerPage() {
+  const seo = youtubeVideoSummarizerSeo;
   return (
     <div
       className="ac-home min-h-screen antialiased"
@@ -95,7 +88,7 @@ export default function AudioToTextConverterPage() {
                 </div>
               </div>
               <div className="mt-5 sm:mt-8">
-                <HeroUpload />
+                <HeroUpload defaultTab="link" />
               </div>
               <MediaFilesStrip />
             </section>
@@ -191,7 +184,7 @@ export default function AudioToTextConverterPage() {
                             <p className="mb-4 text-lg text-gray-600">{row.body}</p>
                             <div className="btnList mt-5 flex gap-4">
                               <Link
-                                href={row.href}
+                                href={YOUTUBE_VIDEO_SUMMARIZER_HREF}
                                 onClick={scrollToHero}
                                 className="inline-flex items-center gap-2 rounded-full text-white"
                                 style={{
@@ -233,8 +226,8 @@ export default function AudioToTextConverterPage() {
                   </p>
                 </div>
                 <div className="mx-auto mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {seo.usecases.items.map((item) => {
-                    const Icon = USECASE_ICONS[item.icon] ?? AudioLines;
+                  {seo.usecases.items.map((item, i) => {
+                    const Icon = [GraduationCap, Youtube, Mic, Newspaper, Users, FileUp][i] ?? Youtube;
                     return (
                       <article
                         key={item.title}
@@ -254,26 +247,6 @@ export default function AudioToTextConverterPage() {
                     );
                   })}
                 </div>
-              </div>
-            </section>
-
-            <section
-              className="pb-16 pt-16 sm:pb-24 sm:pt-32"
-              style={{
-                backgroundImage:
-                  "linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(136,130,245,0.05) 40%, rgba(136,130,245,0.05) 60%, rgba(255,255,255,0.02) 100%)",
-              }}
-            >
-              <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 text-center">
-                  <h2
-                    className="font-bold"
-                    style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px", color: "#000" }}
-                  >
-                    What people are saying
-                  </h2>
-                </div>
-                <ReviewMarquee />
               </div>
             </section>
 
@@ -298,7 +271,7 @@ export default function AudioToTextConverterPage() {
                   </p>
                   <div className="mt-4 flex justify-center">
                     <Link
-                      href={AUDIO_TO_TEXT_CONVERTER_HREF}
+                      href={YOUTUBE_VIDEO_SUMMARIZER_HREF}
                       onClick={scrollToHero}
                       className="inline-flex items-center gap-2"
                       style={{

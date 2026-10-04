@@ -20,6 +20,7 @@ const STATIC_PATHS: {
   { path: "/", changeFrequency: "weekly", priority: 1 },
   { path: "/audio-to-text-converter", changeFrequency: "weekly", priority: 0.9 },
   { path: "/youtube-transcript-generator", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/youtube-video-summarizer", changeFrequency: "weekly", priority: 0.9 },
   { path: "/tiktok-transcript-generator", changeFrequency: "weekly", priority: 0.9 },
   { path: "/instagram-transcript-generator", changeFrequency: "weekly", priority: 0.9 },
   { path: "/facebook-transcript-generator", changeFrequency: "weekly", priority: 0.9 },

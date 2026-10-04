@@ -737,14 +737,14 @@ export default function Hero({ hero }: { hero: HeroType }) {
                       }
                     }}
                   >
-                    Rate My Face
+                    Start transcribing
                   </Button>
                   <Link href="/pricing">
                     <Button 
                       variant="outline" 
                       className="rounded-full px-4 py-2 h-10 sm:px-5 sm:py-2.5 sm:h-11 lg:px-6 lg:py-3 lg:h-12 text-sm sm:text-base relative"
                     >
-                      <span className="whitespace-nowrap">Full Report</span>
+                      <span className="whitespace-nowrap">Pricing</span>
                       <Badge className="ml-1.5 sm:ml-2 bg-red-500 hover:bg-red-600 text-white text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full">NEW</Badge>
                     </Button>
                   </Link>

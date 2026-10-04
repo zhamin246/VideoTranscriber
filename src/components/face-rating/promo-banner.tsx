@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Infinity as InfinityIcon, X } from "lucide-react";
 import { CONVERT_HREF } from "./data";
 
-const KEY = "imagetocad:promo-dismissed";
+const KEY = "videotranscriber:promo-dismissed";
 
 const lex = "var(--font-lexend), Lexend, ui-sans-serif, system-ui, sans-serif";
 

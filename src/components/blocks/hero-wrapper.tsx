@@ -8,13 +8,13 @@ export default function HeroWrapper({ hero }: { hero: any }) {
   const pathname = usePathname();
   
   // 在特定页面不显示旧 hero（首页改用 FaceRatingLandingPage 自带 Hero）
-  const hideHeroPages = ['/image-to-video', '/text-to-video', '/my-orders', '/my-credits', '/my-invites', '/user-generation-records', '/pricing', '/video-to-text', '/audio-to-text', '/audio-to-text-converter', '/youtube-transcript-generator', '/tiktok-transcript-generator', '/instagram-transcript-generator', '/facebook-transcript-generator', '/ai-video-summarizer', '/video-transcript-generator', '/youtube-subtitle-downloader'];
+  const hideHeroPages = ['/image-to-video', '/text-to-video', '/my-orders', '/my-credits', '/my-invites', '/user-generation-records', '/pricing', '/video-to-text', '/audio-to-text', '/audio-to-text-converter', '/youtube-transcript-generator', '/youtube-video-summarizer', '/tiktok-transcript-generator', '/instagram-transcript-generator', '/facebook-transcript-generator', '/ai-video-summarizer', '/video-transcript-generator', '/youtube-subtitle-downloader'];
   const pathHit = hideHeroPages.some(page => pathname.includes(page));
   
   // 判断是否是首页
   const normalizedPath = pathname.replace(/^\/[a-z]{2}\//, '/').replace(/^\/[a-z]{2}$/, '/').replace(/\/$/, '');
   const isHomePage = normalizedPath === '' || normalizedPath === '/';
-  // 首页使用全新 Face Rating 落地页组件，不再挂载旧修图 Hero
+  // Homepage uses in-page Video Transcriber hero — skip legacy block hero
   const shouldHideHero = pathHit || isHomePage;
   
   // 调试信息
