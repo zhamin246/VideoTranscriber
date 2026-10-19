@@ -134,6 +134,15 @@
   text-align: center;
   font-size: 32px;
 }
+.home-more-tools__lead {
+  color: #475569;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: -40px auto 48px;
+  max-width: 42rem;
+  text-align: center;
+}
 .home-more-tools__rows {
   display: grid;
   gap: 14px;

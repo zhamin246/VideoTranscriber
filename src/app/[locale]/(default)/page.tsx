@@ -13,9 +13,9 @@ export async function generateMetadata({
     canonicalUrl = `${process.env.NEXT_PUBLIC_WEB_URL}/${locale}`;
   }
 
-  const title = "Video to Text for MP4 Files and Links | Video Transcriber";
+  const title = "Video Transcriber – Transcribe Videos to Text Free";
   const description =
-    "Use video to text on an MP4, MOV, WebM, or a public link. Copy or export TXT, DOCX, SRT, or VTT in the workspace. Private videos may fail.";
+    "Use this free video transcriber to turn video files and public links into searchable text. Generate transcripts, add speaker labels, and export TXT, DOCX, SRT, VTT, or CSV.";
 
   return {
     title,

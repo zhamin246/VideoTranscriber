@@ -11,9 +11,9 @@ import {
   Mic,
   Newspaper,
   ShieldCheck,
+  Sparkles,
   Subtitles,
   Users,
-  UsersRound,
 } from "lucide-react";
 import FaceRatingSiteHeader from "./site-header";
 import FaceRatingSiteFooter from "./site-footer";
@@ -31,7 +31,7 @@ import {
   facebookTranscriptGeneratorSeo,
 } from "@/lib/convert/facebook-transcript-generator-content";
 
-const CHIP_ICONS = [Link2, UsersRound, Subtitles, AudioLines, FileUp] as const;
+const CHIP_ICONS = [Link2, Subtitles, Sparkles, FileUp] as const;
 
 function scrollToHero(e: React.MouseEvent) {
   e.preventDefault();
@@ -64,9 +64,11 @@ export default function FacebookTranscriptGeneratorPage() {
                 <h1 className="text-[28px] font-bold leading-[1.2] tracking-tight text-[#111827] sm:text-[36px] sm:leading-[46px] md:text-[40px] md:leading-[50px]">
                   {seo.hero.h1}
                 </h1>
-                <p className="mx-auto mt-2 max-w-3xl text-[15px] font-normal leading-6 text-[#4B5563] sm:mt-2 sm:text-lg sm:leading-[27px]">
-                  {seo.hero.subtitle}
-                </p>
+                <div className="mx-auto mt-2 max-w-3xl space-y-1 text-[15px] font-normal leading-6 text-[#4B5563] sm:mt-2 sm:text-lg sm:leading-[27px]">
+                  {seo.hero.subtitle.split("\n").map((line) => (
+                    <p key={line}>{line}</p>
+                  ))}
+                </div>
                 <div className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:mt-4 sm:gap-x-5">
                   {seo.hero.chips.map((item, i) => {
                     const Icon = CHIP_ICONS[i] ?? ShieldCheck;
@@ -88,7 +90,7 @@ export default function FacebookTranscriptGeneratorPage() {
                 </div>
               </div>
               <div className="mt-5 sm:mt-8">
-                <HeroUpload defaultTab="link" />
+                <HeroUpload defaultTab="link" linkPanel={seo.linkPanel} />
               </div>
               <MediaFilesStrip />
             </section>
@@ -267,8 +269,11 @@ export default function FacebookTranscriptGeneratorPage() {
                     className="font-bold"
                     style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px", color: "#000" }}
                   >
-                    What people are saying
+                    {seo.testimonials.title}
                   </h2>
+                  <p className="text-lg text-slate-700" style={{ fontSize: 18, lineHeight: "27px" }}>
+                    {seo.testimonials.lead}
+                  </p>
                 </div>
                 <ReviewMarquee />
               </div>

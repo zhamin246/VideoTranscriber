@@ -118,7 +118,7 @@ function ToolRow({
   );
 }
 
-export default function MoreTools() {
+export default function MoreTools({ lead }: { lead?: string } = {}) {
   const pathname = usePathname() || "";
   const tools = isToTextSensitivePath(pathname)
     ? MORE_TOOLS.map((t) => ({ ...t, label: softenToTextLabel(t.label) }))
@@ -127,8 +127,9 @@ export default function MoreTools() {
     <section className="home-more-tools" aria-labelledby="home-more-tools-title">
       <div className="home-more-tools__inner">
         <h2 id="home-more-tools-title" className="home-more-tools__title">
-          Explore more transcription tools
+          Explore More Transcription Tools
         </h2>
+        {lead ? <p className="home-more-tools__lead">{lead}</p> : null}
         <nav className="home-more-tools__rows" aria-label="Transcription tools">
           <ToolRow tools={tools.slice(0, 9)} pxPerSec={28} />
           <ToolRow tools={tools.slice(9)} reverse pxPerSec={24} />

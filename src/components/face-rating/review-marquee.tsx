@@ -5,7 +5,7 @@ import { content } from "./data";
 import { usePathname } from "@/i18n/navigation";
 import { isToTextSensitivePath, softenToTextLabel } from "./nav-labels";
 
-type ReviewItem = {
+export type ReviewMarqueeItem = {
   rating: number;
   title: string;
   quote: string;
@@ -13,6 +13,8 @@ type ReviewItem = {
   role: string;
   avatar: string;
 };
+
+type ReviewItem = ReviewMarqueeItem;
 
 function StarRow({ n }: { n: number }) {
   return (
@@ -89,15 +91,20 @@ function ReviewColumn({
   );
 }
 
-export default function ReviewMarquee() {
+export default function ReviewMarquee({
+  items: itemsOverride,
+}: {
+  items?: ReadonlyArray<ReviewMarqueeItem>;
+} = {}) {
   const pathname = usePathname() || "";
+  const source = itemsOverride ?? content.usersSay.items;
   const items: ReviewItem[] = isToTextSensitivePath(pathname)
-    ? content.usersSay.items.map((it) => ({
+    ? source.map((it) => ({
         ...it,
         title: softenToTextLabel(it.title),
         quote: softenToTextLabel(it.quote),
       }))
-    : [...content.usersSay.items];
+    : [...source];
   const cols = [0, 1, 2].map((col) => items.filter((_, i) => i % 3 === col));
 
   return (

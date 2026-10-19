@@ -259,10 +259,29 @@ const NOTE_MODES = NOTE_MODE_PRESETS.map((m) => ({
 }));
 
 
+export type LinkPanelCopy = {
+  title?: string;
+  description?: string;
+  placeholder?: string;
+  button?: string;
+  helper?: string;
+};
+
+export type UploadPanelCopy = {
+  title?: string;
+  description?: string;
+  button?: string;
+  helper?: string;
+};
+
 export default function HeroUpload({
   defaultTab = "upload",
+  linkPanel,
+  uploadPanel,
 }: {
   defaultTab?: "upload" | "link" | "record";
+  linkPanel?: LinkPanelCopy;
+  uploadPanel?: UploadPanelCopy;
 } = {}) {
   const { user, setShowSignModal, refreshUserInfo } = useAppContext();
   const { sessionAuthed, sessionLoading: sessionStatusLoading } = useSignedIn();
@@ -1197,9 +1216,9 @@ export default function HeroUpload({
         >
           {(
             [
-              { id: "upload" as const, label: "File upload", short: "File", Icon: FileText },
-              { id: "link" as const, label: "Paste link", short: "Link", Icon: Link2 },
-              { id: "record" as const, label: "Record audio", short: "Record", Icon: Mic },
+              { id: "upload" as const, label: "File", short: "File", Icon: FileText },
+              { id: "link" as const, label: "Link", short: "Link", Icon: Link2 },
+              { id: "record" as const, label: "Record", short: "Record", Icon: Mic },
             ] as const
           ).map(({ id, label, short, Icon }) => {
             const active = tab === id;
@@ -1287,20 +1306,28 @@ export default function HeroUpload({
                   className="text-base font-semibold md:text-lg"
                   style={{ color: "rgba(255,255,255,0.94)" }}
                 >
-                  Click or drag & drop to upload your file
+                  {uploadPanel?.title ?? "Transcribe Your Video"}
+                </p>
+                <p
+                  className="mt-2 max-w-md text-sm md:text-base"
+                  style={{ color: "rgba(255,255,255,0.72)" }}
+                >
+                  {uploadPanel?.description ??
+                    "Upload a video or audio file, paste a supported public link, or record a short clip to get started."}
                 </p>
                 <span
                   className="mt-3 inline-flex h-11 items-center gap-2 rounded-lg px-8 text-base font-semibold text-white"
                   style={{ backgroundColor: "#8882F5", boxShadow: "0 4px 12px rgba(136,130,245,0.28)" }}
                 >
                   <Upload className="h-4 w-4" />
-                  Upload a file
+                  {uploadPanel?.button ?? "Upload a File"}
                 </span>
                 <p
                   className="mt-4 inline-flex items-center gap-1.5 text-sm"
                   style={{ color: "rgba(255,255,255,0.62)" }}
                 >
-                  Supports 20+ audio and video formats
+                  {uploadPanel?.helper ??
+                    "Supports 20+ audio and video formats. Check file and usage limits on the Pricing page."}
                   <Info className="h-3.5 w-3.5" />
                 </p>
               </button>
@@ -1317,8 +1344,17 @@ export default function HeroUpload({
           <div className="flex w-full flex-1 flex-col items-center justify-center text-center" style={wellStyle}>
             {!preview ? (
               <>
+                {linkPanel?.title ? (
+                  <p
+                    className="mt-2 text-base font-semibold md:text-lg"
+                    style={{ color: "rgba(255,255,255,0.94)" }}
+                  >
+                    {linkPanel.title}
+                  </p>
+                ) : null}
                 <p className="my-4 text-sm md:text-base" style={{ color: "rgba(255,255,255,0.72)" }}>
-                  Paste a media link to transcribe video or audio content.
+                  {linkPanel?.description ??
+                    "Paste a media link to transcribe video or audio content."}
                 </p>
                 <div className="mb-4 flex flex-col items-center gap-2">
                   <div
@@ -1358,7 +1394,7 @@ export default function HeroUpload({
                     onKeyDown={(e) => {
                       if (e.key === "Enter" && !linkBusy) void submitUrl();
                     }}
-                    placeholder="Paste a media link"
+                    placeholder={linkPanel?.placeholder ?? "Paste a media link"}
                     disabled={linkBusy}
                     className="h-10 min-w-0 flex-1 rounded-md border px-3 text-sm outline-none"
                     style={{
@@ -1374,9 +1410,17 @@ export default function HeroUpload({
                     className="h-10 shrink-0 whitespace-nowrap rounded-md px-4 text-sm font-medium text-white disabled:opacity-50"
                     style={{ backgroundColor: "#8882F5" }}
                   >
-                    {linkBusy ? "Loading…" : "Search"}
+                    {linkBusy ? "Loading…" : linkPanel?.button ?? "Search"}
                   </button>
                 </div>
+                {linkPanel?.helper ? (
+                  <p
+                    className="mt-4 max-w-2xl text-xs md:text-sm"
+                    style={{ color: "rgba(255,255,255,0.62)" }}
+                  >
+                    {linkPanel.helper}
+                  </p>
+                ) : null}
               </>
             ) : (
               <div className="w-full text-left">
