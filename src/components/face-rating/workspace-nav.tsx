@@ -1,20 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "@/i18n/navigation";
 import {
-  AudioLines,
   Clock3,
   FileText,
   FolderOpen,
   Gift,
+  Home,
+  PanelLeftClose,
+  PanelLeftOpen,
   type LucideIcon,
 } from "lucide-react";
-import { useAppContext } from "@/contexts/app";
 import { useSignedIn } from "@/hooks/useSignedIn";
 import { CONVERT_HREF } from "./data";
 import { isToTextSensitivePath } from "./nav-labels";
+import { NavRouteLink } from "./nav-route-link";
+import { PlatformMark } from "./platform-mark";
+import {
+  isToolNavActive,
+  WORKSPACE_TOOL_NAV,
+  type WorkspaceToolNavItem,
+} from "./workspace-tool-nav-items";
 import type { PlanSummary } from "@/lib/plan/summary";
 import UpgradePricingModal, {
   type UpgradePricingReason,
@@ -23,8 +31,35 @@ import UpgradePricingModal, {
 const NAV_ICON = "h-[18px] w-[18px] shrink-0";
 
 function NavIcon({ icon: Icon }: { icon: LucideIcon }) {
-  return <Icon className={NAV_ICON} strokeWidth={1.5} absoluteStrokeWidth />;
+  return <Icon className={NAV_ICON} strokeWidth={1.75} absoluteStrokeWidth />;
 }
+
+function ToolNavIcon({ item }: { item: WorkspaceToolNavItem }) {
+  if ("platform" in item) {
+    return (
+      <span className="flex h-[22px] w-[22px] shrink-0 items-center justify-center overflow-hidden rounded-md [&_span]:!h-[22px] [&_span]:!w-[22px] [&_svg]:!h-[22px] [&_svg]:!w-[22px]">
+        <PlatformMark kind={item.platform} />
+      </span>
+    );
+  }
+  return <NavIcon icon={item.icon} />;
+}
+
+function toolLinkClass(active: boolean, collapsed: boolean) {
+  return `flex min-h-[44px] items-center gap-2.5 whitespace-nowrap rounded-xl py-2 text-[13px] font-semibold leading-none transition-colors ${
+    collapsed ? "justify-center px-2" : "px-2.5"
+  } ${
+    active
+      ? "bg-[#E8EEFC] text-[#5270FF]"
+      : "text-[#334155] hover:bg-white hover:text-[#5270FF]"
+  }`;
+}
+
+function navLabelClass(collapsed: boolean) {
+  return collapsed ? "sr-only" : "min-w-0 flex-1 truncate text-left";
+}
+
+const SIDEBAR_COLLAPSED_KEY = "workspace-nav-collapsed";
 
 function BrandMark() {
   return (
@@ -131,7 +166,7 @@ function CurrentPlanCard({
     user?.plan || (signedIn && sessionLoading ? null : guestPlan());
   if (!plan) {
     return (
-      <div className="hidden w-full flex-col rounded-2xl border border-[#EEF0F5] bg-white p-3.5 text-sm text-[#94A3B8] group-hover/nav:flex">
+      <div className="flex w-full flex-col rounded-2xl border border-[#EEF0F5] bg-white p-3.5 text-sm text-[#94A3B8]">
         Loading plan…
       </div>
     );
@@ -146,7 +181,7 @@ function CurrentPlanCard({
     plan.badge === "PACK" ? "minutes" : "generic";
 
   return (
-    <div className="hidden w-full flex-col rounded-2xl border border-[#EEF0F5] bg-white p-3.5 shadow-[0_1px_2px_rgba(15,23,42,0.04)] group-hover/nav:flex">
+    <div className="flex w-full flex-col rounded-2xl border border-[#EEF0F5] bg-white p-3.5 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
       <div className="mb-3 flex items-center justify-between gap-2">
         <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#64748B]">
           Current Plan
@@ -218,6 +253,29 @@ export default function WorkspaceNav() {
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [upgradeReason, setUpgradeReason] =
     useState<UpgradePricingReason>("generic");
+  const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    try {
+      if (localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === "1") {
+        setCollapsed(true);
+      }
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  const toggleCollapsed = () => {
+    setCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem(SIDEBAR_COLLAPSED_KEY, next ? "1" : "0");
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+  };
 
   const openUpgrade = (reason: UpgradePricingReason = "generic") => {
     setUpgradeReason(reason);
@@ -226,108 +284,136 @@ export default function WorkspaceNav() {
 
   return (
     <>
-      <aside className="group/nav sticky top-0 z-[60] hidden h-svh w-14 shrink-0 flex-col self-start overflow-hidden border-r border-[#EAEAEA] bg-[#F9F9FC] transition-[width] duration-300 ease-in-out hover:w-[260px] hover:shadow-[8px_0_24px_-16px_rgba(91,84,200,0.35)] md:flex">
-        <div className="mb-0 flex h-14 shrink-0 items-center justify-center overflow-hidden px-[6px] group-hover/nav:justify-start">
+      <aside
+        className={`group/nav sticky top-0 z-[60] hidden h-svh shrink-0 flex-col self-start border-r border-[#EAEAEA] bg-[#F9F9FC] transition-[width] duration-300 ease-in-out md:flex ${
+          collapsed ? "w-14" : "w-[min(100vw,320px)]"
+        }`}
+      >
+        <div
+          className={`flex shrink-0 items-center ${
+            collapsed
+              ? "h-[72px] flex-col justify-center gap-0.5 px-1"
+              : "h-14 gap-1 px-2"
+          }`}
+        >
           <Link
             href="/"
-            className="flex h-full min-h-0 w-full items-center justify-center rounded-xl group-hover/nav:justify-start"
+            className={`flex min-w-0 items-center rounded-xl py-1 ${
+              collapsed ? "justify-center" : "min-w-0 flex-1 gap-2"
+            }`}
             aria-label={hideHomeKeyword ? "Home" : "video transcriber — home"}
           >
-            <span className="flex max-w-full items-center overflow-hidden group-hover/nav:ml-[5px]">
-              <BrandMark />
-              {hideHomeKeyword ? null : (
-                <span
-                  className="ml-2 hidden whitespace-nowrap group-hover/nav:inline"
-                  style={{
-                    fontSize: 18,
-                    fontWeight: 700,
-                    lineHeight: "40px",
-                    letterSpacing: "-0.02em",
-                  }}
-                >
-                  <span style={{ color: "#000000" }}>video </span>
-                  <span style={{ color: "#5270FF" }}>transcriber</span>
-                </span>
-              )}
-            </span>
+            <BrandMark />
+            {hideHomeKeyword || collapsed ? null : (
+              <span
+                className="truncate whitespace-nowrap"
+                style={{
+                  fontSize: 17,
+                  fontWeight: 700,
+                  lineHeight: "24px",
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                <span style={{ color: "#000000" }}>video </span>
+                <span style={{ color: "#5270FF" }}>transcriber</span>
+              </span>
+            )}
           </Link>
+          <button
+            type="button"
+            onClick={toggleCollapsed}
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#64748B] transition-colors hover:bg-white hover:text-[#5270FF]"
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            aria-expanded={!collapsed}
+          >
+            {collapsed ? (
+              <PanelLeftOpen className="h-[18px] w-[18px]" strokeWidth={1.75} />
+            ) : (
+              <PanelLeftClose className="h-[18px] w-[18px]" strokeWidth={1.75} />
+            )}
+          </button>
         </div>
 
-        <nav className="flex min-h-0 flex-1 flex-col px-2 pb-2 pt-1">
-          <ul className="flex flex-col gap-1">
+        <nav className="flex min-h-0 flex-1 flex-col px-2 pb-2">
+          <ul className="min-h-0 flex-1 space-y-0.5 overflow-y-auto overscroll-contain pr-0.5">
             <li>
               <Link
                 href={CONVERT_HREF}
-                title="Transcribe"
-                className={`flex h-11 items-center gap-2 overflow-hidden rounded-xl px-2.5 text-[14px] font-medium ${
-                  onHome
-                    ? "bg-white text-[#635BFF]"
-                    : "text-[#7F7F7F] hover:bg-white hover:text-[#635BFF]"
-                }`}
+                className={toolLinkClass(onHome, collapsed)}
+                title={collapsed ? "Transcribe home" : undefined}
               >
-                <NavIcon icon={AudioLines} />
-                <span className="min-w-0 flex-1 truncate opacity-0 transition-opacity duration-200 group-hover/nav:opacity-100">
-                  Transcribe
-                </span>
+                <NavIcon icon={Home} />
+                <span className={navLabelClass(collapsed)}>Transcribe home</span>
               </Link>
             </li>
+            {WORKSPACE_TOOL_NAV.map((item) => {
+              const active = isToolNavActive(pathname, item.href);
+              return (
+                <li key={item.href}>
+                  <NavRouteLink
+                    href={item.href}
+                    className={toolLinkClass(active, collapsed)}
+                    title={item.label}
+                  >
+                    <ToolNavIcon item={item} />
+                    <span className={navLabelClass(collapsed)}>{item.label}</span>
+                  </NavRouteLink>
+                </li>
+              );
+            })}
+          </ul>
+
+          <ul className="mt-2 shrink-0 space-y-0.5 border-t border-[#E8EAF0] pt-2">
             <li>
               <Link
                 href="/my-assets"
-                title="My Assets"
-                className={`flex h-11 items-center gap-2 overflow-hidden rounded-xl px-2.5 text-[14px] font-medium ${
-                  onAssets
-                    ? "bg-white text-[#635BFF]"
-                    : "text-[#7F7F7F] hover:bg-white hover:text-[#635BFF]"
-                }`}
+                className={toolLinkClass(onAssets, collapsed)}
+                title={collapsed ? "My Assets" : undefined}
               >
                 <NavIcon icon={FolderOpen} />
-                <span className="truncate opacity-0 group-hover/nav:opacity-100">
-                  My Assets
-                </span>
+                <span className={navLabelClass(collapsed)}>My Assets</span>
               </Link>
             </li>
             <li>
               <button
                 type="button"
                 onClick={() => openUpgrade("generic")}
-                title="Pricing"
-                className={`flex h-11 w-full items-center gap-2 overflow-hidden rounded-xl px-2.5 text-left text-[14px] font-medium ${
-                  onPricing || upgradeOpen
-                    ? "bg-white text-[#635BFF]"
-                    : "text-[#64748B] hover:bg-white hover:text-[#635BFF]"
-                }`}
+                className={`${toolLinkClass(onPricing || upgradeOpen, collapsed)} w-full`}
+                title={collapsed ? "Pricing" : undefined}
               >
                 <Gift
-                  className="h-5 w-5 shrink-0"
+                  className="h-[18px] w-[18px] shrink-0"
                   strokeWidth={1.75}
                   style={{ color: "#F97316" }}
                   absoluteStrokeWidth
                 />
-                <span className="min-w-0 truncate opacity-0 group-hover/nav:opacity-100">
-                  Pricing
-                </span>
-                <span
-                  className="ml-auto hidden shrink-0 items-center justify-center rounded-lg px-2 py-0.5 text-xs font-bold text-black group-hover/nav:inline-flex"
-                  style={{ backgroundColor: "#FFCB65" }}
-                >
-                  40% Off
-                </span>
+                <span className={navLabelClass(collapsed)}>Pricing</span>
+                {collapsed ? null : (
+                  <span
+                    className="shrink-0 rounded-md px-1.5 py-0.5 text-[10px] font-bold text-black"
+                    style={{ backgroundColor: "#FFCB65" }}
+                  >
+                    40% Off
+                  </span>
+                )}
               </button>
             </li>
           </ul>
 
-          <div className="-mx-2 mt-auto flex justify-center px-[7px] pb-3 pt-3 group-hover/nav:px-2">
-            <button
-              type="button"
-              onClick={() => openUpgrade("generic")}
-              title="Upgrade Plan"
-              aria-label="Upgrade Plan"
-              className="flex h-[42px] w-[42px] items-center justify-center rounded-xl bg-[#635BFF] text-white shadow-[0_8px_20px_-12px_rgba(99,91,255,0.9)] group-hover/nav:hidden"
-            >
-              <Gift className="h-5 w-5" strokeWidth={1.75} />
-            </button>
-            <CurrentPlanCard onUpgrade={openUpgrade} />
+          <div className="mt-2 shrink-0 pb-2 pt-1">
+            {collapsed ? (
+              <button
+                type="button"
+                onClick={() => openUpgrade("generic")}
+                title="Upgrade Plan"
+                aria-label="Upgrade Plan"
+                className="mx-auto flex h-[42px] w-[42px] items-center justify-center rounded-xl bg-[#635BFF] text-white shadow-[0_8px_20px_-12px_rgba(99,91,255,0.9)]"
+              >
+                <Gift className="h-5 w-5" strokeWidth={1.75} />
+              </button>
+            ) : (
+              <CurrentPlanCard onUpgrade={openUpgrade} />
+            )}
           </div>
         </nav>
       </aside>

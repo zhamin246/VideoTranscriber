@@ -28,10 +28,11 @@ export function isToTextSensitivePath(pathname: string): boolean {
     pathname.includes("/tiktok-transcript-generator") ||
     pathname.includes("/instagram-transcript-generator") ||
     pathname.includes("/facebook-transcript-generator") ||
+    pathname.includes("/x-transcript-generator") ||
     pathname.includes("/ai-video-summarizer") ||
     pathname.includes("/youtube-video-summarizer") ||
     pathname.includes("/youtube-transcript-generator") ||
-    pathname.includes("/video-transcript-generator") ||
+    pathname.includes("/video-to-text") ||
     pathname.includes("/youtube-subtitle-downloader")
   );
 }

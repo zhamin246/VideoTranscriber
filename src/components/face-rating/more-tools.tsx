@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { NavRouteLink } from "./nav-route-link";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
@@ -33,7 +34,8 @@ const MORE_TOOLS: {
   tone: (typeof TONES)[number];
 }[] = [
   { label: "Audio to text", href: "/audio-to-text-converter", icon: Box, tone: "blue" },
-  { label: "File upload", href: CONVERT_HREF, icon: PenTool, tone: "purple" },
+  { label: "Video to Text", href: "/video-to-text", icon: PenTool, tone: "purple" },
+  { label: "File upload", href: CONVERT_HREF, icon: PenTool, tone: "blue" },
   { label: "Paste link", href: CONVERT_HREF, icon: Box, tone: "blue" },
   { label: "Record audio", href: "/audio-to-text-converter", icon: PenLine, tone: "green" },
   { label: "YouTube to text", href: "/youtube-transcript-generator", icon: FileType, tone: "orange" },
@@ -41,6 +43,7 @@ const MORE_TOOLS: {
   { label: "TikTok transcript", href: "/tiktok-transcript-generator", icon: FileType, tone: "cyan" },
   { label: "Instagram transcript", href: "/instagram-transcript-generator", icon: FileType, tone: "pink" },
   { label: "Facebook transcript", href: "/facebook-transcript-generator", icon: FileType, tone: "blue" },
+  { label: "X transcript", href: "/x-transcript-generator", icon: FileType, tone: "green" },
   { label: "Meetings", href: "/#usecases", icon: Pencil, tone: "cyan" },
   { label: "Interviews", href: "/#usecases", icon: Camera, tone: "pink" },
   { label: "Podcasts", href: "/#usecases", icon: Sparkles, tone: "purple" },
@@ -97,7 +100,7 @@ function ToolRow({
           {loop.map((tool, i) => {
             const Icon = tool.icon;
             return (
-              <Link
+              <NavRouteLink
                 key={`${tool.label}-${i}`}
                 href={tool.href}
                 className={`home-more-tools__card home-more-tools__card--${tool.tone}`}
@@ -109,7 +112,7 @@ function ToolRow({
                 </span>
                 <span className="home-more-tools__label">{tool.label}</span>
                 <ArrowRight className="home-more-tools__chevron" aria-hidden />
-              </Link>
+              </NavRouteLink>
             );
           })}
         </div>

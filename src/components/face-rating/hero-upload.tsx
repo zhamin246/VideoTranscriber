@@ -1016,23 +1016,37 @@ export default function HeroUpload({
     }
   };
 
+  /** Tool shell colors aligned with videotranscriber.ai (gray-100 panel, gray-150 tabs). */
+  const HERO_TOOL = {
+    tabTrack: "#EBEDEE",
+    tabInactive: "#64748B",
+    wellBorder: "#CBD5E1",
+    wellFill: "#EBEDEE",
+    divider: "#E2E8F0",
+    thumbBg: "#E2E8F0",
+  } as const;
+
   const wellStyle = {
-    minHeight: 220,
+    minHeight: 280,
     borderRadius: 16,
     padding: "20px 14px",
-    border: drag ? "1.6px dashed rgba(255,255,255,0.85)" : "1.6px dashed rgb(107, 103, 167)",
-    backgroundColor: drag ? "rgba(136, 130, 245, 0.16)" : "rgba(136, 130, 245, 0.08)",
+    border: drag ? "1.6px dashed #8882F5" : `1.6px dashed ${HERO_TOOL.wellBorder}`,
+    backgroundColor: drag
+      ? "color-mix(in srgb, #8882F5 8%, #EBEDEE)"
+      : HERO_TOOL.wellFill,
+    width: "100%",
+    flex: 1,
   } as const;
 
   const optionsAndTranscribe = (onTranscribe: () => void) => (
     <>
       <div
         className="mt-6 flex flex-col gap-3 border-t pt-5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6 sm:gap-y-3"
-        style={{ borderColor: "rgba(255,255,255,0.12)" }}
+        style={{ borderColor: HERO_TOOL.divider }}
       >
         <label
           className="inline-flex items-center gap-2 text-sm"
-          style={{ color: "rgba(255,255,255,0.82)" }}
+          style={{ color: "#475569" }}
         >
           <span className="whitespace-nowrap">Source Language:</span>
           <Select
@@ -1062,7 +1076,7 @@ export default function HeroUpload({
 
         <label
           className="inline-flex items-center gap-2 text-sm"
-          style={{ color: "rgba(255,255,255,0.82)" }}
+          style={{ color: "#475569" }}
         >
           <span>Separate Speaker</span>
           <button
@@ -1072,7 +1086,7 @@ export default function HeroUpload({
             disabled={transcribeBusy}
             onClick={() => setSeparateSpeaker((v) => !v)}
             className="relative h-5 w-9 rounded-full transition-colors disabled:opacity-50"
-            style={{ backgroundColor: separateSpeaker ? "#8882F5" : "rgba(255,255,255,0.28)" }}
+            style={{ backgroundColor: separateSpeaker ? "#8882F5" : "#CBD5E1" }}
           >
             <span
               className="absolute top-0.5 h-4 w-4 rounded-full bg-white transition-all"
@@ -1083,7 +1097,7 @@ export default function HeroUpload({
 
         <label
           className="inline-flex items-center gap-2 text-sm"
-          style={{ color: "rgba(255,255,255,0.82)" }}
+          style={{ color: "#475569" }}
         >
           <span className="whitespace-nowrap">Note Mode:</span>
           <Select value={noteMode} onValueChange={setNoteMode} disabled={transcribeBusy}>
@@ -1137,24 +1151,24 @@ export default function HeroUpload({
         ) : (
           <div
             className="flex h-16 w-28 shrink-0 items-center justify-center rounded-md"
-            style={{ backgroundColor: "rgba(255,255,255,0.12)" }}
+            style={{ backgroundColor: HERO_TOOL.thumbBg }}
           >
             {filePreview.kind === "audio" ? (
-              <AudioLines className="h-6 w-6" style={{ color: "rgba(255,255,255,0.55)" }} />
+              <AudioLines className="h-6 w-6" style={{ color: "#64748B" }} />
             ) : (
-              <Video className="h-6 w-6" style={{ color: "rgba(255,255,255,0.55)" }} />
+              <Video className="h-6 w-6" style={{ color: "#64748B" }} />
             )}
           </div>
         )}
         <div className="min-w-0 flex-1">
           <p
             className="line-clamp-2 text-sm font-semibold leading-snug md:text-base"
-            style={{ color: "#93C5FD" }}
+            style={{ color: "#111827" }}
             title={filePreview.file.name}
           >
             {filePreview.file.name}
           </p>
-          <p className="mt-1 text-xs md:text-sm" style={{ color: "rgba(255,255,255,0.55)" }}>
+          <p className="mt-1 text-xs md:text-sm" style={{ color: "#64748B" }}>
             {[
               formatDuration(filePreview.durationSeconds),
               formatFileSize(filePreview.file.size),
@@ -1171,7 +1185,7 @@ export default function HeroUpload({
             onClick={clearPreview}
             disabled={transcribeBusy}
             className="rounded-md p-1 disabled:opacity-50"
-            style={{ color: "rgba(255,255,255,0.55)" }}
+            style={{ color: "#64748B" }}
             aria-label="Clear file"
           >
             <Trash2 className="h-4 w-4" />
@@ -1183,13 +1197,7 @@ export default function HeroUpload({
   ) : null;
 
   return (
-    <div
-      className="relative mx-auto w-full max-w-[1200px] overflow-hidden rounded-2xl p-1 sm:rounded-[32px] sm:p-1.5"
-      style={{
-        background: "color-mix(in srgb, #8882F5 4%, #fff)",
-        boxShadow: "0 3px 10px rgba(99,91,255,0.16), 0 1px 4px rgba(15,23,42,0.1)",
-      }}
-    >
+    <div className="relative mx-auto w-full max-w-[1200px]">
       <input
         ref={inputRef}
         type="file"
@@ -1200,19 +1208,12 @@ export default function HeroUpload({
           if (f) void go(f);
         }}
       />
-      <div
-        className="flex min-h-[360px] flex-col rounded-xl p-4 sm:min-h-[450px] sm:rounded-3xl sm:p-10"
-        style={{
-          border: "0.8px solid rgb(86, 82, 141)",
-          backgroundImage:
-            "linear-gradient(165deg, rgb(68, 65, 115) 0%, rgb(55, 53, 91) 52%, rgb(43, 41, 70) 100%)",
-        }}
-      >
+      <div className="flex min-h-[360px] flex-col sm:min-h-[450px]">
         <div
           role="tablist"
           aria-label="Upload method"
-          className="mx-auto mb-3 grid h-11 w-full max-w-[38rem] grid-cols-3 rounded-xl p-1 sm:mb-4 sm:h-12"
-          style={{ backgroundColor: "rgba(255,255,255,0.1)" }}
+          className="mx-auto mb-3 grid h-11 w-full max-w-[38rem] grid-cols-3 rounded-lg p-1 sm:mb-4 sm:h-12"
+          style={{ backgroundColor: HERO_TOOL.tabTrack }}
         >
           {(
             [
@@ -1252,7 +1253,7 @@ export default function HeroUpload({
                         color: "#8882F5",
                         boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
                       }
-                    : { backgroundColor: "transparent", color: "rgba(255,255,255,0.72)" }
+                    : { backgroundColor: "transparent", color: HERO_TOOL.tabInactive }
                 }
               >
                 <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={2} />
@@ -1304,13 +1305,13 @@ export default function HeroUpload({
                 </div>
                 <p
                   className="text-base font-semibold md:text-lg"
-                  style={{ color: "rgba(255,255,255,0.94)" }}
+                  style={{ color: "#111827" }}
                 >
                   {uploadPanel?.title ?? "Transcribe Your Video"}
                 </p>
                 <p
                   className="mt-2 max-w-md text-sm md:text-base"
-                  style={{ color: "rgba(255,255,255,0.72)" }}
+                  style={{ color: "#475569" }}
                 >
                   {uploadPanel?.description ??
                     "Upload a video or audio file, paste a supported public link, or record a short clip to get started."}
@@ -1324,7 +1325,7 @@ export default function HeroUpload({
                 </span>
                 <p
                   className="mt-4 inline-flex items-center gap-1.5 text-sm"
-                  style={{ color: "rgba(255,255,255,0.62)" }}
+                  style={{ color: "#64748B" }}
                 >
                   {uploadPanel?.helper ??
                     "Supports 20+ audio and video formats. Check file and usage limits on the Pricing page."}
@@ -1335,7 +1336,7 @@ export default function HeroUpload({
               filePreviewCard
             )}
             {error ? (
-              <p className="mt-4 text-sm" style={{ color: "#FECACA" }}>
+              <p className="mt-4 text-sm" style={{ color: "#DC2626" }}>
                 {error}
               </p>
             ) : null}
@@ -1347,19 +1348,19 @@ export default function HeroUpload({
                 {linkPanel?.title ? (
                   <p
                     className="mt-2 text-base font-semibold md:text-lg"
-                    style={{ color: "rgba(255,255,255,0.94)" }}
+                    style={{ color: "#111827" }}
                   >
                     {linkPanel.title}
                   </p>
                 ) : null}
-                <p className="my-4 text-sm md:text-base" style={{ color: "rgba(255,255,255,0.72)" }}>
+                <p className="my-4 text-sm md:text-base" style={{ color: "#475569" }}>
                   {linkPanel?.description ??
                     "Paste a media link to transcribe video or audio content."}
                 </p>
                 <div className="mb-4 flex flex-col items-center gap-2">
                   <div
                     className="inline-flex items-center gap-1.5 text-xs md:text-sm"
-                    style={{ color: "rgba(255,255,255,0.7)" }}
+                    style={{ color: "#64748B" }}
                   >
                     <Link2 className="h-3.5 w-3.5" />
                     Supported platforms
@@ -1416,7 +1417,7 @@ export default function HeroUpload({
                 {linkPanel?.helper ? (
                   <p
                     className="mt-4 max-w-2xl text-xs md:text-sm"
-                    style={{ color: "rgba(255,255,255,0.62)" }}
+                    style={{ color: "#64748B" }}
                   >
                     {linkPanel.helper}
                   </p>
@@ -1445,7 +1446,7 @@ export default function HeroUpload({
                                 ? "#111111"
                                 : preview.platform === "YouTube"
                                   ? "#FF0000"
-                                  : "rgba(255,255,255,0.12)",
+                                  : HERO_TOOL.thumbBg,
                         backgroundImage:
                           preview.platform === "Instagram"
                             ? "radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%)"
@@ -1459,19 +1460,19 @@ export default function HeroUpload({
                       preview.platform === "X" ? (
                         <BrandIcon name={preview.platform} className="h-7 w-7 text-white" />
                       ) : (
-                        <Video className="h-6 w-6" style={{ color: "rgba(255,255,255,0.55)" }} />
+                        <Video className="h-6 w-6" style={{ color: "#64748B" }} />
                       )}
                     </div>
                   )}
                   <div className="min-w-0 flex-1">
                     <p
                       className="line-clamp-2 text-sm font-semibold leading-snug md:text-base"
-                      style={{ color: "#93C5FD" }}
+                      style={{ color: "#111827" }}
                       title={preview.title}
                     >
                       {preview.title}
                     </p>
-                    <p className="mt-1 text-xs md:text-sm" style={{ color: "rgba(255,255,255,0.55)" }}>
+                    <p className="mt-1 text-xs md:text-sm" style={{ color: "#64748B" }}>
                       {[formatDuration(preview.durationSeconds), preview.platform]
                         .filter(Boolean)
                         .join(" · ")}
@@ -1484,7 +1485,7 @@ export default function HeroUpload({
                       onClick={clearPreview}
                       disabled={transcribeBusy}
                       className="rounded-md p-1 disabled:opacity-50"
-                      style={{ color: "rgba(255,255,255,0.55)" }}
+                      style={{ color: "#64748B" }}
                       aria-label="Clear preview"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -1497,12 +1498,12 @@ export default function HeroUpload({
             )}
 
             {error ? (
-              <p className="mt-4 text-sm" style={{ color: "#FECACA" }}>
+              <p className="mt-4 text-sm" style={{ color: "#DC2626" }}>
                 {error}
               </p>
             ) : null}
             {linkOk ? (
-              <p className="mt-4 text-sm" style={{ color: "#BBF7D0" }}>
+              <p className="mt-4 text-sm" style={{ color: "#15803D" }}>
                 {linkOk}
               </p>
             ) : null}
@@ -1514,20 +1515,20 @@ export default function HeroUpload({
             ) : convertingRecording ? (
               <>
                 <span
-                  className="inline-flex h-16 w-16 items-center justify-center rounded-full text-white"
-                  style={{ backgroundColor: "#8882F5" }}
+                  className="inline-flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full text-white"
+                  style={{ backgroundColor: "#3B82F6" }}
                 >
-                  <Loader2 className="h-8 w-8 animate-spin" />
+                  <Loader2 className="h-9 w-9 animate-spin" strokeWidth={2} />
                 </span>
                 <p
                   className="mt-6 text-base md:text-lg"
-                  style={{ color: "rgba(255,255,255,0.82)" }}
+                  style={{ color: "#475569" }}
                 >
                   Converting to MP3…
                 </p>
                 <p
                   className="mt-2 text-base md:text-lg"
-                  style={{ color: "rgba(255,255,255,0.82)" }}
+                  style={{ color: "#475569" }}
                 >
                   Preparing your recording for transcription
                 </p>
@@ -1535,21 +1536,21 @@ export default function HeroUpload({
             ) : (
               <>
                 <span
-                  className="inline-flex h-16 w-16 items-center justify-center rounded-full text-white"
+                  className="inline-flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full text-white"
                   style={{
-                    backgroundColor: recording ? "#EF4444" : "#8882F5",
-                    boxShadow: recording ? "0 0 0 8px rgba(239,68,68,0.18)" : undefined,
+                    backgroundColor: recording ? "#EF4444" : "#3B82F6",
+                    boxShadow: recording ? "0 0 0 8px rgba(239,68,68,0.12)" : undefined,
                   }}
                 >
-                  <Mic className="h-8 w-8" />
+                  <Mic className="h-9 w-9" strokeWidth={2} />
                 </span>
-                <p className="mt-6 text-base md:text-lg" style={{ color: "rgba(255,255,255,0.82)" }}>
+                <p className="mt-6 text-base md:text-lg" style={{ color: "#475569" }}>
                   {recording
                     ? `Recording… ${formatDuration(recordElapsed)}`
                     : "Click 'Start recording' to capture your voice instantly."}
                 </p>
                 {!recording ? (
-                  <p className="mt-2 text-base md:text-lg" style={{ color: "rgba(255,255,255,0.82)" }}>
+                  <p className="mt-2 text-base md:text-lg" style={{ color: "#475569" }}>
                     Record your audio directly and convert audio to text for free.
                   </p>
                 ) : null}
@@ -1566,7 +1567,7 @@ export default function HeroUpload({
               </>
             )}
             {error ? (
-              <p className="mt-4 text-sm" style={{ color: "#FECACA" }}>
+              <p className="mt-4 text-sm" style={{ color: "#DC2626" }}>
                 {error}
               </p>
             ) : null}

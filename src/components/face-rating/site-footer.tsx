@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { content } from "./data";
+import { NavRouteLink } from "./nav-route-link";
 
 type FooterLink = { label: string; href: string };
 
@@ -90,12 +91,12 @@ function FooterGroupBlock({
       <ul className="space-y-2">
         {group.links.map((l) => (
           <li key={l.label}>
-            <Link
+            <NavRouteLink
               href={l.href}
               className="text-sm leading-5 text-[#64748B] transition-colors hover:text-[#0F172A] hover:underline"
             >
               {l.label}
-            </Link>
+            </NavRouteLink>
           </li>
         ))}
       </ul>

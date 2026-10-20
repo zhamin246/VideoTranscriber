@@ -6,13 +6,14 @@
 import { useCaseAsset } from "@/lib/convert/use-case-assets";
 import { AUDIO_TO_TEXT_CONVERTER_HREF } from "@/lib/convert/audio-to-text-converter-content";
 import { AI_VIDEO_SUMMARIZER_HREF } from "@/lib/convert/ai-video-summarizer-content";
-import { VIDEO_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/video-transcript-generator-content";
+import { VIDEO_TO_TEXT_CONVERTER_HREF } from "@/lib/convert/video-to-text-converter-content";
 import { YOUTUBE_SUBTITLE_DOWNLOADER_HREF } from "@/lib/convert/youtube-subtitle-downloader-content";
 import { YOUTUBE_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/youtube-transcript-generator-content";
 import { YOUTUBE_VIDEO_SUMMARIZER_HREF } from "@/lib/convert/youtube-video-summarizer-content";
 import { TIKTOK_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/tiktok-transcript-generator-content";
 import { INSTAGRAM_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/instagram-transcript-generator-content";
 import { FACEBOOK_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/facebook-transcript-generator-content";
+import { X_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/x-transcript-generator-content";
 
 export const FREE_TEST_HREF = "/tools/ai-attractiveness-test";
 export const FULL_REPORT_HREF = "/tools/full-analysis";
@@ -37,10 +38,7 @@ export const content = {
           {
             title: "Video Tools",
             items: [
-              {
-                label: "Video Transcript Generator",
-                href: VIDEO_TRANSCRIPT_GENERATOR_HREF,
-              },
+              { label: "Video to Text", href: VIDEO_TO_TEXT_CONVERTER_HREF },
               { label: "AI Video Summarizer", href: AI_VIDEO_SUMMARIZER_HREF },
             ],
           },
@@ -59,6 +57,7 @@ export const content = {
               { label: "TikTok Transcript Generator", href: TIKTOK_TRANSCRIPT_GENERATOR_HREF },
               { label: "Instagram Transcript Generator", href: INSTAGRAM_TRANSCRIPT_GENERATOR_HREF },
               { label: "Facebook Transcript Generator", href: FACEBOOK_TRANSCRIPT_GENERATOR_HREF },
+              { label: "X Transcript Generator", href: X_TRANSCRIPT_GENERATOR_HREF },
             ],
           },
         ],

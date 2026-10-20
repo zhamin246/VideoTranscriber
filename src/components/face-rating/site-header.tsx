@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "@/i18n/navigation";
 import { useEffect, useRef, useState } from "react";
+import { NavRouteLink } from "./nav-route-link";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useAppContext } from "@/contexts/app";
@@ -12,10 +13,12 @@ import { btnPrimary, V } from "./visual";
 
 const DASHBOARD_HREF = "/dashboard";
 
-const MEGA_MENU_CLASS =
-  "absolute left-0 top-full z-50 grid max-w-[min(96vw,720px)] grid-cols-2 gap-x-5 gap-y-4 rounded-xl border border-neutral-200 bg-white p-4 shadow-lg lg:w-[720px] lg:grid-cols-3";
-const SIMPLE_MENU_CLASS =
-  "absolute left-0 top-full z-50 w-max min-w-[240px] rounded-xl border border-neutral-200 bg-white py-1.5 shadow-lg";
+const MEGA_MENU_PANEL_CLASS =
+  "grid max-w-[min(96vw,720px)] grid-cols-2 gap-x-5 gap-y-4 rounded-xl border border-neutral-200 bg-white p-4 shadow-lg lg:w-[720px] lg:grid-cols-3";
+const SIMPLE_MENU_PANEL_CLASS =
+  "w-max min-w-[240px] rounded-xl border border-neutral-200 bg-white py-1.5 shadow-lg";
+/** Wrapper only — hover bridge uses padding, not ::before (grid + ::before breaks columns). */
+const DROPDOWN_WRAP_CLASS = "absolute left-0 top-full z-50 pt-1.5 -mt-1.5";
 
 const TOP_NAV_LINK_STYLE: React.CSSProperties = {
   height: 40,
@@ -223,6 +226,20 @@ export default function FaceRatingSiteHeader({
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
   const [hash, setHash] = useState("");
   const menusRef = useRef<HTMLDivElement>(null);
+  const menuCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const keepMenuOpen = (label: string) => {
+    if (menuCloseTimer.current) {
+      clearTimeout(menuCloseTimer.current);
+      menuCloseTimer.current = null;
+    }
+    setMenuOpen(label);
+  };
+
+  const scheduleMenuClose = () => {
+    if (menuCloseTimer.current) clearTimeout(menuCloseTimer.current);
+    menuCloseTimer.current = setTimeout(() => setMenuOpen(null), 150);
+  };
 
   useEffect(() => {
     const syncHash = () => setHash(window.location.hash || "");
@@ -293,8 +310,8 @@ export default function FaceRatingSiteHeader({
                 <div
                   key={menu.label}
                   className="relative"
-                  onMouseEnter={() => setMenuOpen(menu.label)}
-                  onMouseLeave={() => setMenuOpen(null)}
+                  onMouseEnter={() => keepMenuOpen(menu.label)}
+                  onMouseLeave={scheduleMenuClose}
                 >
                   <button
                     type="button"
@@ -319,7 +336,15 @@ export default function FaceRatingSiteHeader({
                     />
                   </button>
                   {openMenu ? (
-                    <div role="menu" className={isMega ? MEGA_MENU_CLASS : SIMPLE_MENU_CLASS}>
+                    <div
+                      className={DROPDOWN_WRAP_CLASS}
+                      onMouseEnter={() => keepMenuOpen(menu.label)}
+                      onMouseLeave={scheduleMenuClose}
+                    >
+                      <div
+                        role="menu"
+                        className={isMega ? MEGA_MENU_PANEL_CLASS : SIMPLE_MENU_PANEL_CLASS}
+                      >
                       {groups?.map((group) => (
                         <div key={group.title} className="min-w-0 pr-1">
                           <p className="px-2 pb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
@@ -327,7 +352,7 @@ export default function FaceRatingSiteHeader({
                           </p>
                           <div className="flex flex-col">
                             {group.items.map((item) => (
-                              <Link
+                              <NavRouteLink
                                 key={item.label}
                                 href={item.href}
                                 role="menuitem"
@@ -335,23 +360,23 @@ export default function FaceRatingSiteHeader({
                                 className="whitespace-nowrap rounded-md px-2 py-1.5 text-[13px] font-medium text-neutral-900 hover:bg-violet-50"
                               >
                                 {item.label}
-                              </Link>
+                              </NavRouteLink>
                             ))}
                             {"more" in group && isNavMore(group.more) ? (
-                              <Link
+                              <NavRouteLink
                                 href={group.more.href}
                                 role="menuitem"
                                 onClick={() => setMenuOpen(null)}
                                 className="rounded-md px-2 py-1.5 text-[13px] font-semibold text-violet-600 hover:bg-violet-50"
                               >
                                 {group.more.label}
-                              </Link>
+                              </NavRouteLink>
                             ) : null}
                           </div>
                         </div>
                       ))}
                       {items?.map((item) => (
-                        <Link
+                        <NavRouteLink
                           key={item.label}
                           href={item.href}
                           role="menuitem"
@@ -359,18 +384,19 @@ export default function FaceRatingSiteHeader({
                           className="block whitespace-nowrap px-3.5 py-2 text-sm font-medium text-neutral-900 hover:bg-violet-50"
                         >
                           {item.label}
-                        </Link>
+                        </NavRouteLink>
                       ))}
                       {more ? (
-                        <Link
+                        <NavRouteLink
                           href={more.href}
                           role="menuitem"
                           onClick={() => setMenuOpen(null)}
                           className="block border-t border-neutral-200 px-3.5 py-2 text-sm font-semibold text-violet-600 hover:bg-violet-50"
                         >
                           {more.label}
-                        </Link>
+                        </NavRouteLink>
                       ) : null}
+                      </div>
                     </div>
                   ) : null}
                 </div>
@@ -444,7 +470,7 @@ export default function FaceRatingSiteHeader({
                         {group.title}
                       </p>
                       {group.items.map((item) => (
-                        <Link
+                        <NavRouteLink
                           key={`${menu.label}-${group.title}-${item.label}`}
                           href={item.href}
                           onClick={() => setOpen(false)}
@@ -452,7 +478,7 @@ export default function FaceRatingSiteHeader({
                           style={{ color: V.ink }}
                         >
                           {item.label}
-                        </Link>
+                        </NavRouteLink>
                       ))}
                       {"more" in group && isNavMore(group.more) ? (
                         <Link

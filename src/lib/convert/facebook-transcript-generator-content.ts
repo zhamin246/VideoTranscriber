@@ -34,7 +34,7 @@ export const facebookTranscriptGeneratorSeo = {
   linkPanel: {
     title: "Transcribe a Facebook Video",
     description:
-      "Paste a supported public Facebook video link to generate a transcript. Some videos may not be accessible because of privacy settings, login requirements, regional restrictions, or unavailable content.",
+      "Paste a public Facebook video link. Private, login-only, or restricted videos may not work.",
     placeholder: "Paste a Facebook video URL",
     button: "Generate Transcript",
     helper:

@@ -4,15 +4,15 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
+  AudioLines,
   FileUp,
-  Film,
   GraduationCap,
+  Link2,
   Mic,
-  MonitorPlay,
+  Newspaper,
   ShieldCheck,
   Subtitles,
   Users,
-  UsersRound,
 } from "lucide-react";
 import FaceRatingSiteHeader from "./site-header";
 import FaceRatingSiteFooter from "./site-footer";
@@ -30,7 +30,7 @@ import {
   videoToTextConverterSeo,
 } from "@/lib/convert/video-to-text-converter-content";
 
-const CHIP_ICONS = [FileUp, Film, UsersRound, Subtitles, GraduationCap] as const;
+const CHIP_ICONS = [FileUp, FileUp, Users, Subtitles] as const;
 
 function scrollToHero(e: React.MouseEvent) {
   e.preventDefault();
@@ -63,9 +63,13 @@ export default function VideoToTextConverterPage() {
                 <h1 className="text-[28px] font-bold leading-[1.2] tracking-tight text-[#111827] sm:text-[36px] sm:leading-[46px] md:text-[40px] md:leading-[50px]">
                   {seo.hero.h1}
                 </h1>
-                <p className="mx-auto mt-2 max-w-3xl text-[15px] font-normal leading-6 text-[#4B5563] sm:mt-2 sm:text-lg sm:leading-[27px]">
-                  {seo.hero.subtitle}
-                </p>
+                <div className="mx-auto mt-2 max-w-4xl space-y-0.5 text-[15px] font-normal leading-6 text-[#4B5563] sm:mt-2 sm:text-lg sm:leading-[27px]">
+                  {seo.hero.subtitle.split("\n").map((line) => (
+                    <p key={line} className="text-pretty sm:whitespace-nowrap">
+                      {line}
+                    </p>
+                  ))}
+                </div>
                 <div className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:mt-4 sm:gap-x-5">
                   {seo.hero.chips.map((item, i) => {
                     const Icon = CHIP_ICONS[i] ?? ShieldCheck;
@@ -87,7 +91,7 @@ export default function VideoToTextConverterPage() {
                 </div>
               </div>
               <div className="mt-5 sm:mt-8">
-                <HeroUpload />
+                <HeroUpload defaultTab="upload" />
               </div>
               <MediaFilesStrip />
             </section>
@@ -102,7 +106,11 @@ export default function VideoToTextConverterPage() {
                     {seo.how.title}
                   </h2>
                   <p className="text-lg text-slate-700" style={{ fontSize: 18, lineHeight: "27px" }}>
-                    {seo.how.lead}
+                    {seo.how.lead}{" "}
+                    <Link href="/" className="underline underline-offset-2">
+                      Public links start on the home page
+                    </Link>
+                    .
                   </p>
                 </div>
                 <div className="mx-auto mt-16 grid gap-8 md:grid-cols-3">
@@ -148,10 +156,10 @@ export default function VideoToTextConverterPage() {
                 <div className="flex w-full justify-center">
                   <div className="flex w-full flex-col items-center gap-6 text-center">
                     <h2
-                      className="whitespace-nowrap font-bold"
+                      className="font-bold"
                       style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px", color: "#000" }}
                     >
-                      What you can do with Video to Text
+                      {seo.features.title}
                     </h2>
                     <p
                       className="max-w-3xl text-center text-lg font-normal text-slate-700"
@@ -163,32 +171,7 @@ export default function VideoToTextConverterPage() {
                 </div>
                 <div className="mx-auto mt-16">
                   <div className="grid gap-20">
-                    {[
-                      {
-                        title: "Convert MP4 and other video files to text",
-                        body: "Upload MP4, MOV, WebM, or MKV here. Add speaker labels and language selection when you need them. For a YouTube URL, use the YouTube Transcript Generator. For MP3 or WAV, use Audio to Text.",
-                        href: VIDEO_TO_TEXT_CONVERTER_HREF,
-                        src: "/features/feature-1-convert.webp",
-                        alt: "Transcribe a video recording",
-                        imageRight: true,
-                      },
-                      {
-                        title: "Generate summary and key points",
-                        body: "After transcription, generate AI notes and key points from the same recording. Use chapters, Ask AI, and mind map when you want more structure without replaying the full file.",
-                        href: VIDEO_TO_TEXT_CONVERTER_HREF,
-                        src: "/features/feature-2-summary.webp",
-                        alt: "Generate an AI summary from video",
-                        imageRight: false,
-                      },
-                      {
-                        title: "Export your transcript",
-                        body: "Export as TXT, DOCX, SRT, VTT, or CSV. Copy the text for notes and drafts, or download subtitle files for your editor.",
-                        href: VIDEO_TO_TEXT_CONVERTER_HREF,
-                        src: "/features/feature-3-export.webp",
-                        alt: "Export a transcript",
-                        imageRight: true,
-                      },
-                    ].map((row) => (
+                    {seo.features.rows.map((row) => (
                       <div key={row.title} className="items-center md:grid md:grid-cols-12 md:gap-6">
                         <div
                           className={`mx-auto mb-8 max-w-xl md:col-span-5 md:mb-0 md:w-full md:max-w-none lg:col-span-6 ${row.imageRight ? "md:order-1" : ""}`}
@@ -208,7 +191,7 @@ export default function VideoToTextConverterPage() {
                             <p className="mb-4 text-lg text-gray-600">{row.body}</p>
                             <div className="btnList mt-5 flex gap-4">
                               <Link
-                                href={row.href}
+                                href={VIDEO_TO_TEXT_CONVERTER_HREF}
                                 onClick={scrollToHero}
                                 className="inline-flex items-center gap-2 rounded-full text-white"
                                 style={{
@@ -243,46 +226,15 @@ export default function VideoToTextConverterPage() {
                     className="font-bold"
                     style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px", color: "#000" }}
                   >
-                    Convert video files to text
+                    {seo.usecases.title}
                   </h2>
                   <p className="text-lg text-slate-700" style={{ fontSize: 18, lineHeight: "27px" }}>
-                    Built for files you already have: camera clips, screen recordings, and exported meetings in MP4, MOV, WebM, or MKV.
+                    {seo.usecases.lead}
                   </p>
                 </div>
                 <div className="mx-auto mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {[
-                    {
-                      title: "Exported meeting video",
-                      body: "Upload a Zoom or Teams recording saved as MP4. Speaker labels help you see who said what without scrubbing the file.",
-                      icon: Users,
-                    },
-                    {
-                      title: "Interview video",
-                      body: "Transcribe camera interviews with timestamps so you can quote sources and jump to the exact moment.",
-                      icon: Mic,
-                    },
-                    {
-                      title: "Screen recordings",
-                      body: "Drop a product demo or walkthrough video and get a transcript you can search, edit, and share.",
-                      icon: MonitorPlay,
-                    },
-                    {
-                      title: "Course and lecture video",
-                      body: "Turn recorded class video into study notes. AI summaries and key points help you review hours of material.",
-                      icon: GraduationCap,
-                    },
-                    {
-                      title: "Camera clips",
-                      body: "Upload MOV or MP4 from a phone or camera when you already have the file on disk.",
-                      icon: Film,
-                    },
-                    {
-                      title: "Caption export from a file",
-                      body: "After transcription, download SRT or VTT for an editor. This page starts from a video file, not a YouTube URL.",
-                      icon: Subtitles,
-                    },
-                  ].map((item) => {
-                    const Icon = item.icon;
+                  {seo.usecases.items.map((item, i) => {
+                    const Icon = [Users, GraduationCap, Mic, Newspaper, AudioLines, Link2][i] ?? Users;
                     return (
                       <article
                         key={item.title}
@@ -318,8 +270,11 @@ export default function VideoToTextConverterPage() {
                     className="font-bold"
                     style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px", color: "#000" }}
                   >
-                    What people are saying
+                    {seo.testimonials.title}
                   </h2>
+                  <p className="text-lg text-slate-700" style={{ fontSize: 18, lineHeight: "27px" }}>
+                    {seo.testimonials.lead}
+                  </p>
                 </div>
                 <ReviewMarquee />
               </div>
@@ -373,7 +328,7 @@ export default function VideoToTextConverterPage() {
             </section>
           </main>
 
-          <FaceRatingSiteFooter />
+          <FaceRatingSiteFooter softenToTextAnchors />
         </div>
       </div>
     </div>

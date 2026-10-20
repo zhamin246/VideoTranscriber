@@ -19,13 +19,14 @@ const STATIC_PATHS: {
 }[] = [
   { path: "/", changeFrequency: "weekly", priority: 1 },
   { path: "/audio-to-text-converter", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/video-to-text", changeFrequency: "weekly", priority: 0.9 },
   { path: "/youtube-transcript-generator", changeFrequency: "weekly", priority: 0.9 },
   { path: "/youtube-video-summarizer", changeFrequency: "weekly", priority: 0.9 },
   { path: "/tiktok-transcript-generator", changeFrequency: "weekly", priority: 0.9 },
   { path: "/instagram-transcript-generator", changeFrequency: "weekly", priority: 0.9 },
   { path: "/facebook-transcript-generator", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/x-transcript-generator", changeFrequency: "weekly", priority: 0.9 },
   { path: "/ai-video-summarizer", changeFrequency: "weekly", priority: 0.9 },
-  { path: "/video-transcript-generator", changeFrequency: "weekly", priority: 0.9 },
   { path: "/youtube-subtitle-downloader", changeFrequency: "weekly", priority: 0.9 },
 ];
 

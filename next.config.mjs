@@ -110,23 +110,23 @@ const nextConfig = {
         permanent: true,
       },
       {
-        source: '/video-to-text',
+        source: '/video-transcript-generator',
         destination: '/',
         permanent: true,
       },
       {
-        source: '/:locale/video-to-text',
+        source: '/:locale/video-transcript-generator',
         destination: '/:locale',
         permanent: true,
       },
       {
         source: '/video-to-text-converter',
-        destination: '/',
+        destination: '/video-to-text',
         permanent: true,
       },
       {
         source: '/:locale/video-to-text-converter',
-        destination: '/:locale',
+        destination: '/:locale/video-to-text',
         permanent: true,
       },
       // 规范化带参数的URL

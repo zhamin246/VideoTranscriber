@@ -1,8 +1,8 @@
-import VideoTranscriptGeneratorPage from "@/components/face-rating/video-transcript-generator-page";
+import VideoToTextConverterPage from "@/components/face-rating/video-to-text-converter-page";
 import {
-  VIDEO_TRANSCRIPT_GENERATOR_HREF,
-  videoTranscriptGeneratorSeo,
-} from "@/lib/convert/video-transcript-generator-content";
+  VIDEO_TO_TEXT_CONVERTER_HREF,
+  videoToTextConverterSeo,
+} from "@/lib/convert/video-to-text-converter-content";
 import { defaultLocale } from "@/i18n/locale";
 import { Metadata } from "next";
 
@@ -13,12 +13,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const base = process.env.NEXT_PUBLIC_WEB_URL || "";
-  let canonicalUrl = `${base}${VIDEO_TRANSCRIPT_GENERATOR_HREF}`;
+  let canonicalUrl = `${base}${VIDEO_TO_TEXT_CONVERTER_HREF}`;
   if (locale !== defaultLocale) {
-    canonicalUrl = `${base}/${locale}${VIDEO_TRANSCRIPT_GENERATOR_HREF}`;
+    canonicalUrl = `${base}/${locale}${VIDEO_TO_TEXT_CONVERTER_HREF}`;
   }
 
-  const { title, description } = videoTranscriptGeneratorSeo.meta;
+  const { title, description } = videoToTextConverterSeo.meta;
 
   return {
     title,
@@ -56,10 +56,10 @@ export default function Page() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: videoTranscriptGeneratorSeo.meta.title,
+    name: videoToTextConverterSeo.meta.title,
     applicationCategory: "MultimediaApplication",
     operatingSystem: "Web",
-    description: videoTranscriptGeneratorSeo.meta.description,
+    description: videoToTextConverterSeo.meta.description,
     offers: {
       "@type": "Offer",
       price: "0",
@@ -71,7 +71,7 @@ export default function Page() {
   const faqLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: videoTranscriptGeneratorSeo.faq.items.map((item) => ({
+    mainEntity: videoToTextConverterSeo.faq.items.map((item) => ({
       "@type": "Question",
       name: item.q,
       acceptedAnswer: {
@@ -91,7 +91,7 @@ export default function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
       />
-      <VideoTranscriptGeneratorPage />
+      <VideoToTextConverterPage />
     </>
   );
 }

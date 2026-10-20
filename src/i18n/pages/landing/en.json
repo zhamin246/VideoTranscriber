@@ -19,8 +19,8 @@
           "style": "text-lg text-foreground hover:text-foreground/80 transition-colors"
         },
         {
-          "title": "Video Transcript Generator",
-          "url": "/video-transcript-generator",
+          "title": "Video to Text",
+          "url": "/video-to-text",
           "icon": "RiVideoLine",
           "style": "text-lg text-foreground hover:text-foreground/80 transition-colors"
         },
@@ -631,7 +631,7 @@
         {
           "title": "Transcribe",
           "children": [
-            { "title": "Video Transcript Generator", "url": "/video-transcript-generator" },
+            { "title": "Video to Text", "url": "/video-to-text" },
             { "title": "YouTube Transcript Generator", "url": "/youtube-transcript-generator" },
             { "title": "Audio to text", "url": "/audio-to-text-converter" }
           ]

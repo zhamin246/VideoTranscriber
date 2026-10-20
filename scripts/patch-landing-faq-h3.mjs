@@ -8,7 +8,6 @@ const files = [
   "src/components/face-rating/facebook-transcript-generator-page.tsx",
   "src/components/face-rating/ai-video-summarizer-page.tsx",
   "src/components/face-rating/youtube-subtitle-downloader-page.tsx",
-  "src/components/face-rating/video-transcript-generator-page.tsx",
   "src/components/face-rating/audio-to-text-converter-page.tsx",
   "src/components/face-rating/video-to-text-converter-page.tsx",
 ];
