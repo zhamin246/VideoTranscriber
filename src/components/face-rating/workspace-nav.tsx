@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { useSignedIn } from "@/hooks/useSignedIn";
 import { CONVERT_HREF } from "./data";
-import { isToTextSensitivePath } from "./nav-labels";
 import { NavRouteLink } from "./nav-route-link";
 import { PlatformMark } from "./platform-mark";
 import {
@@ -246,7 +245,6 @@ function CurrentPlanCard({
 
 export default function WorkspaceNav() {
   const pathname = usePathname() || "";
-  const hideHomeKeyword = isToTextSensitivePath(pathname);
   const onHome = pathname === "/" || pathname === "";
   const onAssets = pathname.includes("/my-assets");
   const onPricing = pathname.includes("/pricing");
@@ -301,10 +299,10 @@ export default function WorkspaceNav() {
             className={`flex min-w-0 items-center rounded-xl py-1 ${
               collapsed ? "justify-center" : "min-w-0 flex-1 gap-2"
             }`}
-            aria-label={hideHomeKeyword ? "Home" : "video transcriber — home"}
+            aria-label="video transcriber — home"
           >
             <BrandMark />
-            {hideHomeKeyword || collapsed ? null : (
+            {collapsed ? null : (
               <span
                 className="truncate whitespace-nowrap"
                 style={{

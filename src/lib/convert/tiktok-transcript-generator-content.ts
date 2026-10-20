@@ -86,11 +86,11 @@ export const tiktokTranscriptGeneratorSeo = {
       },
       {
         title: "Tutorials",
-        body: "Turn a public how-to into searchable words. Export SRT or VTT when you need a captions file. Steps that exist only as on-screen type will not appear.",
+        body: "Turn a public how-to into searchable words. For a local MP4 instead of a TikTok link, start with [[Video to Text|/video-to-text]]. Export SRT or VTT when you need a captions file. Steps that exist only as on-screen type will not appear.",
       },
       {
         title: "Interviews and duets",
-        body: "Run TikTok transcript on a public interview-style clip. Optional speaker labels help when more than one person talks and the model can tell them apart.",
+        body: "Run TikTok transcript on a public interview-style clip. For the same conversation on [[X Transcript Generator|/x-transcript-generator]], paste the post URL on that page instead. Optional speaker labels help when more than one person talks and the model can tell them apart.",
       },
       {
         title: "Show notes and blogs",
@@ -102,7 +102,7 @@ export const tiktokTranscriptGeneratorSeo = {
       },
       {
         title: "Captions workflow",
-        body: "Export SRT or VTT after TikTok transcript. Load those files in an editor. We do not import TikTok’s own auto-caption file.",
+        body: "Export SRT or VTT after TikTok transcript. Load those files in an editor. For YouTube caption tracks, the [[YouTube Subtitle Downloader|/youtube-subtitle-downloader]] accepts a public watch link.",
       },
     ],
   },

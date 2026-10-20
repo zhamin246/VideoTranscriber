@@ -22,7 +22,6 @@ import MediaFilesStrip from "./media-files-strip";
 import WorkspaceNav from "./workspace-nav";
 import PromoBanner from "./promo-banner";
 import ReviewMarquee from "./review-marquee";
-import MoreTools from "./more-tools";
 import ScrollCta from "./scroll-cta";
 import { LandingFaqSection } from "./landing-faq-section";
 import { V } from "./visual";
@@ -281,7 +280,6 @@ export default function FacebookTranscriptGeneratorPage() {
 
             <LandingFaqSection title={seo.faq.title} items={seo.faq.items} />
 
-            <MoreTools />
 
             <section className="ac-section-wash overflow-hidden">
               <div className="overflow-hidden text-center" style={{ backgroundColor: "#8882F5" }}>

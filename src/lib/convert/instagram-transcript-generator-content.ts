@@ -83,7 +83,7 @@ export const instagramTranscriptGeneratorSeo = {
     items: [
       {
         title: "Hooks and talking-head Reels",
-        body: "Paste a public talking-head Reel, then get Instagram transcript of what was said. Use those words in notes — we do not score virality.",
+        body: "Paste a public talking-head Reel, then get Instagram transcript of what was said. When the clip lives on Facebook instead, use [[Facebook Transcript Generator|/facebook-transcript-generator]] with the public post URL.",
       },
       {
         title: "Tutorials",
@@ -95,7 +95,7 @@ export const instagramTranscriptGeneratorSeo = {
       },
       {
         title: "Show notes and blogs",
-        body: "Draft a caption or blog line from Instagram transcript. Copy TXT or DOCX into the tool you already use. You still write the publish-ready post.",
+        body: "Draft a caption or blog line from Instagram transcript. For files you already saved, [[Video to Text|/video-to-text]] handles MP4 uploads in the same workspace flow. Copy TXT or DOCX into the tool you already use. You still write the publish-ready post.",
       },
       {
         title: "Team research",

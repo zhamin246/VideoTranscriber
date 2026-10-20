@@ -45,7 +45,7 @@ export const content = {
           {
             title: "Audio Transcriber",
             items: [
-              { label: "Audio transcript", href: AUDIO_TO_TEXT_CONVERTER_HREF },
+              { label: "Audio to Text", href: AUDIO_TO_TEXT_CONVERTER_HREF },
             ],
           },
           {

@@ -22,7 +22,7 @@ import MediaFilesStrip from "./media-files-strip";
 import WorkspaceNav from "./workspace-nav";
 import PromoBanner from "./promo-banner";
 import ReviewMarquee from "./review-marquee";
-import MoreTools from "./more-tools";
+import { BodyWithInternalLinks } from "./body-with-internal-links";
 import ScrollCta from "./scroll-cta";
 import { LandingFaqSection } from "./landing-faq-section";
 import { V } from "./visual";
@@ -242,7 +242,7 @@ export default function TiktokTranscriptGeneratorPage() {
                           </span>
                           <h3 className="text-[18px] font-bold leading-snug text-black">{item.title}</h3>
                         </div>
-                        <p className="mt-4 text-[15px] leading-7 text-slate-600">{item.body}</p>
+                        <BodyWithInternalLinks text={item.body} className="mt-4 text-[15px] leading-7 text-slate-600" />
                       </article>
                     );
                   })}
@@ -272,7 +272,6 @@ export default function TiktokTranscriptGeneratorPage() {
 
             <LandingFaqSection title={seo.faq.title} items={seo.faq.items} />
 
-            <MoreTools />
 
             <section className="ac-section-wash overflow-hidden">
               <div className="overflow-hidden text-center" style={{ backgroundColor: "#8882F5" }}>

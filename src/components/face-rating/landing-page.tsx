@@ -23,7 +23,7 @@ import MediaFilesStrip from "./media-files-strip";
 import WorkspaceNav from "./workspace-nav";
 import PromoBanner from "./promo-banner";
 import ReviewMarquee from "./review-marquee";
-import MoreTools from "./more-tools";
+import { BodyWithInternalLinks } from "./body-with-internal-links";
 import ScrollCta from "./scroll-cta";
 import { content, CONVERT_HREF } from "./data";
 import { AUDIO_TO_TEXT_CONVERTER_HREF } from "@/lib/convert/audio-to-text-converter-content";
@@ -360,7 +360,7 @@ export default function FaceRatingLandingPage() {
                     </span>
                     <h3 className="text-[24px] font-semibold leading-[30px] text-black">{step.title}</h3>
                   </div>
-                  <p className="mt-3 text-lg text-gray-600">{step.body}</p>
+                  <BodyWithInternalLinks text={step.body} className="mt-3 text-lg text-gray-600" />
                 </article>
               ))}
             </div>
@@ -401,7 +401,7 @@ export default function FaceRatingLandingPage() {
                   },
                   {
                     title: "Turn Transcripts into AI Notes",
-                    body: "Generate summaries, key points, study notes, and chapters from your transcript. Use Ask AI to explore the content, or create a mind map to see how ideas connect, where these features are available.",
+                    body: "Generate summaries, key points, study notes, and chapters from your transcript, or open the [[AI Video Summarizer|/ai-video-summarizer]] for a dedicated summary pass. Use Ask AI to explore the content, or create a mind map to see how ideas connect, where these features are available.",
                     href: CONVERT_HREF,
                     src: "/features/feature-2-summary.webp",
                     alt: "AI notes, summaries, and chapters from a transcript",
@@ -432,7 +432,7 @@ export default function FaceRatingLandingPage() {
                     <div className="mx-auto max-w-xl md:col-span-7 md:w-full md:max-w-none lg:col-span-6">
                       <div className={row.imageRight ? "md:pr-4 lg:pr-12 xl:pr-16" : "md:pl-4 lg:pl-12 xl:pl-16"}>
                         <h3 className="mb-3 text-[24px] font-semibold leading-[30px] text-black">{row.title}</h3>
-                        <p className="mb-4 text-lg text-gray-600">{row.body}</p>
+                        <BodyWithInternalLinks text={row.body} className="mb-4 text-lg text-gray-600" />
                         <div className="btnList mt-5 flex gap-4">
                           <Link
                             href={row.href}
@@ -504,7 +504,7 @@ export default function FaceRatingLandingPage() {
                 },
                 {
                   title: "YouTube and Online Videos",
-                  body: "Paste a supported public YouTube link or upload a video file to create a transcript. Use the text for research, content review, or subtitle preparation. Private, restricted, or inaccessible videos may not be available for processing.",
+                  body: "Paste a supported public YouTube link or upload a video file to create a transcript. When you want a summary without rewatching, open the [[YouTube Video Summarizer|/youtube-video-summarizer]] for that URL. Private, restricted, or inaccessible videos may not be available for processing.",
                   icon: Youtube,
                 },
               ].map((item) => {
@@ -523,7 +523,7 @@ export default function FaceRatingLandingPage() {
                       </span>
                       <h3 className="text-[18px] font-bold leading-snug text-black">{item.title}</h3>
                     </div>
-                    <p className="mt-4 text-[15px] leading-7 text-slate-600">{item.body}</p>
+                    <BodyWithInternalLinks text={item.body} className="mt-4 text-[15px] leading-7 text-slate-600" />
                   </article>
                 );
               })}
@@ -555,8 +555,6 @@ export default function FaceRatingLandingPage() {
         </section>
 
         <FaceRatingFaq />
-
-        <MoreTools />
 
         <section className="ac-section-wash overflow-hidden">
           <div className="overflow-hidden text-center" style={{ backgroundColor: "#8882F5" }}>

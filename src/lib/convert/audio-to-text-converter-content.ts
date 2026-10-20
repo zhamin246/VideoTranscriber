@@ -54,7 +54,7 @@ export const audioToTextConverterSeo = {
     rows: [
       {
         title: "Convert MP3, WAV, and M4A to text",
-        body: "Drop the audio file on this audio to text converter. Add speaker labels and language selection when you need them. For MP4 video, start from the homepage upload. For a YouTube URL, use the YouTube Transcript Generator.",
+        body: "Drop the audio file on this audio to text converter. Add speaker labels and language selection when you need them. For Facebook or X clips, try the [[Facebook Transcript Generator|/facebook-transcript-generator]] or [[X Transcript Generator|/x-transcript-generator]].",
         href: AUDIO_TO_TEXT_CONVERTER_HREF,
         src: "https://cdn.videotranscriber.pro/videotranscriber/landing/features/audio-feature-1-convert.webp",
         alt: "Upload an audio file to transcribe",

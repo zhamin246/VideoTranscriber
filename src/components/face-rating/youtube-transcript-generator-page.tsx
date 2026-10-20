@@ -23,7 +23,7 @@ import MediaFilesStrip from "./media-files-strip";
 import WorkspaceNav from "./workspace-nav";
 import PromoBanner from "./promo-banner";
 import ReviewMarquee from "./review-marquee";
-import MoreTools from "./more-tools";
+import { BodyWithInternalLinks } from "./body-with-internal-links";
 import ScrollCta from "./scroll-cta";
 import { LandingFaqSection } from "./landing-faq-section";
 import { V } from "./visual";
@@ -182,7 +182,7 @@ export default function YoutubeTranscriptGeneratorPage() {
                         <div className="mx-auto max-w-xl md:col-span-7 md:w-full md:max-w-none lg:col-span-6">
                           <div className={row.imageRight ? "md:pr-4 lg:pr-12 xl:pr-16" : "md:pl-4 lg:pl-12 xl:pl-16"}>
                             <h3 className="mb-3 text-[24px] font-semibold leading-[30px] text-black">{row.title}</h3>
-                            <p className="mb-4 text-lg text-gray-600">{row.body}</p>
+                            <BodyWithInternalLinks text={row.body} className="mb-4 text-lg text-gray-600" />
                             <div className="btnList mt-5 flex gap-4">
                               <Link
                                 href={YOUTUBE_TRANSCRIPT_GENERATOR_HREF}
@@ -243,7 +243,7 @@ export default function YoutubeTranscriptGeneratorPage() {
                           </span>
                           <h3 className="text-[18px] font-bold leading-snug text-black">{item.title}</h3>
                         </div>
-                        <p className="mt-4 text-[15px] leading-7 text-slate-600">{item.body}</p>
+                        <BodyWithInternalLinks text={item.body} className="mt-4 text-[15px] leading-7 text-slate-600" />
                       </article>
                     );
                   })}
@@ -273,7 +273,6 @@ export default function YoutubeTranscriptGeneratorPage() {
 
             <LandingFaqSection title={seo.faq.title} items={seo.faq.items} />
 
-            <MoreTools />
 
             <section className="ac-section-wash overflow-hidden">
               <div className="overflow-hidden text-center" style={{ backgroundColor: "#8882F5" }}>
