@@ -282,7 +282,18 @@ export default function FaceRatingSiteHeader({
                 <img src="/favicon.svg" alt="" width={32} height={32} className="h-8 w-8 object-contain" />
               </span>
               {hideBrandOnDesktop ? (
-                <span className="sr-only">{hideHomeKeyword ? "Home" : "Video Transcriber"}</span>
+                <span
+                  className="truncate whitespace-nowrap md:sr-only"
+                  style={{
+                    fontSize: 17,
+                    fontWeight: 700,
+                    lineHeight: "24px",
+                    letterSpacing: "-0.02em",
+                  }}
+                >
+                  <span className="text-black">video </span>
+                  <span className="text-[#5270FF]">transcriber</span>
+                </span>
               ) : (
                 <span className="text-lg font-bold tracking-tight text-[#5270FF]">
                   Video Transcriber

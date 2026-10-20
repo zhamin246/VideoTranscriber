@@ -23,10 +23,8 @@ import MediaFilesStrip from "./media-files-strip";
 import WorkspaceNav from "./workspace-nav";
 import PromoBanner from "./promo-banner";
 import ReviewMarquee from "./review-marquee";
-import { BodyWithInternalLinks } from "./body-with-internal-links";
 import ScrollCta from "./scroll-cta";
 import { content, CONVERT_HREF } from "./data";
-import { AUDIO_TO_TEXT_CONVERTER_HREF } from "@/lib/convert/audio-to-text-converter-content";
 import { YOUTUBE_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/youtube-transcript-generator-content";
 import { V } from "./visual";
 import { useCaseAsset } from "@/lib/convert/use-case-assets";
@@ -125,7 +123,7 @@ export default function FaceRatingLandingPage() {
 
       <div className="flex min-h-0">
         <WorkspaceNav />
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1 pb-[4.75rem] md:pb-0">
       <FaceRatingSiteHeader hideBrandOnDesktop />
 
       <main>
@@ -134,9 +132,18 @@ export default function FaceRatingLandingPage() {
             <h1 className="text-[28px] font-bold leading-[1.2] tracking-tight text-[#111827] sm:text-[36px] sm:leading-[46px] md:text-[40px] md:leading-[50px]">
               Free Online Video Transcriber
             </h1>
-            <div className="mx-auto mt-2 max-w-3xl space-y-1 text-[15px] font-normal leading-6 text-[#4B5563] sm:mt-2 sm:text-lg sm:leading-[27px]">
-              {hero.description.split("\n").map((line) => (
-                <p key={line}>{line}</p>
+            <div className="mx-auto mt-2 w-full max-w-3xl space-y-0 px-0.5 font-normal text-[#4B5563] max-sm:text-[11px] max-sm:leading-[14px] max-sm:tracking-[-0.02em] sm:mt-2 sm:space-y-1 sm:px-0 sm:text-lg sm:leading-[27px] sm:tracking-normal">
+              {hero.description.split("\n").map((line, i) => (
+                <p
+                  key={line}
+                  className={
+                    i === 0
+                      ? "max-sm:whitespace-nowrap sm:whitespace-normal"
+                      : "max-sm:whitespace-nowrap max-sm:text-[10px] max-sm:leading-[13px] sm:whitespace-normal sm:text-lg sm:leading-[27px]"
+                  }
+                >
+                  {line}
+                </p>
               ))}
             </div>
             <div className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:mt-4 sm:gap-x-5">
@@ -173,10 +180,6 @@ export default function FaceRatingLandingPage() {
           </div>
           <p className="mx-auto mt-6 flex max-w-3xl flex-wrap items-center justify-center gap-2 px-4 text-sm text-slate-600">
             <span>Looking for a specific start?</span>
-            <Link href={AUDIO_TO_TEXT_CONVERTER_HREF} className="font-medium text-[#6F68F0] underline-offset-2 hover:underline">
-              Audio files
-            </Link>
-            <span aria-hidden>·</span>
             <Link href={YOUTUBE_TRANSCRIPT_GENERATOR_HREF} className="font-medium text-[#6F68F0] underline-offset-2 hover:underline">
               YouTube links
             </Link>
@@ -360,7 +363,7 @@ export default function FaceRatingLandingPage() {
                     </span>
                     <h3 className="text-[24px] font-semibold leading-[30px] text-black">{step.title}</h3>
                   </div>
-                  <BodyWithInternalLinks text={step.body} className="mt-3 text-lg text-gray-600" />
+                  <p className="mt-3 text-lg text-gray-600">{step.body}</p>
                 </article>
               ))}
             </div>
@@ -401,7 +404,7 @@ export default function FaceRatingLandingPage() {
                   },
                   {
                     title: "Turn Transcripts into AI Notes",
-                    body: "Generate summaries, key points, study notes, and chapters from your transcript, or open the [[AI Video Summarizer|/ai-video-summarizer]] for a dedicated summary pass. Use Ask AI to explore the content, or create a mind map to see how ideas connect, where these features are available.",
+                    body: "Generate summaries, key points, study notes, and chapters from your transcript. Use Ask AI to explore the content, or create a mind map to see how ideas connect, where these features are available.",
                     href: CONVERT_HREF,
                     src: "/features/feature-2-summary.webp",
                     alt: "AI notes, summaries, and chapters from a transcript",
@@ -432,7 +435,7 @@ export default function FaceRatingLandingPage() {
                     <div className="mx-auto max-w-xl md:col-span-7 md:w-full md:max-w-none lg:col-span-6">
                       <div className={row.imageRight ? "md:pr-4 lg:pr-12 xl:pr-16" : "md:pl-4 lg:pl-12 xl:pl-16"}>
                         <h3 className="mb-3 text-[24px] font-semibold leading-[30px] text-black">{row.title}</h3>
-                        <BodyWithInternalLinks text={row.body} className="mb-4 text-lg text-gray-600" />
+                        <p className="mb-4 text-lg text-gray-600">{row.body}</p>
                         <div className="btnList mt-5 flex gap-4">
                           <Link
                             href={row.href}
@@ -504,7 +507,7 @@ export default function FaceRatingLandingPage() {
                 },
                 {
                   title: "YouTube and Online Videos",
-                  body: "Paste a supported public YouTube link or upload a video file to create a transcript. When you want a summary without rewatching, open the [[YouTube Video Summarizer|/youtube-video-summarizer]] for that URL. Private, restricted, or inaccessible videos may not be available for processing.",
+                  body: "Paste a supported public YouTube link or upload a video file to create a transcript. Use the text for research, content review, or subtitle preparation. Private, restricted, or inaccessible videos may not be available for processing.",
                   icon: Youtube,
                 },
               ].map((item) => {
@@ -523,7 +526,7 @@ export default function FaceRatingLandingPage() {
                       </span>
                       <h3 className="text-[18px] font-bold leading-snug text-black">{item.title}</h3>
                     </div>
-                    <BodyWithInternalLinks text={item.body} className="mt-4 text-[15px] leading-7 text-slate-600" />
+                    <p className="mt-4 text-[15px] leading-7 text-slate-600">{item.body}</p>
                   </article>
                 );
               })}
@@ -573,7 +576,7 @@ export default function FaceRatingLandingPage() {
               </p>
               <div className="mt-4 flex justify-center">
                 <Link
-                  href={CONVERT_HREF}
+                  href="#transcribe"
                   className="inline-flex items-center gap-2"
                   style={{
                     height: 48,

@@ -280,8 +280,43 @@ export default function WorkspaceNav() {
     setUpgradeOpen(true);
   };
 
+  const mobileToolLinks = [
+    { href: CONVERT_HREF, label: "Transcribe home" },
+    ...WORKSPACE_TOOL_NAV.map((item) => ({ href: item.href, label: item.label })),
+    { href: "/my-assets", label: "My Assets" },
+  ];
+
   return (
     <>
+      <nav
+        aria-label="Tool pages"
+        className="fixed bottom-0 left-0 right-0 z-[58] border-t border-[#E8EAF0] bg-[#F9F9FC] md:hidden"
+      >
+        <ul className="flex gap-2 overflow-x-auto overscroll-x-contain px-3 py-2.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {mobileToolLinks.map((item) => {
+            const active =
+              item.href === CONVERT_HREF
+                ? onHome
+                : item.href === "/my-assets"
+                  ? onAssets
+                  : isToolNavActive(pathname, item.href);
+            return (
+              <li key={item.href} className="shrink-0">
+                <Link
+                  href={item.href}
+                  className={`inline-flex min-h-[40px] items-center whitespace-nowrap rounded-xl px-3 py-2 text-[13px] font-semibold leading-none transition-colors ${
+                    active
+                      ? "bg-[#E8EEFC] text-[#5270FF]"
+                      : "bg-white text-[#334155] shadow-sm ring-1 ring-[#E8EAF0] hover:text-[#5270FF]"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
       <aside
         className={`group/nav sticky top-0 z-[60] hidden h-svh shrink-0 flex-col self-start border-r border-[#EAEAEA] bg-[#F9F9FC] transition-[width] duration-300 ease-in-out md:flex ${
           collapsed ? "w-14" : "w-[min(100vw,320px)]"

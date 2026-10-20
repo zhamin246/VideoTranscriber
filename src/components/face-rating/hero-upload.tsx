@@ -1197,7 +1197,7 @@ export default function HeroUpload({
   ) : null;
 
   return (
-    <div className="relative mx-auto w-full max-w-[1200px]">
+    <div id="transcribe" className="relative mx-auto w-full max-w-[1200px] scroll-mt-24">
       <input
         ref={inputRef}
         type="file"

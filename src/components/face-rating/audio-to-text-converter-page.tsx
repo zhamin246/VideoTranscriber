@@ -20,7 +20,7 @@ import MediaFilesStrip from "./media-files-strip";
 import WorkspaceNav from "./workspace-nav";
 import PromoBanner from "./promo-banner";
 import ReviewMarquee from "./review-marquee";
-import { BodyWithInternalLinks } from "./body-with-internal-links";
+import RelatedTools from "./related-tools";
 import ScrollCta from "./scroll-cta";
 import { LandingFaqSection } from "./landing-faq-section";
 import { V } from "./visual";
@@ -62,7 +62,7 @@ export default function AudioToTextConverterPage() {
 
       <div className="flex min-h-0">
         <WorkspaceNav />
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1 pb-[4.75rem] md:pb-0">
           <FaceRatingSiteHeader hideBrandOnDesktop />
 
           <main>
@@ -188,7 +188,7 @@ export default function AudioToTextConverterPage() {
                         <div className="mx-auto max-w-xl md:col-span-7 md:w-full md:max-w-none lg:col-span-6">
                           <div className={row.imageRight ? "md:pr-4 lg:pr-12 xl:pr-16" : "md:pl-4 lg:pl-12 xl:pl-16"}>
                             <h3 className="mb-3 text-[24px] font-semibold leading-[30px] text-black">{row.title}</h3>
-                            <BodyWithInternalLinks text={row.body} className="mb-4 text-lg text-gray-600" />
+                            <p className="mb-4 text-lg text-gray-600">{row.body}</p>
                             <div className="btnList mt-5 flex gap-4">
                               <Link
                                 href={row.href}
@@ -277,6 +277,8 @@ export default function AudioToTextConverterPage() {
               </div>
             </section>
 
+            <RelatedTools currentPath="/audio-to-text-converter" />
+
             <LandingFaqSection title={seo.faq.title} items={seo.faq.items} />
 
 
@@ -297,7 +299,7 @@ export default function AudioToTextConverterPage() {
                   </p>
                   <div className="mt-4 flex justify-center">
                     <Link
-                      href={AUDIO_TO_TEXT_CONVERTER_HREF}
+                      href="#transcribe"
                       onClick={scrollToHero}
                       className="inline-flex items-center gap-2"
                       style={{

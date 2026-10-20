@@ -24,6 +24,7 @@ import PromoBanner from "./promo-banner";
 import ReviewMarquee from "./review-marquee";
 import ScrollCta from "./scroll-cta";
 import { LandingFaqSection } from "./landing-faq-section";
+import RelatedTools from "./related-tools";
 import { V } from "./visual";
 import {
   FACEBOOK_TRANSCRIPT_GENERATOR_HREF,
@@ -54,7 +55,7 @@ export default function FacebookTranscriptGeneratorPage() {
 
       <div className="flex min-h-0">
         <WorkspaceNav />
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1 pb-[4.75rem] md:pb-0">
           <FaceRatingSiteHeader hideBrandOnDesktop />
 
           <main>
@@ -189,7 +190,7 @@ export default function FacebookTranscriptGeneratorPage() {
                             <p className="mb-4 text-lg text-gray-600">{row.body}</p>
                             <div className="btnList mt-5 flex gap-4">
                               <Link
-                                href={FACEBOOK_TRANSCRIPT_GENERATOR_HREF}
+                                href="#transcribe"
                                 onClick={scrollToHero}
                                 className="inline-flex items-center gap-2 rounded-full text-white"
                                 style={{
@@ -278,6 +279,8 @@ export default function FacebookTranscriptGeneratorPage() {
               </div>
             </section>
 
+            <RelatedTools currentPath="/facebook-transcript-generator" />
+
             <LandingFaqSection title={seo.faq.title} items={seo.faq.items} />
 
 
@@ -298,7 +301,7 @@ export default function FacebookTranscriptGeneratorPage() {
                   </p>
                   <div className="mt-4 flex justify-center">
                     <Link
-                      href={FACEBOOK_TRANSCRIPT_GENERATOR_HREF}
+                      href="#transcribe"
                       onClick={scrollToHero}
                       className="inline-flex items-center gap-2"
                       style={{

@@ -23,14 +23,11 @@ import MediaFilesStrip from "./media-files-strip";
 import WorkspaceNav from "./workspace-nav";
 import PromoBanner from "./promo-banner";
 import ReviewMarquee from "./review-marquee";
-import { BodyWithInternalLinks } from "./body-with-internal-links";
+import RelatedTools from "./related-tools";
 import ScrollCta from "./scroll-cta";
 import { LandingFaqSection } from "./landing-faq-section";
 import { V } from "./visual";
-import {
-  YOUTUBE_TRANSCRIPT_GENERATOR_HREF,
-  youtubeTranscriptGeneratorSeo,
-} from "@/lib/convert/youtube-transcript-generator-content";
+import { youtubeTranscriptGeneratorSeo } from "@/lib/convert/youtube-transcript-generator-content";
 
 const CHIP_ICONS = [Link2, UsersRound, Subtitles, AudioLines, FileUp] as const;
 
@@ -56,7 +53,7 @@ export default function YoutubeTranscriptGeneratorPage() {
 
       <div className="flex min-h-0">
         <WorkspaceNav />
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1 pb-[4.75rem] md:pb-0">
           <FaceRatingSiteHeader hideBrandOnDesktop />
 
           <main>
@@ -182,10 +179,10 @@ export default function YoutubeTranscriptGeneratorPage() {
                         <div className="mx-auto max-w-xl md:col-span-7 md:w-full md:max-w-none lg:col-span-6">
                           <div className={row.imageRight ? "md:pr-4 lg:pr-12 xl:pr-16" : "md:pl-4 lg:pl-12 xl:pl-16"}>
                             <h3 className="mb-3 text-[24px] font-semibold leading-[30px] text-black">{row.title}</h3>
-                            <BodyWithInternalLinks text={row.body} className="mb-4 text-lg text-gray-600" />
+                            <p className="mb-4 text-lg text-gray-600">{row.body}</p>
                             <div className="btnList mt-5 flex gap-4">
                               <Link
-                                href={YOUTUBE_TRANSCRIPT_GENERATOR_HREF}
+                                href="#transcribe"
                                 onClick={scrollToHero}
                                 className="inline-flex items-center gap-2 rounded-full text-white"
                                 style={{
@@ -243,7 +240,7 @@ export default function YoutubeTranscriptGeneratorPage() {
                           </span>
                           <h3 className="text-[18px] font-bold leading-snug text-black">{item.title}</h3>
                         </div>
-                        <BodyWithInternalLinks text={item.body} className="mt-4 text-[15px] leading-7 text-slate-600" />
+                        <p className="mt-4 text-[15px] leading-7 text-slate-600">{item.body}</p>
                       </article>
                     );
                   })}
@@ -271,6 +268,8 @@ export default function YoutubeTranscriptGeneratorPage() {
               </div>
             </section>
 
+            <RelatedTools currentPath="/youtube-transcript-generator" />
+
             <LandingFaqSection title={seo.faq.title} items={seo.faq.items} />
 
 
@@ -291,7 +290,7 @@ export default function YoutubeTranscriptGeneratorPage() {
                   </p>
                   <div className="mt-4 flex justify-center">
                     <Link
-                      href={YOUTUBE_TRANSCRIPT_GENERATOR_HREF}
+                      href="#transcribe"
                       onClick={scrollToHero}
                       className="inline-flex items-center gap-2"
                       style={{

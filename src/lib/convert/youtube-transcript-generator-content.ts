@@ -61,14 +61,14 @@ export const youtubeTranscriptGeneratorSeo = {
       },
       {
         title: "Generate summary and key points",
-        body: "After YouTube to transcript finishes, generate AI notes and key points from the same video. For a dedicated summary pass on any transcript, use the [[AI Video Summarizer|/ai-video-summarizer]] next.",
+        body: "After YouTube to transcript finishes, generate AI notes and key points from the same video. Use chapters, Ask AI, and mind map when you want more structure without replaying the full runtime.",
         src: "https://cdn.videotranscriber.pro/videotranscriber/landing/features/youtube-feature-2-summary.webp",
         alt: "Generate an AI summary from a YouTube transcript",
         imageRight: false,
       },
       {
         title: "Export your transcript",
-        body: "Export as TXT, DOCX, SRT, VTT, or CSV. Copy the YouTube transcript for notes and drafts, or open the [[YouTube Subtitle Downloader|/youtube-subtitle-downloader]] when caption tracks are all you need. PDF, JSON, and translation are not in the current export set.",
+        body: "Export as TXT, DOCX, SRT, VTT, or CSV. Copy the YouTube transcript for notes and drafts, or download subtitle files for an editor. PDF, JSON, and translation are not in the current export set.",
         src: "https://cdn.videotranscriber.pro/videotranscriber/landing/features/youtube-feature-3-export.webp",
         alt: "Export a YouTube transcript",
         imageRight: true,
@@ -93,7 +93,7 @@ export const youtubeTranscriptGeneratorSeo = {
       },
       {
         title: "Show notes & blogs",
-        body: "Draft show notes and posts from the YouTube transcript, or run the [[YouTube Video Summarizer|/youtube-video-summarizer]] when a short summary is enough. Copy TXT or DOCX into the doc tool you already use. YouTube to transcript gives you the spoken words; you still write the publish-ready post.",
+        body: "Draft show notes and posts from the YouTube transcript. Copy TXT or DOCX into the doc tool you already use. YouTube to transcript gives you the spoken words; you still write the publish-ready post.",
       },
       {
         title: "Team research",

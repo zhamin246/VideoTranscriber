@@ -22,7 +22,7 @@ import MediaFilesStrip from "./media-files-strip";
 import WorkspaceNav from "./workspace-nav";
 import PromoBanner from "./promo-banner";
 import ReviewMarquee from "./review-marquee";
-import { BodyWithInternalLinks } from "./body-with-internal-links";
+import RelatedTools from "./related-tools";
 import ScrollCta from "./scroll-cta";
 import { LandingFaqSection } from "./landing-faq-section";
 import { V } from "./visual";
@@ -55,7 +55,7 @@ export default function TiktokTranscriptGeneratorPage() {
 
       <div className="flex min-h-0">
         <WorkspaceNav />
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1 pb-[4.75rem] md:pb-0">
           <FaceRatingSiteHeader hideBrandOnDesktop />
 
           <main>
@@ -184,7 +184,7 @@ export default function TiktokTranscriptGeneratorPage() {
                             <p className="mb-4 text-lg text-gray-600">{row.body}</p>
                             <div className="btnList mt-5 flex gap-4">
                               <Link
-                                href={TIKTOK_TRANSCRIPT_GENERATOR_HREF}
+                                href="#transcribe"
                                 onClick={scrollToHero}
                                 className="inline-flex items-center gap-2 rounded-full text-white"
                                 style={{
@@ -242,7 +242,7 @@ export default function TiktokTranscriptGeneratorPage() {
                           </span>
                           <h3 className="text-[18px] font-bold leading-snug text-black">{item.title}</h3>
                         </div>
-                        <BodyWithInternalLinks text={item.body} className="mt-4 text-[15px] leading-7 text-slate-600" />
+                        <p className="mt-4 text-[15px] leading-7 text-slate-600">{item.body}</p>
                       </article>
                     );
                   })}
@@ -270,6 +270,8 @@ export default function TiktokTranscriptGeneratorPage() {
               </div>
             </section>
 
+            <RelatedTools currentPath="/tiktok-transcript-generator" />
+
             <LandingFaqSection title={seo.faq.title} items={seo.faq.items} />
 
 
@@ -290,7 +292,7 @@ export default function TiktokTranscriptGeneratorPage() {
                   </p>
                   <div className="mt-4 flex justify-center">
                     <Link
-                      href={TIKTOK_TRANSCRIPT_GENERATOR_HREF}
+                      href="#transcribe"
                       onClick={scrollToHero}
                       className="inline-flex items-center gap-2"
                       style={{

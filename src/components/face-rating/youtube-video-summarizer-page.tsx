@@ -24,6 +24,7 @@ import WorkspaceNav from "./workspace-nav";
 import PromoBanner from "./promo-banner";
 import ScrollCta from "./scroll-cta";
 import { LandingFaqSection } from "./landing-faq-section";
+import RelatedTools from "./related-tools";
 import { V } from "./visual";
 import {
   YOUTUBE_VIDEO_SUMMARIZER_HREF,
@@ -54,7 +55,7 @@ export default function YoutubeVideoSummarizerPage() {
 
       <div className="flex min-h-0">
         <WorkspaceNav />
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1 pb-[4.75rem] md:pb-0">
           <FaceRatingSiteHeader hideBrandOnDesktop />
 
           <main>
@@ -183,7 +184,7 @@ export default function YoutubeVideoSummarizerPage() {
                             <p className="mb-4 text-lg text-gray-600">{row.body}</p>
                             <div className="btnList mt-5 flex gap-4">
                               <Link
-                                href={YOUTUBE_VIDEO_SUMMARIZER_HREF}
+                                href="#transcribe"
                                 onClick={scrollToHero}
                                 className="inline-flex items-center gap-2 rounded-full text-white"
                                 style={{
@@ -249,6 +250,8 @@ export default function YoutubeVideoSummarizerPage() {
               </div>
             </section>
 
+            <RelatedTools currentPath="/youtube-video-summarizer" />
+
             <LandingFaqSection title={seo.faq.title} items={seo.faq.items} />
 
 
@@ -269,7 +272,7 @@ export default function YoutubeVideoSummarizerPage() {
                   </p>
                   <div className="mt-4 flex justify-center">
                     <Link
-                      href={YOUTUBE_VIDEO_SUMMARIZER_HREF}
+                      href="#transcribe"
                       onClick={scrollToHero}
                       className="inline-flex items-center gap-2"
                       style={{
