@@ -11,7 +11,6 @@ import {
   ShieldCheck,
   Subtitles,
   UsersRound,
-  type LucideIcon,
 } from "lucide-react";
 import FaceRatingSiteHeader from "./site-header";
 import FaceRatingSiteFooter from "./site-footer";
@@ -28,14 +27,14 @@ import { MP3_TO_SRT_HREF, mp3ToSrtSeo } from "@/lib/convert/mp3-to-srt-content";
 
 const CHIP_ICONS = [FileUp, AudioLines, FileUp, UsersRound, Subtitles] as const;
 
-const USECASE_ICONS: Record<string, LucideIcon> = {
-  AudioLines,
-  ShieldCheck,
-  FileUp,
-  Subtitles,
+const USECASE_ICONS_BY_INDEX = [
   Mic,
   GraduationCap,
-};
+  UsersRound,
+  Subtitles,
+  ShieldCheck,
+  AudioLines,
+] as const;
 
 function scrollToHero(e: React.MouseEvent) {
   e.preventDefault();
@@ -230,8 +229,8 @@ export default function Mp3ToSrtPage() {
                   </p>
                 </div>
                 <div className="mx-auto mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {seo.usecases.items.map((item) => {
-                    const Icon = USECASE_ICONS[item.icon] ?? AudioLines;
+                  {seo.usecases.items.map((item, i) => {
+                    const Icon = USECASE_ICONS_BY_INDEX[i] ?? AudioLines;
                     return (
                       <article
                         key={item.title}
