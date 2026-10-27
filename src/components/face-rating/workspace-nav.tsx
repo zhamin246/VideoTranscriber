@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { signOut, useSession } from "next-auth/react";
 import { usePathname } from "@/i18n/navigation";
 import {
   ChevronDown,
@@ -11,13 +12,13 @@ import {
   Gift,
   Globe,
   Home,
-  LogIn,
+  LayoutGrid,
   PanelLeftClose,
   PanelLeftOpen,
+  Plus,
   type LucideIcon,
 } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useTranslations } from "next-intl";
 import { useSignedIn } from "@/hooks/useSignedIn";
 import { useAppContext } from "@/contexts/app";
 import { localeNames } from "@/i18n/locale";
@@ -25,8 +26,11 @@ import { CONVERT_HREF } from "./data";
 import { NavRouteLink } from "./nav-route-link";
 import { PlatformMark } from "./platform-mark";
 import {
+  AI_TOOLS_HREF,
+  isAiToolsHubActive,
   isToolNavActive,
-  WORKSPACE_TOOL_NAV,
+  WORKSPACE_MEDIA_TOOL_NAV,
+  WORKSPACE_PLATFORM_TOOL_NAV,
   type WorkspaceToolNavItem,
 } from "./workspace-tool-nav-items";
 import type { PlanSummary } from "@/lib/plan/summary";
@@ -34,7 +38,9 @@ import UpgradePricingModal, {
   type UpgradePricingReason,
 } from "./upgrade-pricing-modal";
 
-const NAV_ICON = "h-[18px] w-[18px] shrink-0";
+const DASHBOARD_HREF = "/dashboard";
+
+const NAV_ICON = "h-4 w-4 shrink-0";
 
 function NavIcon({ icon: Icon }: { icon: LucideIcon }) {
   return <Icon className={NAV_ICON} strokeWidth={1.75} absoluteStrokeWidth />;
@@ -43,7 +49,7 @@ function NavIcon({ icon: Icon }: { icon: LucideIcon }) {
 function ToolNavIcon({ item }: { item: WorkspaceToolNavItem }) {
   if ("platform" in item) {
     return (
-      <span className="flex h-[22px] w-[22px] shrink-0 items-center justify-center overflow-hidden rounded-md [&_span]:!h-[22px] [&_span]:!w-[22px] [&_svg]:!h-[22px] [&_svg]:!w-[22px]">
+      <span className="flex h-[18px] w-[18px] shrink-0 items-center justify-center overflow-hidden rounded-sm [&_span]:!h-[18px] [&_span]:!w-[18px] [&_svg]:!h-[18px] [&_svg]:!w-[18px]">
         <PlatformMark kind={item.platform} />
       </span>
     );
@@ -52,8 +58,8 @@ function ToolNavIcon({ item }: { item: WorkspaceToolNavItem }) {
 }
 
 function toolLinkClass(active: boolean, collapsed: boolean) {
-  return `flex min-h-[44px] items-center gap-2.5 whitespace-nowrap rounded-xl py-2 text-[13px] font-semibold leading-none transition-colors ${
-    collapsed ? "justify-center px-2" : "px-2.5"
+  return `flex min-h-[36px] items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm font-normal leading-snug transition-colors ${
+    collapsed ? "justify-center px-2" : ""
   } ${
     active
       ? "bg-[#E8EEFC] text-[#5270FF]"
@@ -62,23 +68,50 @@ function toolLinkClass(active: boolean, collapsed: boolean) {
 }
 
 function navLabelClass(collapsed: boolean) {
-  return collapsed ? "sr-only" : "min-w-0 flex-1 truncate text-left";
+  return collapsed
+    ? "sr-only"
+    : "min-w-0 flex-1 truncate whitespace-nowrap text-left";
+}
+
+function ToolNavListItem({
+  item,
+  pathname,
+  collapsed,
+  nested,
+}: {
+  item: WorkspaceToolNavItem;
+  pathname: string;
+  collapsed: boolean;
+  nested?: boolean;
+}) {
+  const active = isToolNavActive(pathname, item.href);
+  const className = `${toolLinkClass(active, collapsed)}${nested && !collapsed ? " ml-1 min-h-[34px]" : ""}`;
+
+  return (
+    <li>
+      <NavRouteLink href={item.href} className={className} title={item.label}>
+        <ToolNavIcon item={item} />
+        <span className={navLabelClass(collapsed)}>{item.label}</span>
+      </NavRouteLink>
+    </li>
+  );
 }
 
 export const SIDEBAR_COLLAPSED_KEY = "workspace-nav-collapsed";
 
-export const WORKSPACE_NAV_EXPANDED_WIDTH_PX = 320;
+/** Wide enough for full tool labels (e.g. Facebook Transcript Generator). */
+export const WORKSPACE_NAV_EXPANDED_WIDTH_PX = 288;
 export const WORKSPACE_NAV_COLLAPSED_WIDTH_PX = 56;
 
 function BrandMark() {
   return (
-    <span className="flex h-10 w-10 min-h-10 min-w-10 shrink-0 items-center justify-center bg-transparent">
+    <span className="flex h-9 w-9 min-h-9 min-w-9 shrink-0 items-center justify-center rounded-full bg-white shadow-[0_1px_3px_rgba(15,23,42,0.08)] ring-1 ring-black/[0.04]">
       <img
         src="/favicon.svg"
         alt=""
-        width={40}
-        height={40}
-        className="h-10 w-10 object-contain"
+        width={28}
+        height={28}
+        className="h-7 w-7 object-contain"
       />
     </span>
   );
@@ -151,6 +184,29 @@ function UsageRow({
   );
 }
 
+function SidebarGoogleMark() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden className="shrink-0">
+      <path
+        fill="#FFC107"
+        d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3.1l5.7-5.7C34.2 6.1 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.5-.4-3.5z"
+      />
+      <path
+        fill="#FF3D00"
+        d="M6.3 14.7l6.6 4.8C14.7 16 19 12 24 12c3.1 0 5.8 1.2 8 3.1l5.7-5.7C34.2 6.1 29.4 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"
+      />
+      <path
+        fill="#4CAF50"
+        d="M24 44c5.2 0 10-2 13.5-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.3 0-9.7-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"
+      />
+      <path
+        fill="#1976D2"
+        d="M43.6 20.5H42V20H24v8h11.3c-1.1 3.2-3.5 5.8-6.6 7.3l6.2 5.2C37.3 38.3 44 33 44 24c0-1.3-.1-2.5-.4-3.5z"
+      />
+    </svg>
+  );
+}
+
 function guestPlan(): PlanSummary {
   return {
     tier: "FREE",
@@ -165,8 +221,13 @@ function guestPlan(): PlanSummary {
   };
 }
 
-function GuestSidebarFooter({ onSignIn }: { onSignIn: () => void }) {
-  const t = useTranslations();
+function GuestSidebarFooter({
+  onSignIn,
+  onUpgrade,
+}: {
+  onSignIn: () => void;
+  onUpgrade: () => void;
+}) {
   const params = useParams();
   const locale = (params?.locale as string) || "en";
   const languageLabel = localeNames[locale] || localeNames.en;
@@ -175,21 +236,336 @@ function GuestSidebarFooter({ onSignIn }: { onSignIn: () => void }) {
     <div className="flex w-full flex-col gap-2">
       <button
         type="button"
-        onClick={onSignIn}
-        className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border-2 border-[#5270FF] bg-white text-[14px] font-semibold text-[#5270FF] transition-colors hover:bg-[#F4F6FF]"
+        onClick={onUpgrade}
+        className="flex h-[37px] w-full items-center gap-2 rounded-lg bg-[#2563EB] px-2.5 text-[13px] font-bold text-white shadow-[0_10px_28px_-10px_rgba(37,99,235,0.75)] transition-colors hover:bg-[#1D4ED8]"
       >
-        <LogIn className="h-[18px] w-[18px] shrink-0" strokeWidth={2} />
-        {t("user.sign_in")}
-      </button>
-      <div
-        className="flex h-11 w-full items-center gap-2 rounded-xl border border-[#E8EAF0] bg-white px-3 text-[#334155]"
-        aria-label="Language"
-      >
-        <Globe className="h-[18px] w-[18px] shrink-0 text-[#64748B]" strokeWidth={1.75} />
-        <span className="min-w-0 flex-1 truncate text-left text-[14px] font-medium">
-          {languageLabel}
+        <Gift
+          className="h-[18px] w-[18px] shrink-0"
+          strokeWidth={1.75}
+          style={{ color: "#FDBA74" }}
+          absoluteStrokeWidth
+        />
+        <span>Upgrade</span>
+        <span className="ml-auto rounded bg-white px-2 py-0.5 text-[11px] font-bold text-[#2563EB]">
+          Save 40%
         </span>
-        <ChevronDown className="h-4 w-4 shrink-0 text-[#94A3B8]" aria-hidden />
+      </button>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={onSignIn}
+          className="flex h-11 min-w-0 flex-1 items-center justify-center gap-2 rounded-lg border border-[#E5E7EB] bg-white px-4 text-[13px] font-bold text-[#334155] transition-colors hover:bg-[#F8FAFC]"
+        >
+          <SidebarGoogleMark />
+          <span className="truncate">Sign in for free</span>
+        </button>
+        <button
+          type="button"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-[#E5E7EB] bg-white text-[#64748B] transition-colors hover:bg-[#F8FAFC]"
+          title={languageLabel}
+          aria-label={`Language: ${languageLabel}`}
+        >
+          <Globe className="h-[18px] w-[18px]" strokeWidth={1.75} absoluteStrokeWidth />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function sidebarAccountName(
+  user: ReturnType<typeof useAppContext>["user"],
+  session: ReturnType<typeof useSession>["data"],
+): string {
+  const raw =
+    user?.nickname?.trim() ||
+    session?.user?.name?.trim() ||
+    user?.email?.split("@")[0] ||
+    session?.user?.email?.split("@")[0] ||
+    "Account";
+  return raw;
+}
+
+function sidebarAccountEmail(
+  user: ReturnType<typeof useAppContext>["user"],
+  session: ReturnType<typeof useSession>["data"],
+): string {
+  return user?.email || session?.user?.email || "";
+}
+
+function SidebarUserAvatar({
+  name,
+  avatarUrl,
+  size = "md",
+}: {
+  name: string;
+  avatarUrl?: string | null;
+  size?: "md" | "sm";
+}) {
+  const initial = (name.trim()[0] || "?").toUpperCase();
+  const dim = size === "sm" ? "h-9 w-9 text-[13px]" : "h-10 w-10 text-sm";
+  if (avatarUrl) {
+    return (
+      <img
+        src={avatarUrl}
+        alt=""
+        className={`${dim} shrink-0 rounded-full object-cover ring-1 ring-black/[0.06]`}
+      />
+    );
+  }
+  return (
+    <span
+      className={`${dim} flex shrink-0 items-center justify-center rounded-full bg-[#E879F9] font-bold text-white ring-1 ring-black/[0.04]`}
+      aria-hidden
+    >
+      {initial}
+    </span>
+  );
+}
+
+function sidebarMinutesLeft(
+  user: ReturnType<typeof useAppContext>["user"],
+): number {
+  const fromPlan = user?.plan?.minutes.left;
+  if (typeof fromPlan === "number") return Math.max(0, fromPlan);
+  const fromCredits = user?.credits?.left_credits;
+  if (typeof fromCredits === "number") return Math.max(0, fromCredits);
+  return guestPlan().minutes.left;
+}
+
+function SignedInSidebarUpgradeStrip({
+  collapsed,
+  onUpgrade,
+}: {
+  collapsed: boolean;
+  onUpgrade: () => void;
+}) {
+  const { user, sessionLoading } = useSignedIn();
+  const minutesLeft = sessionLoading ? null : sidebarMinutesLeft(user);
+
+  const upgradeButtonExpanded = (
+    <button
+      type="button"
+      onClick={onUpgrade}
+      className="flex h-[37px] w-full items-center gap-2 rounded-lg bg-[#2563EB] px-2.5 text-[13px] font-bold text-white shadow-[0_10px_28px_-10px_rgba(37,99,235,0.75)] transition-colors hover:bg-[#1D4ED8]"
+    >
+      <Gift
+        className="h-[18px] w-[18px] shrink-0"
+        strokeWidth={1.75}
+        style={{ color: "#FDBA74" }}
+        absoluteStrokeWidth
+      />
+      <span>Upgrade</span>
+      <span className="ml-auto rounded bg-white px-2 py-0.5 text-[11px] font-bold text-[#2563EB]">
+        Save 40%
+      </span>
+    </button>
+  );
+
+  if (collapsed) {
+    return (
+      <div className="mb-2 flex w-full flex-col items-center gap-2">
+        <div
+          className="flex w-full flex-col items-center rounded-xl bg-[#E8EEFC] px-1 py-2"
+          title={
+            minutesLeft == null
+              ? "Minutes remaining"
+              : `${minutesLeft} min remaining`
+          }
+        >
+          <Clock3
+            className="h-4 w-4 text-[#5270FF]"
+            strokeWidth={1.75}
+            absoluteStrokeWidth
+          />
+          <span className="mt-1 text-center text-[11px] font-bold leading-tight tabular-nums text-[#0F172A]">
+            {minutesLeft == null ? "—" : `${minutesLeft}`}
+            {minutesLeft == null ? null : (
+              <span className="block text-[10px] font-semibold text-[#64748B]">
+                min
+              </span>
+            )}
+          </span>
+        </div>
+        <button
+          type="button"
+          onClick={onUpgrade}
+          title="Upgrade"
+          aria-label="Upgrade"
+          className="flex h-[42px] w-[42px] items-center justify-center rounded-lg bg-[#2563EB] text-white shadow-[0_8px_20px_-12px_rgba(37,99,235,0.9)]"
+        >
+          <Gift className="h-5 w-5" strokeWidth={1.75} style={{ color: "#FDBA74" }} />
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mb-2.5 flex w-full flex-col gap-2 rounded-2xl bg-[#E8EEFC] px-3 py-3">
+      <div
+        className="flex items-center justify-center gap-1.5"
+        title={
+          minutesLeft == null
+            ? "Minutes remaining"
+            : `${minutesLeft} min remaining`
+        }
+      >
+        <Clock3
+          className="h-[18px] w-[18px] shrink-0 text-[#5270FF]"
+          strokeWidth={1.75}
+          absoluteStrokeWidth
+        />
+        <span className="text-[22px] font-bold tabular-nums leading-none text-[#0F172A]">
+          {minutesLeft ?? "—"}
+        </span>
+        {minutesLeft == null ? null : (
+          <span className="self-end pb-0.5 text-[14px] font-semibold text-[#64748B]">
+            min
+          </span>
+        )}
+      </div>
+      {upgradeButtonExpanded}
+    </div>
+  );
+}
+
+function SignedInSidebarAccount({
+  collapsed,
+  onUpgrade,
+}: {
+  collapsed: boolean;
+  onUpgrade: (reason?: UpgradePricingReason) => void;
+}) {
+  const { user } = useSignedIn();
+  const { data: session } = useSession();
+  const params = useParams();
+  const locale = (params?.locale as string) || "en";
+  const languageLabel = localeNames[locale] || localeNames.en;
+  const [panelOpen, setPanelOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  const name = sidebarAccountName(user, session);
+  const email = sidebarAccountEmail(user, session);
+  const avatarUrl = user?.avatar_url || session?.user?.image;
+
+  useEffect(() => {
+    if (!panelOpen) return;
+    const onDoc = (e: MouseEvent) => {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
+        setPanelOpen(false);
+      }
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPanelOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [panelOpen]);
+
+  const handleUpgrade = (reason?: UpgradePricingReason) => {
+    setPanelOpen(false);
+    onUpgrade(reason);
+  };
+
+  const globeButton = (
+    <button
+      type="button"
+      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-[#E5E7EB] bg-white text-[#64748B] transition-colors hover:bg-[#F8FAFC]"
+      title={languageLabel}
+      aria-label={`Language: ${languageLabel}`}
+    >
+      <Globe className="h-[18px] w-[18px]" strokeWidth={1.75} absoluteStrokeWidth />
+    </button>
+  );
+
+  const planPopover = panelOpen ? (
+    <div
+      className={
+        collapsed
+          ? "absolute bottom-0 left-full z-[70] ml-2 w-[min(288px,calc(100vw-4rem))]"
+          : "absolute bottom-full left-0 right-0 z-[70] mb-2"
+      }
+      role="dialog"
+      aria-label="Current plan"
+    >
+      <div className="overflow-hidden rounded-2xl bg-white shadow-[0_8px_28px_rgba(15,23,42,0.14)] ring-1 ring-black/[0.06]">
+        <CurrentPlanCard embedded onUpgrade={handleUpgrade} />
+        <div className="border-t border-[#EEF0F5] px-2 py-1.5">
+          <Link
+            href={DASHBOARD_HREF}
+            className="block rounded-lg px-2.5 py-2.5 text-[14px] font-medium text-[#334155] transition-colors hover:bg-[#F8FAFC]"
+            onClick={() => setPanelOpen(false)}
+          >
+            My Dashboard
+          </Link>
+          <button
+            type="button"
+            className="block w-full rounded-lg px-2.5 py-2.5 text-left text-[14px] font-medium text-[#334155] transition-colors hover:bg-[#F8FAFC]"
+            onClick={() => {
+              setPanelOpen(false);
+              void signOut({ callbackUrl: "/" });
+            }}
+          >
+            Sign out
+          </button>
+        </div>
+      </div>
+    </div>
+  ) : null;
+
+  if (collapsed) {
+    return (
+      <div ref={rootRef} className="relative flex flex-col items-center gap-2">
+        {planPopover}
+        <button
+          type="button"
+          onClick={() => setPanelOpen((v) => !v)}
+          className="rounded-full"
+          title={name}
+          aria-label="Account and plan"
+          aria-expanded={panelOpen}
+        >
+          <SidebarUserAvatar name={name} avatarUrl={avatarUrl} size="sm" />
+        </button>
+        {globeButton}
+      </div>
+    );
+  }
+
+  return (
+    <div ref={rootRef} className="relative w-full">
+      {planPopover}
+      <div className="flex items-center gap-1.5">
+        <button
+          type="button"
+          onClick={() => setPanelOpen((v) => !v)}
+          aria-expanded={panelOpen}
+          aria-label="Account and plan"
+          className="flex min-w-0 flex-1 items-center gap-2.5 rounded-lg py-1 pl-0.5 pr-1 text-left transition-colors hover:bg-white"
+        >
+          <SidebarUserAvatar name={name} avatarUrl={avatarUrl} />
+          <span className="min-w-0 flex-1">
+            <span className="block truncate text-[14px] font-semibold leading-tight text-[#0F172A]">
+              {name}
+            </span>
+            {email ? (
+              <span className="mt-0.5 block truncate text-[12px] leading-tight text-[#94A3B8]">
+                {email}
+              </span>
+            ) : null}
+          </span>
+          <ChevronDown
+            className={`h-4 w-4 shrink-0 text-[#94A3B8] transition-transform duration-200 ${
+              panelOpen ? "rotate-180" : ""
+            }`}
+            strokeWidth={1.75}
+            aria-hidden
+          />
+        </button>
+        {globeButton}
       </div>
     </div>
   );
@@ -197,8 +573,10 @@ function GuestSidebarFooter({ onSignIn }: { onSignIn: () => void }) {
 
 function CurrentPlanCard({
   onUpgrade,
+  embedded = false,
 }: {
   onUpgrade: (reason?: UpgradePricingReason) => void;
+  embedded?: boolean;
 }) {
   const { user, signedIn, sessionLoading } = useSignedIn();
   if (!signedIn) return null;
@@ -221,7 +599,13 @@ function CurrentPlanCard({
     plan.badge === "PACK" ? "minutes" : "generic";
 
   return (
-    <div className="flex w-full flex-col rounded-2xl border border-[#EEF0F5] bg-white p-3.5 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+    <div
+      className={`flex w-full flex-col bg-white p-3.5 ${
+        embedded
+          ? "border-0 shadow-none"
+          : "rounded-2xl border border-[#EEF0F5] shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
+      }`}
+    >
       <div className="mb-3 flex items-center justify-between gap-2">
         <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#64748B]">
           Current Plan
@@ -295,6 +679,11 @@ export default function WorkspaceNav() {
   const [upgradeReason, setUpgradeReason] =
     useState<UpgradePricingReason>("generic");
   const [collapsed, setCollapsed] = useState(false);
+  const onAiTools = isAiToolsHubActive(pathname);
+
+  const guestSignIn = () => {
+    setShowSignModal(true, pathname || "/");
+  };
 
   useEffect(() => {
     try {
@@ -326,8 +715,16 @@ export default function WorkspaceNav() {
   };
 
   const mobileToolLinks = [
-    { href: CONVERT_HREF, label: "Transcribe home" },
-    ...WORKSPACE_TOOL_NAV.map((item) => ({ href: item.href, label: item.label })),
+    { href: CONVERT_HREF, label: "Home" },
+    ...WORKSPACE_MEDIA_TOOL_NAV.map((item) => ({
+      href: item.href,
+      label: item.label,
+    })),
+    ...WORKSPACE_PLATFORM_TOOL_NAV.map((item) => ({
+      href: item.href,
+      label: item.label,
+    })),
+    { href: AI_TOOLS_HREF, label: "AI Tools" },
     { href: "/my-assets", label: "My Assets" },
   ];
 
@@ -344,7 +741,9 @@ export default function WorkspaceNav() {
                 ? onHome
                 : item.href === "/my-assets"
                   ? onAssets
-                  : isToolNavActive(pathname, item.href);
+                  : item.href === AI_TOOLS_HREF
+                    ? onAiTools
+                    : isToolNavActive(pathname, item.href);
             return (
               <li key={item.href} className="shrink-0">
                 <Link
@@ -375,36 +774,30 @@ export default function WorkspaceNav() {
       </nav>
       <aside
         className={`group/nav sticky top-0 z-[60] hidden h-svh shrink-0 flex-col self-start border-r border-[#EAEAEA] bg-[#F9F9FC] transition-[width] duration-300 ease-in-out md:flex ${
-          collapsed ? "w-14" : "w-[min(100vw,320px)]"
+          collapsed ? "w-14" : "w-[288px]"
         }`}
       >
         <div
           className={`flex shrink-0 items-center ${
             collapsed
-              ? "h-[72px] flex-col justify-center gap-0.5 px-1"
-              : "h-14 gap-1 px-2"
+              ? "mb-2 h-[72px] flex-col justify-center gap-0.5 px-1"
+              : "mb-4 min-h-14 gap-1.5 px-3 pb-1 pt-2.5"
           }`}
         >
           <Link
             href="/"
-            className={`flex min-w-0 items-center rounded-xl py-1 ${
-              collapsed ? "justify-center" : "min-w-0 flex-1 gap-2"
+            className={`flex min-w-0 items-center ${
+              collapsed ? "justify-center" : "min-w-0 flex-1 gap-2.5"
             }`}
             aria-label="video transcriber — home"
           >
             <BrandMark />
             {collapsed ? null : (
               <span
-                className="truncate whitespace-nowrap"
-                style={{
-                  fontSize: 17,
-                  fontWeight: 700,
-                  lineHeight: "24px",
-                  letterSpacing: "-0.02em",
-                }}
+                className="block min-w-0 whitespace-nowrap text-[20px] font-bold leading-7 tracking-[-0.02em]"
               >
-                <span style={{ color: "#000000" }}>video </span>
-                <span style={{ color: "#5270FF" }}>transcriber</span>
+                <span className="text-[#000000]">video </span>
+                <span className="text-[#5270FF]">transcriber</span>
               </span>
             )}
           </Link>
@@ -423,33 +816,56 @@ export default function WorkspaceNav() {
           </button>
         </div>
 
-        <nav className="flex min-h-0 flex-1 flex-col px-2 pb-2">
-          <ul className="min-h-0 flex-1 space-y-0.5 overflow-y-auto overscroll-contain pr-0.5">
+        <nav className="flex min-h-0 flex-1 flex-col px-2.5 pb-2">
+          <div className="mb-5 shrink-0">
+            <Link
+              href={CONVERT_HREF}
+              className={`flex h-[35px] items-center justify-center gap-1.5 rounded-md bg-[#0F172A] text-sm font-normal text-white transition-colors hover:bg-[#1E293B] ${
+                collapsed ? "px-2" : "px-3.5"
+              }`}
+              title={collapsed ? "New Video" : undefined}
+            >
+              <Plus className="h-4 w-4 shrink-0" strokeWidth={2} />
+              <span className={collapsed ? "sr-only" : "truncate"}>New Video</span>
+            </Link>
+          </div>
+          <ul className="min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain">
             <li>
               <Link
                 href={CONVERT_HREF}
                 className={toolLinkClass(onHome, collapsed)}
-                title={collapsed ? "Transcribe home" : undefined}
+                title={collapsed ? "Home" : undefined}
               >
                 <NavIcon icon={Home} />
-                <span className={navLabelClass(collapsed)}>Transcribe home</span>
+                <span className={navLabelClass(collapsed)}>Home</span>
               </Link>
             </li>
-            {WORKSPACE_TOOL_NAV.map((item) => {
-              const active = isToolNavActive(pathname, item.href);
-              return (
-                <li key={item.href}>
-                  <NavRouteLink
-                    href={item.href}
-                    className={toolLinkClass(active, collapsed)}
-                    title={item.label}
-                  >
-                    <ToolNavIcon item={item} />
-                    <span className={navLabelClass(collapsed)}>{item.label}</span>
-                  </NavRouteLink>
-                </li>
-              );
-            })}
+            {WORKSPACE_MEDIA_TOOL_NAV.map((item) => (
+              <ToolNavListItem
+                key={item.href}
+                item={item}
+                pathname={pathname}
+                collapsed={collapsed}
+              />
+            ))}
+            {WORKSPACE_PLATFORM_TOOL_NAV.map((item) => (
+              <ToolNavListItem
+                key={item.href}
+                item={item}
+                pathname={pathname}
+                collapsed={collapsed}
+              />
+            ))}
+            <li>
+              <NavRouteLink
+                href={AI_TOOLS_HREF}
+                className={toolLinkClass(onAiTools, collapsed)}
+                title={collapsed ? "AI Tools" : undefined}
+              >
+                <LayoutGrid className={NAV_ICON} strokeWidth={1.75} absoluteStrokeWidth />
+                <span className={navLabelClass(collapsed)}>AI Tools</span>
+              </NavRouteLink>
+            </li>
           </ul>
 
           <ul className="mt-2 shrink-0 space-y-0.5 border-t border-[#E8EAF0] pt-2">
@@ -471,7 +887,7 @@ export default function WorkspaceNav() {
                 title={collapsed ? "Pricing" : undefined}
               >
                 <Gift
-                  className="h-[18px] w-[18px] shrink-0"
+                  className="h-4 w-4 shrink-0"
                   strokeWidth={1.75}
                   style={{ color: "#F97316" }}
                   absoluteStrokeWidth
@@ -479,7 +895,7 @@ export default function WorkspaceNav() {
                 <span className={navLabelClass(collapsed)}>Pricing</span>
                 {collapsed ? null : (
                   <span
-                    className="shrink-0 rounded-md px-1.5 py-0.5 text-[10px] font-bold text-black"
+                    className="shrink-0 rounded px-1.5 py-0.5 text-[10px] font-bold text-black"
                     style={{ backgroundColor: "#FFCB65" }}
                   >
                     40% Off
@@ -489,33 +905,44 @@ export default function WorkspaceNav() {
             </li>
           </ul>
 
-          <div className="mt-2 shrink-0 pb-2 pt-1">
+          <div className="relative z-[65] mt-2 shrink-0 overflow-visible pb-2 pt-1">
             {signedIn ? (
-              collapsed ? (
+              <div className="flex w-full flex-col">
+                <SignedInSidebarUpgradeStrip
+                  collapsed={collapsed}
+                  onUpgrade={() => openUpgrade("generic")}
+                />
+                <SignedInSidebarAccount
+                  collapsed={collapsed}
+                  onUpgrade={openUpgrade}
+                />
+              </div>
+            ) : collapsed ? (
+              <div className="flex flex-col items-center gap-2">
                 <button
                   type="button"
                   onClick={() => openUpgrade("generic")}
-                  title="Upgrade Plan"
-                  aria-label="Upgrade Plan"
-                  className="mx-auto flex h-[42px] w-[42px] items-center justify-center rounded-xl bg-[#635BFF] text-white shadow-[0_8px_20px_-12px_rgba(99,91,255,0.9)]"
+                  title="Upgrade"
+                  aria-label="Upgrade"
+                  className="flex h-[42px] w-[42px] items-center justify-center rounded-lg bg-[#2563EB] text-white shadow-[0_8px_20px_-12px_rgba(37,99,235,0.9)]"
                 >
                   <Gift className="h-5 w-5" strokeWidth={1.75} />
                 </button>
-              ) : (
-                <CurrentPlanCard onUpgrade={openUpgrade} />
-              )
-            ) : collapsed ? (
-              <button
-                type="button"
-                onClick={() => setShowSignModal(true)}
-                title="Sign In"
-                aria-label="Sign In"
-                className="mx-auto flex h-[42px] w-[42px] items-center justify-center rounded-xl border-2 border-[#5270FF] bg-white text-[#5270FF]"
-              >
-                <LogIn className="h-5 w-5" strokeWidth={1.75} />
-              </button>
+                <button
+                  type="button"
+                  onClick={guestSignIn}
+                  title="Sign in for free"
+                  aria-label="Sign in for free"
+                  className="flex h-[42px] w-[42px] items-center justify-center rounded-lg border border-[#E5E7EB] bg-white"
+                >
+                  <SidebarGoogleMark />
+                </button>
+              </div>
             ) : (
-              <GuestSidebarFooter onSignIn={() => setShowSignModal(true)} />
+              <GuestSidebarFooter
+                onSignIn={guestSignIn}
+                onUpgrade={() => openUpgrade("generic")}
+              />
             )}
           </div>
         </nav>

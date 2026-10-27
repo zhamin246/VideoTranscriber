@@ -14,6 +14,8 @@ import { TIKTOK_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/tiktok-transcrip
 import { INSTAGRAM_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/instagram-transcript-generator-content";
 import { FACEBOOK_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/facebook-transcript-generator-content";
 import { X_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/x-transcript-generator-content";
+import { MP3_TO_SRT_HREF } from "@/lib/convert/mp3-to-srt-content";
+import { AI_TOOLS_HREF } from "./workspace-tool-nav-items";
 
 export const FREE_TEST_HREF = "/tools/ai-attractiveness-test";
 export const FULL_REPORT_HREF = "/tools/full-analysis";
@@ -46,6 +48,7 @@ export const content = {
             title: "Audio Transcriber",
             items: [
               { label: "Audio to Text", href: AUDIO_TO_TEXT_CONVERTER_HREF },
+              { label: "MP3 to SRT", href: MP3_TO_SRT_HREF },
             ],
           },
           {
@@ -61,9 +64,13 @@ export const content = {
             ],
           },
         ],
+        more: { label: "All AI Tools", href: AI_TOOLS_HREF },
       },
     ],
-    items: [{ label: "Pricing", href: "/pricing" }],
+    items: [
+      { label: "AI Tools", href: AI_TOOLS_HREF },
+      { label: "Pricing", href: "/pricing" },
+    ],
     login: { label: "Log in", href: "/auth/signin" },
     cta: { label: "Start transcribing", href: CONVERT_HREF },
   },

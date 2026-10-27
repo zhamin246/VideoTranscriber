@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { content } from "./data";
+import { AI_TOOLS_HREF } from "./workspace-tool-nav-items";
 
 type FooterLink = { label: string; href: string };
 
@@ -33,6 +34,7 @@ const COLUMNS: FooterGroup[][] = [
     {
       title: "About",
       links: [
+        { label: "AI Tools", href: AI_TOOLS_HREF },
         { label: "Pricing", href: "/pricing" },
         { label: "Blog", href: "/posts" },
         { label: "Privacy", href: "/privacy-policy" },

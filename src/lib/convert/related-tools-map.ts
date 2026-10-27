@@ -48,5 +48,14 @@ export const RELATED_TOOLS_BY_PATH: Record<
     "/ai-video-summarizer",
     "/youtube-transcript-generator",
   ],
-  "/audio-to-text-converter": ["/video-to-text", "/youtube-transcript-generator"],
+  "/audio-to-text-converter": [
+    "/video-to-text",
+    "/mp3-to-srt",
+    "/youtube-transcript-generator",
+  ],
+  "/mp3-to-srt": [
+    "/audio-to-text-converter",
+    "/video-to-text",
+    "/youtube-subtitle-downloader",
+  ],
 };

@@ -12,6 +12,7 @@ function siteOrigin() {
 const STATIC_PATHS = [
   "/",
   "/audio-to-text-converter",
+  "/mp3-to-srt",
   "/video-to-text",
   "/youtube-transcript-generator",
   "/youtube-video-summarizer",
@@ -21,6 +22,7 @@ const STATIC_PATHS = [
   "/x-transcript-generator",
   "/ai-video-summarizer",
   "/youtube-subtitle-downloader",
+  "/ai-tools",
 ] as const;
 
 function absoluteUrl(path: string, locale: string): string {

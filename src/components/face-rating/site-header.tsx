@@ -425,7 +425,15 @@ export default function FaceRatingSiteHeader({
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          {isLoggedIn ? <AccountMenu name={greetingName(session)} /> : null}
+          {isLoggedIn ? (
+            hideBrandOnDesktop ? (
+              <div className="md:hidden">
+                <AccountMenu name={greetingName(session)} />
+              </div>
+            ) : (
+              <AccountMenu name={greetingName(session)} />
+            )
+          ) : null}
           <button
             type="button"
             className="inline-flex h-10 w-10 items-center justify-center rounded-[10px] border md:hidden"

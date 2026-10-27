@@ -13,6 +13,8 @@ import { useAppContext } from "@/contexts/app";
 
 const PRIMARY = "#4C6EF5";
 
+const SIGN_IN_FLOW_IMAGE = "/videotranscriber/auth/sign-in-flow.webp";
+
 function RememberCheckbox({
   checked,
   onChange,
@@ -135,116 +137,30 @@ function FeatureIcon({ kind }: { kind: "cc" | "speaker" | "lang" }) {
 function MarketingPanel() {
   return (
     <div
-      className="hidden h-full flex-col rounded-[20px] p-6 lg:flex"
+      className="hidden h-full min-h-0 flex-col rounded-[20px] px-5 py-5 lg:flex"
       style={{ backgroundColor: "#F4F5F7" }}
     >
-      <div className="flex items-center gap-2.5">
+      <div className="flex shrink-0 items-center gap-2.5">
         <BrandMark size={26} />
         <span className="text-[15px] font-semibold tracking-tight text-[#111827]">
           Video Transcriber
         </span>
       </div>
 
-      <div className="relative mx-auto my-8 flex w-full max-w-[340px] flex-1 items-center justify-center">
-        <div className="relative w-full">
-          {/* Input card */}
-          <div className="absolute left-0 top-6 z-10 w-[118px] overflow-hidden rounded-xl border border-white bg-white shadow-md">
-            <div
-              className="h-[72px] bg-cover bg-center"
-              style={{
-                backgroundImage:
-                  "linear-gradient(135deg,#c7d2fe 0%,#a5b4fc 40%,#818cf8 100%)",
-              }}
-            />
-            <div className="flex items-end gap-0.5 px-2.5 py-2">
-              {[4, 8, 5, 11, 7, 9, 4, 6, 10, 5].map((h, i) => (
-                <span
-                  key={i}
-                  className="w-1.5 rounded-sm bg-[#4C6EF5]/30"
-                  style={{ height: h }}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* AI hub */}
-          <div className="absolute left-1/2 top-[78px] z-20 flex size-12 -translate-x-1/2 items-center justify-center rounded-full bg-gradient-to-br from-[#60a5fa] via-[#4C6EF5] to-[#7c3aed] text-[11px] font-bold text-white shadow-lg">
-            AI
-          </div>
-
-          {/* Transcript card */}
-          <div className="absolute right-0 top-0 z-10 w-[168px] rounded-xl border border-[#E5E7EB] bg-white p-2.5 shadow-md">
-            <p className="mb-1.5 text-[10px] font-semibold text-[#6B7280]">
-              Transcript
-            </p>
-            <div className="space-y-1.5 text-[10px] leading-snug">
-              <p>
-                <span className="font-semibold text-[#4C6EF5]">00:00</span>{" "}
-                <span className="font-semibold text-[#111827]">David</span>
-                <span className="text-[#6B7280]"> Let’s kick off…</span>
-              </p>
-              <p>
-                <span className="font-semibold text-[#4C6EF5]">00:31</span>{" "}
-                <span className="font-semibold text-[#111827]">Lisa</span>
-                <span className="text-[#6B7280]"> Sounds good.</span>
-              </p>
-            </div>
-          </div>
-
-          {/* Translate card */}
-          <div className="absolute bottom-0 right-2 z-10 w-[176px] rounded-xl border border-[#E5E7EB] bg-white p-2.5 shadow-md">
-            <p className="mb-1.5 text-[10px] font-semibold text-[#6B7280]">
-              Translate
-            </p>
-            <div className="mb-2 flex items-center justify-between rounded-md bg-[#F3F4F6] px-2 py-1 text-[10px] font-medium text-[#374151]">
-              <span>English</span>
-              <span className="text-[#9CA3AF]">→</span>
-              <span>Spanish</span>
-            </div>
-            <div className="flex gap-1">
-              {["🇺🇸", "🇩🇪", "🇫🇷", "🇯🇵", "🇧🇷"].map((f) => (
-                <span
-                  key={f}
-                  className="flex size-5 items-center justify-center rounded-full bg-[#F9FAFB] text-[11px]"
-                >
-                  {f}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Connector lines (decorative) */}
-          <svg
-            className="pointer-events-none absolute inset-0 h-full w-full"
-            viewBox="0 0 340 220"
-            fill="none"
-            aria-hidden
-          >
-            <path
-              d="M118 90 C150 90, 150 100, 170 100"
-              stroke="#C7D2FE"
-              strokeWidth="2"
-              strokeDasharray="4 3"
-            />
-            <path
-              d="M194 100 C230 100, 240 50, 250 42"
-              stroke="#C7D2FE"
-              strokeWidth="2"
-              strokeDasharray="4 3"
-            />
-            <path
-              d="M194 108 C230 108, 240 170, 250 178"
-              stroke="#C7D2FE"
-              strokeWidth="2"
-              strokeDasharray="4 3"
-            />
-          </svg>
-
-          <div className="h-[220px]" />
+      <div className="flex min-h-0 flex-1 flex-col gap-1 pt-2">
+        <div className="flex min-h-0 flex-1 items-center justify-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={SIGN_IN_FLOW_IMAGE}
+            alt=""
+            width={1024}
+            height={1024}
+            className="mx-auto block h-auto w-full max-h-[min(680px,80vh)] min-h-[260px] object-contain object-center"
+            decoding="async"
+          />
         </div>
-      </div>
 
-      <div className="mt-auto grid grid-cols-3 gap-3">
+        <div className="shrink-0 grid grid-cols-3 gap-2">
         {(
           [
             {
@@ -266,14 +182,15 @@ function MarketingPanel() {
         ).map((f) => (
           <div key={f.title} className="min-w-0">
             <FeatureIcon kind={f.kind} />
-            <p className="mt-2 text-[12px] font-semibold leading-tight text-[#111827]">
+            <p className="mt-1.5 text-[12px] font-semibold leading-tight text-[#111827]">
               {f.title}
             </p>
-            <p className="mt-1 text-[11px] leading-snug text-[#6B7280]">
+            <p className="mt-0.5 text-[11px] leading-snug text-[#6B7280]">
               {f.body}
             </p>
           </div>
         ))}
+      </div>
       </div>
     </div>
   );
@@ -755,7 +672,7 @@ export default function SignModal() {
     >
       <DialogContent
         overlayClassName="z-[100]"
-        className="z-[100] max-h-[92vh] gap-0 overflow-hidden border-0 bg-white p-0 shadow-2xl sm:max-w-[920px] sm:rounded-[24px] [color-scheme:light]"
+        className="z-[100] max-h-[92vh] gap-0 overflow-hidden border-0 bg-white p-0 shadow-2xl sm:max-w-[980px] sm:rounded-[24px] [color-scheme:light]"
         style={{ colorScheme: "light", backgroundColor: "#ffffff" }}
       >
         <DialogHeader className="sr-only">
@@ -764,8 +681,8 @@ export default function SignModal() {
             Sign in to Video Transcriber with Google or email and password
           </DialogDescription>
         </DialogHeader>
-        <div className="grid max-h-[92vh] overflow-y-auto lg:grid-cols-[1.05fr_0.95fr] lg:overflow-hidden">
-          <div className="p-3 lg:p-4">
+        <div className="grid max-h-[92vh] overflow-y-auto lg:grid-cols-[1.2fr_0.8fr] lg:overflow-hidden">
+          <div className="min-h-0 p-2 lg:p-3">
             <MarketingPanel />
           </div>
           <AuthPanel
