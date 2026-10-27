@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import { NavRouteLink } from "./nav-route-link";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
-import { useAppContext } from "@/contexts/app";
 import { content, CONVERT_HREF } from "./data";
 import { isToTextSensitivePath } from "./nav-labels";
 import { btnPrimary, V } from "./visual";
@@ -215,7 +214,6 @@ export default function FaceRatingSiteHeader({
   const hideHomeKeyword = isToTextSensitivePath(pathname);
   const nav = content.nav;
   const { data: session, status } = useSession();
-  const { setShowSignModal } = useAppContext();
   const sessionEmail =
     (session?.user as { email?: string } | undefined)?.email ||
     session?.user?.email ||
@@ -427,18 +425,7 @@ export default function FaceRatingSiteHeader({
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          {isLoggedIn ? (
-            <AccountMenu name={greetingName(session)} />
-          ) : (
-            <button
-              type="button"
-              onClick={() => setShowSignModal(true)}
-              className="hidden hover:opacity-70 sm:inline"
-              style={{ fontSize: 16, fontWeight: 400, lineHeight: "24px", color: "#000" }}
-            >
-              {nav.login.label}
-            </button>
-          )}
+          {isLoggedIn ? <AccountMenu name={greetingName(session)} /> : null}
           <button
             type="button"
             className="inline-flex h-10 w-10 items-center justify-center rounded-[10px] border md:hidden"
@@ -559,19 +546,7 @@ export default function FaceRatingSiteHeader({
                   Sign out
                 </button>
               </>
-            ) : (
-              <button
-                type="button"
-                onClick={() => {
-                  setOpen(false);
-                  setShowSignModal(true);
-                }}
-                className="rounded-[10px] px-3 py-3 text-left text-[15px] font-medium"
-                style={{ color: V.ink }}
-              >
-                {nav.login.label}
-              </button>
-            )}
+            ) : null}
             <Link
               href={CONVERT_HREF}
               onClick={() => setOpen(false)}

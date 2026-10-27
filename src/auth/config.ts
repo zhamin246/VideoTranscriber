@@ -173,6 +173,7 @@ export const providerMap = providers
   );
 
 export const authOptions: NextAuthConfig = {
+  trustHost: process.env.AUTH_TRUST_HOST !== "false",
   providers,
   pages: {
     signIn: "/auth/signin",

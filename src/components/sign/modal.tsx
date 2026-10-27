@@ -341,7 +341,7 @@ function AuthPanel({
   callbackUrl: string;
   resetKey: number;
 }) {
-  const googleEnabled = process.env.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED === "true";
+  const [googleEnabled, setGoogleEnabled] = useState(false);
   const [mode, setMode] = useState<"signup" | "signin" | "forgot">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -363,6 +363,21 @@ function AuthPanel({
     setLoading(false);
     setGoogleLoading(false);
   }, [resetKey]);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/auth/oauth-status")
+      .then((res) => res.json())
+      .then((data: { google?: boolean }) => {
+        if (!cancelled) setGoogleEnabled(Boolean(data.google));
+      })
+      .catch(() => {
+        if (!cancelled) setGoogleEnabled(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const nextUrl = callbackUrl.startsWith("/") ? callbackUrl : "/";
 
@@ -739,7 +754,8 @@ export default function SignModal() {
       onOpenChange={(open) => setShowSignModal(open)}
     >
       <DialogContent
-        className="max-h-[92vh] gap-0 overflow-hidden border-0 bg-white p-0 shadow-2xl sm:max-w-[920px] sm:rounded-[24px] [color-scheme:light]"
+        overlayClassName="z-[100]"
+        className="z-[100] max-h-[92vh] gap-0 overflow-hidden border-0 bg-white p-0 shadow-2xl sm:max-w-[920px] sm:rounded-[24px] [color-scheme:light]"
         style={{ colorScheme: "light", backgroundColor: "#ffffff" }}
       >
         <DialogHeader className="sr-only">

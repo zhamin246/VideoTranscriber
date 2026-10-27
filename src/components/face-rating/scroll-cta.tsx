@@ -3,9 +3,27 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { CONVERT_HREF } from "./data";
+import {
+  SIDEBAR_COLLAPSED_KEY,
+  WORKSPACE_NAV_COLLAPSED_WIDTH_PX,
+  WORKSPACE_NAV_EXPANDED_WIDTH_PX,
+} from "./workspace-nav";
+
+function readSidebarOffsetPx(): number {
+  if (typeof window === "undefined") return WORKSPACE_NAV_EXPANDED_WIDTH_PX;
+  try {
+    return localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === "1"
+      ? WORKSPACE_NAV_COLLAPSED_WIDTH_PX
+      : WORKSPACE_NAV_EXPANDED_WIDTH_PX;
+  } catch {
+    return WORKSPACE_NAV_EXPANDED_WIDTH_PX;
+  }
+}
 
 export default function ScrollCta() {
   const [visible, setVisible] = useState(false);
+  const [sidebarOffset, setSidebarOffset] = useState(WORKSPACE_NAV_EXPANDED_WIDTH_PX);
+  const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
     const hero = document.getElementById("landing-hero");
@@ -18,8 +36,31 @@ export default function ScrollCta() {
     return () => io.disconnect();
   }, []);
 
+  useEffect(() => {
+    const syncSidebar = () => setSidebarOffset(readSidebarOffsetPx());
+    syncSidebar();
+    window.addEventListener("workspace-nav-collapse", syncSidebar);
+    window.addEventListener("storage", syncSidebar);
+
+    const mq = window.matchMedia("(min-width: 768px)");
+    const syncViewport = () => setIsDesktop(mq.matches);
+    syncViewport();
+    mq.addEventListener("change", syncViewport);
+
+    return () => {
+      window.removeEventListener("workspace-nav-collapse", syncSidebar);
+      window.removeEventListener("storage", syncSidebar);
+      mq.removeEventListener("change", syncViewport);
+    };
+  }, []);
+
+  const leftOffset = isDesktop ? sidebarOffset : 0;
+
   return (
-    <div className="pointer-events-none fixed bottom-0 left-0 right-0 z-40 flex h-0 items-end justify-center md:left-14">
+    <div
+      className="pointer-events-none fixed bottom-0 right-0 z-40 flex justify-center max-md:bottom-[4.75rem] md:bottom-0"
+      style={{ left: leftOffset }}
+    >
       <div
         className="w-full bg-gradient-to-b from-transparent to-[#a0a0a0] p-[10px] pb-6"
         style={{

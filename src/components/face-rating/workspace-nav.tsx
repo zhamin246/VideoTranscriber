@@ -4,16 +4,23 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "@/i18n/navigation";
 import {
+  ChevronDown,
   Clock3,
   FileText,
   FolderOpen,
   Gift,
+  Globe,
   Home,
+  LogIn,
   PanelLeftClose,
   PanelLeftOpen,
   type LucideIcon,
 } from "lucide-react";
+import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useSignedIn } from "@/hooks/useSignedIn";
+import { useAppContext } from "@/contexts/app";
+import { localeNames } from "@/i18n/locale";
 import { CONVERT_HREF } from "./data";
 import { NavRouteLink } from "./nav-route-link";
 import { PlatformMark } from "./platform-mark";
@@ -58,7 +65,10 @@ function navLabelClass(collapsed: boolean) {
   return collapsed ? "sr-only" : "min-w-0 flex-1 truncate text-left";
 }
 
-const SIDEBAR_COLLAPSED_KEY = "workspace-nav-collapsed";
+export const SIDEBAR_COLLAPSED_KEY = "workspace-nav-collapsed";
+
+export const WORKSPACE_NAV_EXPANDED_WIDTH_PX = 320;
+export const WORKSPACE_NAV_COLLAPSED_WIDTH_PX = 56;
 
 function BrandMark() {
   return (
@@ -155,14 +165,45 @@ function guestPlan(): PlanSummary {
   };
 }
 
+function GuestSidebarFooter({ onSignIn }: { onSignIn: () => void }) {
+  const t = useTranslations();
+  const params = useParams();
+  const locale = (params?.locale as string) || "en";
+  const languageLabel = localeNames[locale] || localeNames.en;
+
+  return (
+    <div className="flex w-full flex-col gap-2">
+      <button
+        type="button"
+        onClick={onSignIn}
+        className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border-2 border-[#5270FF] bg-white text-[14px] font-semibold text-[#5270FF] transition-colors hover:bg-[#F4F6FF]"
+      >
+        <LogIn className="h-[18px] w-[18px] shrink-0" strokeWidth={2} />
+        {t("user.sign_in")}
+      </button>
+      <div
+        className="flex h-11 w-full items-center gap-2 rounded-xl border border-[#E8EAF0] bg-white px-3 text-[#334155]"
+        aria-label="Language"
+      >
+        <Globe className="h-[18px] w-[18px] shrink-0 text-[#64748B]" strokeWidth={1.75} />
+        <span className="min-w-0 flex-1 truncate text-left text-[14px] font-medium">
+          {languageLabel}
+        </span>
+        <ChevronDown className="h-4 w-4 shrink-0 text-[#94A3B8]" aria-hidden />
+      </div>
+    </div>
+  );
+}
+
 function CurrentPlanCard({
   onUpgrade,
 }: {
   onUpgrade: (reason?: UpgradePricingReason) => void;
 }) {
   const { user, signedIn, sessionLoading } = useSignedIn();
-  const plan =
-    user?.plan || (signedIn && sessionLoading ? null : guestPlan());
+  if (!signedIn) return null;
+
+  const plan = user?.plan || (sessionLoading ? null : guestPlan());
   if (!plan) {
     return (
       <div className="flex w-full flex-col rounded-2xl border border-[#EEF0F5] bg-white p-3.5 text-sm text-[#94A3B8]">
@@ -245,6 +286,8 @@ function CurrentPlanCard({
 
 export default function WorkspaceNav() {
   const pathname = usePathname() || "";
+  const { signedIn } = useSignedIn();
+  const { setShowSignModal } = useAppContext();
   const onHome = pathname === "/" || pathname === "";
   const onAssets = pathname.includes("/my-assets");
   const onPricing = pathname.includes("/pricing");
@@ -261,6 +304,7 @@ export default function WorkspaceNav() {
     } catch {
       /* ignore */
     }
+    window.dispatchEvent(new Event("workspace-nav-collapse"));
   }, []);
 
   const toggleCollapsed = () => {
@@ -271,6 +315,7 @@ export default function WorkspaceNav() {
       } catch {
         /* ignore */
       }
+      window.dispatchEvent(new Event("workspace-nav-collapse"));
       return next;
     });
   };
@@ -315,6 +360,17 @@ export default function WorkspaceNav() {
               </li>
             );
           })}
+          {!signedIn ? (
+            <li className="shrink-0">
+              <button
+                type="button"
+                onClick={() => setShowSignModal(true)}
+                className="inline-flex min-h-[40px] items-center whitespace-nowrap rounded-xl border-2 border-[#5270FF] bg-white px-3 py-2 text-[13px] font-semibold leading-none text-[#5270FF]"
+              >
+                Sign In
+              </button>
+            </li>
+          ) : null}
         </ul>
       </nav>
       <aside
@@ -434,18 +490,32 @@ export default function WorkspaceNav() {
           </ul>
 
           <div className="mt-2 shrink-0 pb-2 pt-1">
-            {collapsed ? (
+            {signedIn ? (
+              collapsed ? (
+                <button
+                  type="button"
+                  onClick={() => openUpgrade("generic")}
+                  title="Upgrade Plan"
+                  aria-label="Upgrade Plan"
+                  className="mx-auto flex h-[42px] w-[42px] items-center justify-center rounded-xl bg-[#635BFF] text-white shadow-[0_8px_20px_-12px_rgba(99,91,255,0.9)]"
+                >
+                  <Gift className="h-5 w-5" strokeWidth={1.75} />
+                </button>
+              ) : (
+                <CurrentPlanCard onUpgrade={openUpgrade} />
+              )
+            ) : collapsed ? (
               <button
                 type="button"
-                onClick={() => openUpgrade("generic")}
-                title="Upgrade Plan"
-                aria-label="Upgrade Plan"
-                className="mx-auto flex h-[42px] w-[42px] items-center justify-center rounded-xl bg-[#635BFF] text-white shadow-[0_8px_20px_-12px_rgba(99,91,255,0.9)]"
+                onClick={() => setShowSignModal(true)}
+                title="Sign In"
+                aria-label="Sign In"
+                className="mx-auto flex h-[42px] w-[42px] items-center justify-center rounded-xl border-2 border-[#5270FF] bg-white text-[#5270FF]"
               >
-                <Gift className="h-5 w-5" strokeWidth={1.75} />
+                <LogIn className="h-5 w-5" strokeWidth={1.75} />
               </button>
             ) : (
-              <CurrentPlanCard onUpgrade={openUpgrade} />
+              <GuestSidebarFooter onSignIn={() => setShowSignModal(true)} />
             )}
           </div>
         </nav>
