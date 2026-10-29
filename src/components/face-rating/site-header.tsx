@@ -9,6 +9,7 @@ import { signOut, useSession } from "next-auth/react";
 import { content, CONVERT_HREF } from "./data";
 import { isToTextSensitivePath } from "./nav-labels";
 import { btnPrimary, V } from "./visual";
+import WorkspaceDrawerNav from "./workspace-drawer-nav";
 
 const DASHBOARD_HREF = "/dashboard";
 
@@ -257,9 +258,164 @@ export default function FaceRatingSiteHeader({
     return () => document.removeEventListener("mousedown", onDoc);
   }, [menuOpen]);
 
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
+  const mobileMenuPanel = (
+    <div className="flex flex-col gap-1">
+      {hideBrandOnDesktop ? (
+        <>
+          <WorkspaceDrawerNav onNavigate={() => setOpen(false)} />
+          {isLoggedIn ? (
+            <div className="mt-2 border-t pt-2" style={{ borderColor: V.line }}>
+              <Link
+                href={DASHBOARD_HREF}
+                onClick={() => setOpen(false)}
+                className="block rounded-[10px] px-3 py-3 text-[15px] font-medium"
+                style={{ color: V.ink }}
+              >
+                My Dashboard
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  void signOut({ callbackUrl: "/" });
+                }}
+                className="block w-full rounded-[10px] px-3 py-3 text-left text-[15px] font-medium"
+                style={{ color: V.ink }}
+              >
+                Sign out
+              </button>
+            </div>
+          ) : null}
+        </>
+      ) : (
+        <>
+          <Link
+            href={nav.home.href}
+            onClick={() => setOpen(false)}
+            className="rounded-[10px] px-3 py-3 text-[15px] font-medium"
+            style={{ color: V.ink }}
+          >
+            {nav.home.label}
+          </Link>
+          {nav.menus.map((menu) => {
+            const groups = "groups" in menu ? menu.groups : undefined;
+            const items = navMenuItems(menu);
+            const more = "more" in menu && isNavMore(menu.more) ? menu.more : undefined;
+            return (
+              <div key={menu.label} className="mb-2">
+                <p className="px-3 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  {menu.label}
+                </p>
+                {groups?.map((group) => (
+                  <div key={group.title} className="mb-1">
+                    <p className="px-3 py-1 text-[13px] font-semibold" style={{ color: V.ink }}>
+                      {group.title}
+                    </p>
+                    {group.items.map((item) => (
+                      <NavRouteLink
+                        key={`${menu.label}-${group.title}-${item.label}`}
+                        href={item.href}
+                        onClick={() => setOpen(false)}
+                        className="block whitespace-nowrap rounded-[10px] px-3 py-2 text-[14px] font-medium"
+                        style={{ color: V.ink }}
+                      >
+                        {item.label}
+                      </NavRouteLink>
+                    ))}
+                    {"more" in group && isNavMore(group.more) ? (
+                      <Link
+                        href={group.more.href}
+                        onClick={() => setOpen(false)}
+                        className="block rounded-[10px] px-3 py-2 text-[14px] font-semibold text-violet-600"
+                      >
+                        {group.more.label}
+                      </Link>
+                    ) : null}
+                  </div>
+                ))}
+                {items?.map((item) => (
+                  <Link
+                    key={`${menu.label}-${item.label}`}
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    className="block whitespace-nowrap rounded-[10px] px-3 py-2 text-[14px] font-medium"
+                    style={{ color: V.ink }}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+                {more ? (
+                  <Link
+                    href={more.href}
+                    onClick={() => setOpen(false)}
+                    className="block rounded-[10px] px-3 py-2 text-[14px] font-semibold text-violet-600"
+                  >
+                    {more.label}
+                  </Link>
+                ) : null}
+              </div>
+            );
+          })}
+          <div className="my-2 border-t" style={{ borderColor: V.line }} />
+          {nav.items.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              onClick={() => setOpen(false)}
+              className="rounded-[10px] px-3 py-3 text-[15px] font-medium"
+              style={{ color: V.ink }}
+            >
+              {item.label}
+            </Link>
+          ))}
+          {isLoggedIn ? (
+            <>
+              <Link
+                href={DASHBOARD_HREF}
+                onClick={() => setOpen(false)}
+                className="rounded-[10px] px-3 py-3 text-[15px] font-medium"
+                style={{ color: V.ink }}
+              >
+                My Dashboard
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  void signOut({ callbackUrl: "/" });
+                }}
+                className="rounded-[10px] px-3 py-3 text-left text-[15px] font-medium"
+                style={{ color: V.ink }}
+              >
+                Sign out
+              </button>
+            </>
+          ) : null}
+          <Link
+            href={CONVERT_HREF}
+            onClick={() => setOpen(false)}
+            className={`${btnPrimary} mt-3 w-full`}
+          >
+            {nav.cta.label}
+          </Link>
+        </>
+      )}
+    </div>
+  );
+
   return (
+    <>
     <header
-      className="sticky top-0 z-30 border-b border-white/10"
+      className={`sticky top-0 border-b border-white/10 ${open ? "z-[63]" : "z-30"}`}
       style={{
         backgroundColor: "rgba(255,255,255,0.72)",
         backdropFilter: "blur(12px)",
@@ -446,125 +602,28 @@ export default function FaceRatingSiteHeader({
           </button>
         </div>
       </div>
+    </header>
 
-      {open ? (
+    {open ? (
+      <div className="fixed inset-0 z-[62] md:hidden">
+        <button
+          type="button"
+          className="absolute inset-x-0 bottom-0 top-[59px] bg-black/35"
+          aria-label="Close menu"
+          onClick={() => setOpen(false)}
+        />
         <div
-          className="border-t px-4 py-4 md:hidden"
-          style={{ borderColor: V.line, backgroundColor: V.bg }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigation menu"
+          className="absolute inset-x-0 bottom-0 top-[59px] flex flex-col bg-white shadow-[0_-8px_32px_rgba(15,23,42,0.12)]"
         >
-          <div className="flex flex-col gap-1">
-            <Link
-              href={nav.home.href}
-              onClick={() => setOpen(false)}
-              className="rounded-[10px] px-3 py-3 text-[15px] font-medium"
-              style={{ color: V.ink }}
-            >
-              {nav.home.label}
-            </Link>
-            {nav.menus.map((menu) => {
-              const groups = "groups" in menu ? menu.groups : undefined;
-              const items = navMenuItems(menu);
-              const more = "more" in menu && isNavMore(menu.more) ? menu.more : undefined;
-              return (
-                <div key={menu.label} className="mb-2">
-                  <p className="px-3 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                    {menu.label}
-                  </p>
-                  {groups?.map((group) => (
-                    <div key={group.title} className="mb-1">
-                      <p className="px-3 py-1 text-[13px] font-semibold" style={{ color: V.ink }}>
-                        {group.title}
-                      </p>
-                      {group.items.map((item) => (
-                        <NavRouteLink
-                          key={`${menu.label}-${group.title}-${item.label}`}
-                          href={item.href}
-                          onClick={() => setOpen(false)}
-                          className="block whitespace-nowrap rounded-[10px] px-3 py-2 text-[14px] font-medium"
-                          style={{ color: V.ink }}
-                        >
-                          {item.label}
-                        </NavRouteLink>
-                      ))}
-                      {"more" in group && isNavMore(group.more) ? (
-                        <Link
-                          href={group.more.href}
-                          onClick={() => setOpen(false)}
-                          className="block rounded-[10px] px-3 py-2 text-[14px] font-semibold text-violet-600"
-                        >
-                          {group.more.label}
-                        </Link>
-                      ) : null}
-                    </div>
-                  ))}
-                  {items?.map((item) => (
-                    <Link
-                      key={`${menu.label}-${item.label}`}
-                      href={item.href}
-                      onClick={() => setOpen(false)}
-                      className="block whitespace-nowrap rounded-[10px] px-3 py-2 text-[14px] font-medium"
-                      style={{ color: V.ink }}
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                  {more ? (
-                    <Link
-                      href={more.href}
-                      onClick={() => setOpen(false)}
-                      className="block rounded-[10px] px-3 py-2 text-[14px] font-semibold text-violet-600"
-                    >
-                      {more.label}
-                    </Link>
-                  ) : null}
-                </div>
-              );
-            })}
-            <div className="my-2 border-t" style={{ borderColor: V.line }} />
-            {nav.items.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="rounded-[10px] px-3 py-3 text-[15px] font-medium"
-                style={{ color: V.ink }}
-              >
-                {item.label}
-              </Link>
-            ))}
-            {isLoggedIn ? (
-              <>
-                <Link
-                  href={DASHBOARD_HREF}
-                  onClick={() => setOpen(false)}
-                  className="rounded-[10px] px-3 py-3 text-[15px] font-medium"
-                  style={{ color: V.ink }}
-                >
-                  My Dashboard
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setOpen(false);
-                    void signOut({ callbackUrl: "/" });
-                  }}
-                  className="rounded-[10px] px-3 py-3 text-left text-[15px] font-medium"
-                  style={{ color: V.ink }}
-                >
-                  Sign out
-                </button>
-              </>
-            ) : null}
-            <Link
-              href={CONVERT_HREF}
-              onClick={() => setOpen(false)}
-              className={`${btnPrimary} mt-3 w-full`}
-            >
-              {nav.cta.label}
-            </Link>
+          <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+            {mobileMenuPanel}
           </div>
         </div>
-      ) : null}
-    </header>
+      </div>
+    ) : null}
+    </>
   );
 }

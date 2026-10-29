@@ -25,8 +25,7 @@ export function LandingFaqSection({
     >
       <div className="mx-auto max-w-3xl px-4 pb-12 pt-16 text-center md:pb-16">
         <h2
-          className="font-bold"
-          style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px", color: "#000" }}
+          className="ac-section-heading font-bold"
         >
           {title}
         </h2>

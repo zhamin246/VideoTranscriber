@@ -56,9 +56,13 @@ export default function ScrollCta() {
 
   const leftOffset = isDesktop ? sidebarOffset : 0;
 
+  if (!isDesktop) {
+    return null;
+  }
+
   return (
     <div
-      className="pointer-events-none fixed bottom-0 right-0 z-40 flex justify-center max-md:bottom-[4.75rem] md:bottom-0"
+      className="pointer-events-none fixed bottom-0 right-0 z-40 hidden justify-center md:flex"
       style={{ left: leftOffset }}
     >
       <div

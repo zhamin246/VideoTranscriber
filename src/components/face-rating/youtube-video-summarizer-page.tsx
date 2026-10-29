@@ -97,8 +97,7 @@ export default function YoutubeVideoSummarizerPage() {
               <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 text-center">
                   <h2
-                    className="font-bold"
-                    style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px", color: "#000" }}
+                    className="ac-section-heading font-bold"
                   >
                     {seo.how.title}
                   </h2>
@@ -149,8 +148,7 @@ export default function YoutubeVideoSummarizerPage() {
                 <div className="flex w-full justify-center">
                   <div className="flex w-full flex-col items-center gap-6 text-center">
                     <h2
-                      className="font-bold"
-                      style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px", color: "#000" }}
+                      className="ac-section-heading font-bold"
                     >
                       {seo.features.title}
                     </h2>
@@ -186,14 +184,7 @@ export default function YoutubeVideoSummarizerPage() {
                               <Link
                                 href="#transcribe"
                                 onClick={scrollToHero}
-                                className="inline-flex items-center gap-2 rounded-full text-white"
-                                style={{
-                                  height: 48,
-                                  padding: "8px 40px",
-                                  backgroundColor: "#8882F5",
-                                  fontSize: 18,
-                                  fontWeight: 500,
-                                }}
+                                className="ac-try-free-btn"
                               >
                                 Try It Free
                                 <span className="rotate-90 text-white">
@@ -216,8 +207,7 @@ export default function YoutubeVideoSummarizerPage() {
               <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 text-center">
                   <h2
-                    className="font-bold"
-                    style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px", color: "#000" }}
+                    className="ac-section-heading font-bold"
                   >
                     {seo.usecases.title}
                   </h2>
@@ -259,8 +249,7 @@ export default function YoutubeVideoSummarizerPage() {
               <div className="overflow-hidden text-center" style={{ backgroundColor: "#8882F5" }}>
                 <div className="mx-auto grid max-w-6xl items-end gap-y-6 px-4 py-10 lg:px-8">
                   <h2
-                    className="font-bold text-white"
-                    style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px" }}
+                    className="ac-section-heading font-bold text-white"
                   >
                     {seo.cta.title}
                   </h2>
@@ -274,16 +263,7 @@ export default function YoutubeVideoSummarizerPage() {
                     <Link
                       href="#transcribe"
                       onClick={scrollToHero}
-                      className="inline-flex items-center gap-2"
-                      style={{
-                        height: 48,
-                        padding: "8px 40px",
-                        borderRadius: 8,
-                        fontSize: 18,
-                        fontWeight: 500,
-                        color: "rgb(111, 104, 240)",
-                        backgroundColor: "#fff",
-                      }}
+                      className="ac-purple-cta-btn"
                     >
                       {seo.cta.button}
                       <span

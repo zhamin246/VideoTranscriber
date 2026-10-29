@@ -1544,13 +1544,19 @@ export default function HeroUpload({
                 >
                   <Mic className="h-9 w-9" strokeWidth={2} />
                 </span>
-                <p className="mt-6 text-base md:text-lg" style={{ color: "#475569" }}>
+                <p
+                  className={`mt-6 text-[#475569] ${
+                    recording
+                      ? "text-base md:text-lg"
+                      : "max-sm:whitespace-nowrap max-sm:text-[12px] max-sm:leading-4 max-sm:tracking-[-0.02em] text-base md:text-lg"
+                  }`}
+                >
                   {recording
                     ? `Recording… ${formatDuration(recordElapsed)}`
                     : "Click 'Start recording' to capture your voice instantly."}
                 </p>
                 {!recording ? (
-                  <p className="mt-2 text-base md:text-lg" style={{ color: "#475569" }}>
+                  <p className="mt-2 text-[#475569] max-sm:whitespace-nowrap max-sm:text-[12px] max-sm:leading-4 max-sm:tracking-[-0.02em] text-base md:text-lg">
                     Record your audio directly and convert audio to text for free.
                   </p>
                 ) : null}

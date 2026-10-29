@@ -132,15 +132,11 @@ export default function FaceRatingLandingPage() {
             <h1 className="text-[28px] font-bold leading-[1.2] tracking-tight text-[#111827] sm:text-[36px] sm:leading-[46px] md:text-[40px] md:leading-[50px]">
               Free Online Video Transcriber
             </h1>
-            <div className="mx-auto mt-2 w-full max-w-3xl space-y-0 px-0.5 font-normal text-[#4B5563] max-sm:text-[11px] max-sm:leading-[14px] max-sm:tracking-[-0.02em] sm:mt-2 sm:space-y-1 sm:px-0 sm:text-lg sm:leading-[27px] sm:tracking-normal">
-              {hero.description.split("\n").map((line, i) => (
+            <div className="mx-auto mt-2 w-full max-w-3xl px-0 font-normal text-[#4B5563] sm:mt-2 sm:space-y-1 sm:text-lg sm:leading-[27px]">
+              {hero.description.split("\n").map((line) => (
                 <p
                   key={line}
-                  className={
-                    i === 0
-                      ? "max-sm:whitespace-nowrap sm:whitespace-normal"
-                      : "max-sm:whitespace-nowrap max-sm:text-[10px] max-sm:leading-[13px] sm:whitespace-normal sm:text-lg sm:leading-[27px]"
-                  }
+                  className="max-sm:whitespace-nowrap max-sm:text-[12px] max-sm:leading-[16px] max-sm:tracking-[-0.02em] sm:text-pretty"
                 >
                   {line}
                 </p>
@@ -187,11 +183,8 @@ export default function FaceRatingLandingPage() {
           <MediaFilesStrip />
         </section>
 
-        <section
-          className="ac-section-wash overflow-hidden"
-          style={{ padding: "56px 16px 72px" }}
-        >
-          <div className="mx-auto max-w-[1200px]" style={{ padding: "32px 31px 36px" }}>
+        <section className="ac-section-wash overflow-hidden px-4 py-10 sm:px-6 sm:py-14">
+          <div className="mx-auto max-w-[1200px] px-2 py-6 sm:px-8 sm:py-8">
             <div className="grid gap-4 sm:grid-cols-3" style={{ gap: 16 }}>
               <div
                 className="relative overflow-hidden text-center"
@@ -264,16 +257,7 @@ export default function FaceRatingLandingPage() {
               </div>
             </div>
 
-            <p
-              className="text-center"
-              style={{
-                marginTop: 40,
-                marginBottom: 16,
-                fontSize: 36,
-                fontWeight: 700,
-                color: "rgb(51, 65, 85)",
-              }}
-            >
+            <p className="ac-section-heading mt-10 mb-4 text-center text-[#334155]">
               One workspace for every transcript
             </p>
             <p className="mb-8 text-center text-lg text-slate-500">
@@ -312,8 +296,7 @@ export default function FaceRatingLandingPage() {
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 text-center">
               <h2
-                className="font-bold"
-                style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px", color: "#000" }}
+                className="ac-section-heading font-bold"
               >
                 How it works
               </h2>
@@ -380,10 +363,7 @@ export default function FaceRatingLandingPage() {
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex w-full justify-center">
               <div className="flex w-full max-w-4xl flex-col gap-6 text-center">
-                <h2
-                  className="whitespace-pre-line font-bold"
-                  style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px", color: "#000" }}
-                >
+                <h2 className="ac-section-heading whitespace-pre-line font-bold">
                   More Ways to Work with Your Transcript
                 </h2>
                 <p className="text-center text-lg font-normal text-slate-700" style={{ fontSize: 18, lineHeight: "27px" }}>
@@ -434,23 +414,13 @@ export default function FaceRatingLandingPage() {
                     </div>
                     <div className="mx-auto max-w-xl md:col-span-7 md:w-full md:max-w-none lg:col-span-6">
                       <div className={row.imageRight ? "md:pr-4 lg:pr-12 xl:pr-16" : "md:pl-4 lg:pl-12 xl:pl-16"}>
-                        <h3 className="mb-3 text-[24px] font-semibold leading-[30px] text-black">{row.title}</h3>
-                        <p className="mb-4 text-lg text-gray-600">{row.body}</p>
+                        <h3 className="mb-3 text-xl font-semibold leading-snug text-black sm:text-2xl sm:leading-[30px]">{row.title}</h3>
+                        <p className="mb-4 text-base leading-relaxed text-gray-600 sm:text-lg">{row.body}</p>
                         <div className="btnList mt-5 flex gap-4">
-                          <Link
-                            href={row.href}
-                            className="inline-flex items-center gap-2 rounded-full text-white"
-                            style={{
-                              height: 48,
-                              padding: "8px 40px",
-                              backgroundColor: "#8882F5",
-                              fontSize: 18,
-                              fontWeight: 500,
-                            }}
-                          >
+                          <Link href={row.href} className="ac-try-free-btn">
                             Try It Free
                             <span className="rotate-90 text-white">
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-8 w-8">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="m15 11.25-3-3m0 0-3 3m3-3v7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                               </svg>
                             </span>
@@ -469,8 +439,7 @@ export default function FaceRatingLandingPage() {
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 text-center">
               <h2
-                className="font-bold"
-                style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px", color: "#000" }}
+                className="ac-section-heading font-bold"
               >
                 Common use cases
               </h2>
@@ -544,8 +513,7 @@ export default function FaceRatingLandingPage() {
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 text-center">
               <h2
-                className="font-bold"
-                style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px", color: "#000" }}
+                className="ac-section-heading font-bold"
               >
                 Built for everyday tasks
               </h2>
@@ -563,8 +531,7 @@ export default function FaceRatingLandingPage() {
           <div className="overflow-hidden text-center" style={{ backgroundColor: "#8882F5" }}>
             <div className="mx-auto grid max-w-6xl items-end gap-y-6 px-4 py-10 lg:px-8">
               <h2
-                className="font-bold text-white"
-                style={{ fontSize: 36, fontWeight: 700, lineHeight: "45px" }}
+                className="ac-section-heading font-bold text-white"
               >
                 {cta.title}
               </h2>
@@ -575,19 +542,7 @@ export default function FaceRatingLandingPage() {
                 {cta.body}
               </p>
               <div className="mt-4 flex justify-center">
-                <Link
-                  href="#transcribe"
-                  className="inline-flex items-center gap-2"
-                  style={{
-                    height: 48,
-                    padding: "8px 40px",
-                    borderRadius: 8,
-                    fontSize: 18,
-                    fontWeight: 500,
-                    color: "rgb(111, 104, 240)",
-                    backgroundColor: "#fff",
-                  }}
-                >
+                <Link href="#transcribe" className="ac-purple-cta-btn">
                   {cta.primary}
                   <span
                     className="inline-flex h-7 w-7 items-center justify-center rounded-full"
