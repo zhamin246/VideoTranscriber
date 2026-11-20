@@ -21,6 +21,34 @@ export function canonicalUrlForPath(path: string, locale: string): string {
 
 export const DEFAULT_OG_IMAGE_PATH = "/apple-touch-icon.png";
 
+/** 1200×630 share image for indexable landing/pricing pages. */
+export const SOCIAL_OG_IMAGE_PATH = "/og-social-1200x630.png";
+export const SOCIAL_OG_IMAGE_SIZE = { width: 1200, height: 630 } as const;
+
+export const INDEXABLE_ROBOTS: Metadata["robots"] = {
+  index: true,
+  follow: true,
+  googleBot: {
+    index: true,
+    follow: true,
+    "max-video-preview": -1,
+    "max-image-preview": "large",
+    "max-snippet": -1,
+  },
+};
+
+export const PRIVATE_ROBOTS: Metadata["robots"] = {
+  index: false,
+  follow: false,
+  googleBot: { index: false, follow: false },
+};
+
+export const AUTH_ROBOTS: Metadata["robots"] = {
+  index: false,
+  follow: true,
+  googleBot: { index: false, follow: true },
+};
+
 const defaultRobots: Metadata["robots"] = {
   index: true,
   follow: true,

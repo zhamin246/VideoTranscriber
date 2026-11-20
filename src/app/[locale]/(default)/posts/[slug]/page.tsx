@@ -2,6 +2,7 @@ import BlogArticlePage from "@/components/face-rating/blog-article-page";
 import Empty from "@/components/blocks/empty";
 import { PostStatus, findPostBySlug, postRowToPost } from "@/models/post";
 import { getTranslations } from "next-intl/server";
+import { INDEXABLE_ROBOTS } from "@/lib/seo/build-tool-page-metadata";
 
 export async function generateMetadata({
   params,
@@ -24,6 +25,7 @@ export async function generateMetadata({
     alternates: {
       canonical: canonicalUrl,
     },
+    robots: INDEXABLE_ROBOTS,
   };
 }
 
