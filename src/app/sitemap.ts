@@ -23,6 +23,10 @@ const STATIC_PATHS = [
   "/youtube-subtitle-downloader",
 ] as const;
 
+/** Indexable content paths (blog + docs with published copy). */
+const POST_SLUGS = ["turboscribe-review-ai-transcription-tool"] as const;
+const DOC_PATHS = ["/docs", "/docs/quickstart"] as const;
+
 function absoluteUrl(path: string, locale: string): string {
   const base = siteOrigin();
   if (locale === defaultLocale) {
@@ -38,6 +42,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
     for (const path of STATIC_PATHS) {
       entries.push({
         url: absoluteUrl(path, locale),
+      });
+    }
+
+    entries.push({
+      url: absoluteUrl("/pricing", locale),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    });
+
+    entries.push({
+      url: absoluteUrl("/posts", locale),
+    });
+    for (const slug of POST_SLUGS) {
+      entries.push({
+        url: absoluteUrl(`/posts/${slug}`, locale),
+      });
+    }
+
+    for (const docPath of DOC_PATHS) {
+      entries.push({
+        url: absoluteUrl(docPath, locale),
       });
     }
   }

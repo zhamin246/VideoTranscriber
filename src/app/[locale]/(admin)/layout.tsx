@@ -4,6 +4,12 @@ import { ReactNode } from "react";
 import { Sidebar } from "@/types/blocks/sidebar";
 import { getUserInfo } from "@/services/user";
 import { redirect } from "next/navigation";
+import type { Metadata } from "next";
+import { PRIVATE_ROBOTS } from "@/lib/seo/build-tool-page-metadata";
+
+export const metadata: Metadata = {
+  robots: PRIVATE_ROBOTS,
+};
 
 export default async function AdminLayout({
   children,

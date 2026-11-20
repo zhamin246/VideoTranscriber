@@ -4,7 +4,6 @@ import FaceRatingDashboardPage from "@/components/face-rating/dashboard-page";
 export const metadata: Metadata = {
   title: "Dashboard | image to cad",
   description: "Your saved photo-to-vector conversions.",
-  robots: { index: false, follow: false },
 };
 
 export default async function DashboardRoutePage({

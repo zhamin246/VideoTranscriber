@@ -5,11 +5,6 @@ import TranscriptWorkspace from "@/components/workspace/transcript-workspace";
 export const metadata: Metadata = {
   title: "Workspace | Video Transcriber",
   description: "Transcript workspace for your media link.",
-  robots: {
-    index: false,
-    follow: false,
-    googleBot: { index: false, follow: false },
-  },
 };
 
 export default async function WorkspacePage({

@@ -16,7 +16,6 @@ export async function generateMetadata({
     title: "My Assets | Video Transcriber",
     description: "Your transcriptions, translations, and recordings.",
     alternates: { canonical: canonicalUrl },
-    robots: { index: false, follow: false },
   };
 }
 
