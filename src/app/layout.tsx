@@ -2,7 +2,6 @@ import "@/app/globals.css";
 
 import type { Viewport } from "next";
 import { getLocale, setRequestLocale } from "next-intl/server";
-import { locales, defaultLocale } from "@/i18n/locale";
 import { cn } from "@/lib/utils";
 import localFont from "next/font/local";
 import MicrosoftClarity from "@/components/analytics/microsoft-clarity";
@@ -117,16 +116,6 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://www.google-analytics.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://www.clarity.ms" crossOrigin="anonymous" />
 
-        {locales &&
-          locales.map((loc) => (
-            <link
-              key={loc}
-              rel="alternate"
-              hrefLang={loc}
-              href={webUrl ? `${webUrl}${loc === defaultLocale ? "" : `/${loc}`}/` : undefined}
-            />
-          ))}
-        {webUrl && <link rel="alternate" hrefLang="x-default" href={webUrl} />}
       </head>
       <body
         className={cn(

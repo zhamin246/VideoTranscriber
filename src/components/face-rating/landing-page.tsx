@@ -38,19 +38,6 @@ import { BodyWithInternalLinks } from "./body-with-internal-links";
  * FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
  */
 
-const AUDIENCE: { label: string; dot: string }[] = [
-  { label: "Architects", dot: "#8882F5" },
-  { label: "Product designers", dot: "#6D8DF7" },
-  { label: "Laser shops", dot: "#4FB7E9" },
-  { label: "Fashion studios", dot: "#A78BFA" },
-  { label: "Patent drafters", dot: "#41C5B6" },
-  { label: "CNC shops", dot: "#7AA7FF" },
-  { label: "Illustrators", dot: "#5EC6E8" },
-  { label: "Makers", dot: "#6EE7C8" },
-  { label: "Educators", dot: "#8882F5" },
-  { label: "Fabricators", dot: "#6D8DF7" },
-];
-
 const LOGOS = [
   { src: "/logos/google.svg", alt: "Google" },
   { src: "/logos/spotify.svg", alt: "Spotify" },
@@ -59,51 +46,6 @@ const LOGOS = [
   { src: "/logos/tiktok.svg", alt: "TikTok" },
   { src: "/logos/netflix.svg", alt: "Netflix" },
 ];
-
-function AudienceMarquee() {
-  const row = [...AUDIENCE, ...AUDIENCE];
-  return (
-    <div className="overflow-hidden">
-      <div className="ac-marquee flex w-max" style={{ gap: 12 }}>
-        {row.map((item, i) => (
-          <span
-            key={`${item.label}-${i}`}
-            className="inline-flex shrink-0 items-center"
-            style={{
-              height: 52,
-              padding: "12px 19px",
-              borderRadius: 9999,
-              fontSize: 16,
-              fontWeight: 700,
-              color: "rgb(51, 65, 85)",
-              backgroundColor: "rgba(255,255,255,0.9)",
-              border: "0.8px solid rgb(194, 207, 253)",
-              gap: 10,
-            }}
-          >
-            <span
-              className="shrink-0 rounded-full"
-              style={{ width: 11, height: 11, backgroundColor: item.dot }}
-            />
-            {item.label}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function TrustStars() {
-  return (
-    <span className="inline-flex" style={{ gap: 2, color: "rgb(242, 169, 0)" }} aria-hidden>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <svg key={i} width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2.6l2.7 6.4 6.9.6-5.2 4.6 1.6 6.7L12 17.8 5.99 20.9l1.62-6.7L2.4 9.6l6.9-.6L12 2.6z" />
-        </svg>
-      ))}
-    </span>
-  );
-}
 
 export default function FaceRatingLandingPage() {
   const { hero, cta } = content;
@@ -179,79 +121,7 @@ export default function FaceRatingLandingPage() {
 
         <section className="ac-section-wash overflow-hidden px-4 py-10 sm:px-6 sm:py-14">
           <div className="mx-auto max-w-[1200px] px-2 py-6 sm:px-8 sm:py-8">
-            <div className="grid gap-4 sm:grid-cols-3" style={{ gap: 16 }}>
-              <div
-                className="relative overflow-hidden text-center"
-                style={{
-                  minHeight: 129,
-                  padding: "21px 16px",
-                  borderRadius: 16,
-                  background: "rgba(136, 130, 245, 0.07)",
-                  border: "0.8px solid rgba(136, 130, 245, 0.16)",
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)",
-                }}
-              >
-                <span
-                  className="absolute bottom-0 left-0 top-0"
-                  style={{ width: 4, background: "#8882F5" }}
-                />
-                <div className="flex items-center justify-center gap-2">
-                  <span style={{ fontSize: 44, fontWeight: 800, lineHeight: "44px", color: "rgb(242, 169, 0)" }}>
-                    4.9
-                  </span>
-                  <TrustStars />
-                </div>
-                <p style={{ marginTop: 8, fontSize: 18, fontWeight: 700, color: "rgb(100, 116, 139)" }}>
-                  User rating
-                </p>
-              </div>
-              <div
-                className="relative overflow-hidden text-center"
-                style={{
-                  minHeight: 129,
-                  padding: "21px 16px",
-                  borderRadius: 16,
-                  background: "rgba(136, 130, 245, 0.07)",
-                  border: "0.8px solid rgba(136, 130, 245, 0.16)",
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)",
-                }}
-              >
-                <span
-                  className="absolute bottom-0 left-0 top-0"
-                  style={{ width: 4, background: "#8882F5" }}
-                />
-                <p style={{ fontSize: 38, fontWeight: 800, lineHeight: "38px", color: "rgb(23, 32, 51)" }}>
-                  30,000,000+
-                </p>
-                <p style={{ marginTop: 8, fontSize: 18, fontWeight: 700, color: "rgb(100, 116, 139)" }}>
-                  Files processed
-                </p>
-              </div>
-              <div
-                className="relative overflow-hidden text-center"
-                style={{
-                  minHeight: 129,
-                  padding: "21px 16px",
-                  borderRadius: 16,
-                  background: "rgba(136, 130, 245, 0.07)",
-                  border: "0.8px solid rgba(136, 130, 245, 0.16)",
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)",
-                }}
-              >
-                <span
-                  className="absolute bottom-0 left-0 top-0"
-                  style={{ width: 4, background: "#8882F5" }}
-                />
-                <p style={{ fontSize: 44, fontWeight: 800, lineHeight: "44px", color: "rgb(23, 32, 51)" }}>
-                  190+
-                </p>
-                <p style={{ marginTop: 8, fontSize: 18, fontWeight: 700, color: "rgb(100, 116, 139)" }}>
-                  Countries served
-                </p>
-              </div>
-            </div>
-
-            <p className="ac-section-heading mt-10 mb-4 text-center text-[#334155]">
+            <p className="ac-section-heading mb-4 text-center text-[#334155]">
               One workspace for every transcript
             </p>
             <p className="mb-8 text-center text-lg text-slate-500">
@@ -279,9 +149,6 @@ export default function FaceRatingLandingPage() {
                   </div>
                 ))}
               </div>
-            </div>
-            <div className="mt-8">
-              <AudienceMarquee />
             </div>
           </div>
         </section>

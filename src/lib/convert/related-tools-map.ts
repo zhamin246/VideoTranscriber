@@ -6,9 +6,9 @@ export const RELATED_TOOLS_BY_PATH: Record<
   readonly ToolInternalLinkHref[]
 > = {
   "/youtube-transcript-generator": [
-    "/ai-video-summarizer",
-    "/youtube-subtitle-downloader",
-    "/video-to-text",
+    "/tiktok-transcript-generator",
+    "/instagram-transcript-generator",
+    "/facebook-transcript-generator",
   ],
   "/ai-video-summarizer": [
     "/youtube-transcript-generator",
@@ -20,14 +20,14 @@ export const RELATED_TOOLS_BY_PATH: Record<
     "/ai-video-summarizer",
   ],
   "/tiktok-transcript-generator": [
+    "/youtube-transcript-generator",
     "/instagram-transcript-generator",
     "/x-transcript-generator",
-    "/video-to-text",
   ],
   "/instagram-transcript-generator": [
+    "/youtube-transcript-generator",
     "/tiktok-transcript-generator",
     "/facebook-transcript-generator",
-    "/video-to-text",
   ],
   "/facebook-transcript-generator": [
     "/instagram-transcript-generator",
