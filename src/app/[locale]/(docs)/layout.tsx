@@ -2,9 +2,15 @@ import { source } from "@/lib/source";
 import { RootProvider } from "fumadocs-ui/provider";
 import { DocsLayout } from "fumadocs-ui/layouts/notebook";
 import { baseOptions } from "./layout.config";
+import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import type { Translations } from "fumadocs-ui/i18n";
+import { AUTH_ROBOTS } from "@/lib/seo/build-tool-page-metadata";
 import "./style.css";
+
+export const metadata: Metadata = {
+  robots: AUTH_ROBOTS,
+};
 
 const zh: Partial<Translations> = {
   search: "搜索内容",

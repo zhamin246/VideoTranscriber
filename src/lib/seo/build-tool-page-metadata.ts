@@ -19,9 +19,7 @@ export function canonicalUrlForPath(path: string, locale: string): string {
   return cleanPath === "/" ? `${base}/${locale}/` : `${base}/${locale}${cleanPath}`;
 }
 
-export const DEFAULT_OG_IMAGE_PATH = "/apple-touch-icon.png";
-
-/** 1200×630 share image for indexable landing/pricing pages. */
+/** Default 1200×630 share image for tool/landing pages. */
 export const SOCIAL_OG_IMAGE_PATH = "/og-social-1200x630.png";
 export const SOCIAL_OG_IMAGE_SIZE = { width: 1200, height: 630 } as const;
 
@@ -77,7 +75,7 @@ export function buildToolPageMetadata({
   const normalizedTitle = normalizeSeoTitle(title);
   const url = canonicalUrlForPath(path, locale);
   const base = siteOrigin();
-  const imageUrl = `${base}${DEFAULT_OG_IMAGE_PATH}`;
+  const imageUrl = `${base}${SOCIAL_OG_IMAGE_PATH}`;
 
   return {
     title: normalizedTitle,
@@ -94,8 +92,8 @@ export function buildToolPageMetadata({
       images: [
         {
           url: imageUrl,
-          width: 180,
-          height: 180,
+          width: SOCIAL_OG_IMAGE_SIZE.width,
+          height: SOCIAL_OG_IMAGE_SIZE.height,
           alt: SEO_SITE_NAME,
         },
       ],
