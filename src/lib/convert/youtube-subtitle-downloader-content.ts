@@ -11,7 +11,7 @@ export const YOUTUBE_SUBTITLE_DOWNLOADER_HREF = "/youtube-subtitle-downloader";
 
 export const youtubeSubtitleDownloaderSeo = {
   meta: {
-    title: "YouTube Subtitle Downloader | Video Transcriber",
+    title: "YouTube Subtitle Downloader — SRT & VTT from Video Speech",
     description:
       "YouTube Subtitle Downloader writes timed SRT or VTT from public speech. It does not copy YouTube’s caption panel and does not save the video file.",
   },
@@ -106,6 +106,14 @@ export const youtubeSubtitleDownloaderSeo = {
         title: "A how-to that must stay in sync",
         body: "Spoken steps get in-times. Menus that only appear as graphics are not read. That is not screen OCR.",
       },
+    ],
+  },
+  pageGuide: {
+    title: "When to use YouTube Subtitle Downloader",
+    paragraphs: [
+      "YouTube Subtitle Downloader expects one public watch, youtu.be, or Shorts URL per job. It writes SRT or VTT from speech timing—not from the CC drop-down in YouTube Studio and not as an MP4 download. Age-restricted, members-only, or region-blocked uploads fail early; playlists and channel home links are out of scope. Readable prose without cue times belongs on [[YouTube Transcript Generator|/youtube-transcript-generator]].",
+      "Use SRT when your editor (Premiere, DaVinci, Final Cut) imports subtitles; use VTT for HTML5 players. Both files come from the same workspace export after you review cues. Local video files should use [[video to text converter|/video-to-text]] first if you only have an MP4; audio-only projects can pair [[MP3 to SRT|/mp3-to-srt]] with extracted soundtracks.",
+      "Common failures: an empty auto-caption track (still fine—we transcribe audio), a private link, live streams that have not finished, or overlapping speakers without speaker labels. Re-fetch after confirming the URL plays while signed out. For summaries after captions exist, open [[AI Video Summarizer|/ai-video-summarizer]]; for other platforms try [[TikTok Transcript Generator|/tiktok-transcript-generator]] or [[Facebook Transcript Generator|/facebook-transcript-generator]].",
     ],
   },
   faq: {

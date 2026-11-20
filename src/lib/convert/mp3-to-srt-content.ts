@@ -27,7 +27,7 @@ export const mp3ToSrtSeo = {
   how: {
     title: "How to Convert MP3 to SRT",
     lead:
-      "Mp3 to srt takes three steps: upload local audio, transcribe speech, export timed captions. Use files you already have—podcasts, interviews, or voice-over—not pasted video URLs. Sign in for history and minutes; see Pricing for limits.",
+      "Mp3 to srt takes three steps: upload local audio, transcribe speech, export timed captions. Use files you already have—podcasts, interviews, or voice-over—not pasted video URLs. For MP4 or other video files, use the [[video to text converter|/video-to-text]] instead.",
     steps: [
       {
         n: "1",

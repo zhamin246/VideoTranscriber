@@ -7,17 +7,13 @@ export const RELATED_TOOLS_BY_PATH: Record<
 > = {
   "/youtube-transcript-generator": [
     "/ai-video-summarizer",
-    "/youtube-video-summarizer",
     "/youtube-subtitle-downloader",
+    "/video-to-text",
   ],
   "/ai-video-summarizer": [
     "/youtube-transcript-generator",
-    "/youtube-video-summarizer",
-  ],
-  "/youtube-video-summarizer": [
-    "/ai-video-summarizer",
-    "/youtube-transcript-generator",
     "/youtube-subtitle-downloader",
+    "/video-to-text",
   ],
   "/youtube-subtitle-downloader": [
     "/youtube-transcript-generator",

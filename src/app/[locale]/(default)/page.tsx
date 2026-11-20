@@ -1,5 +1,5 @@
 import { FaceRatingLandingPage } from "@/components/face-rating";
-import { defaultLocale } from "@/i18n/locale";
+import { buildToolPageMetadata } from "@/lib/seo/build-tool-page-metadata";
 
 export async function generateMetadata({
   params,
@@ -7,46 +7,16 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  let canonicalUrl = `${process.env.NEXT_PUBLIC_WEB_URL}`;
-
-  if (locale !== defaultLocale) {
-    canonicalUrl = `${process.env.NEXT_PUBLIC_WEB_URL}/${locale}`;
-  }
-
-  const title = "Video Transcriber – Transcribe Videos to Text Free";
+  const title = "Video Transcriber — Transcribe Videos to Text Free";
   const description =
     "Use this free video transcriber to turn video files and public links into searchable text. Generate transcripts, add speaker labels, and export TXT, DOCX, SRT, VTT, or CSV.";
 
-  return {
+  return buildToolPageMetadata({
+    path: "/",
+    locale,
     title,
     description,
-    alternates: {
-      canonical: canonicalUrl,
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonicalUrl,
-      siteName: "Video Transcriber",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      },
-    },
-  };
+  });
 }
 
 export default async function LandingPage() {

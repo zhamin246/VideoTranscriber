@@ -10,7 +10,6 @@ import { VIDEO_TO_TEXT_CONVERTER_HREF } from "@/lib/convert/video-to-text-conver
 import { X_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/x-transcript-generator-content";
 import { YOUTUBE_SUBTITLE_DOWNLOADER_HREF } from "@/lib/convert/youtube-subtitle-downloader-content";
 import { YOUTUBE_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/youtube-transcript-generator-content";
-import { YOUTUBE_VIDEO_SUMMARIZER_HREF } from "@/lib/convert/youtube-video-summarizer-content";
 
 export type WorkspaceToolNavItem =
   | {
@@ -82,11 +81,6 @@ export const WORKSPACE_AI_TOOLS_NAV: WorkspaceToolNavItem[] = [
     label: "AI Video Summarizer",
     href: AI_VIDEO_SUMMARIZER_HREF,
     icon: Sparkles,
-  },
-  {
-    label: "YouTube Video Summarizer",
-    href: YOUTUBE_VIDEO_SUMMARIZER_HREF,
-    platform: "youtube",
   },
   {
     label: "YouTube Subtitle Downloader",

@@ -129,6 +129,16 @@ const nextConfig = {
         destination: '/:locale/video-to-text',
         permanent: true,
       },
+      {
+        source: '/youtube-video-summarizer',
+        destination: '/ai-video-summarizer',
+        permanent: true,
+      },
+      {
+        source: '/:locale/youtube-video-summarizer',
+        destination: '/:locale/ai-video-summarizer',
+        permanent: true,
+      },
       // 规范化带参数的URL
       {
         source: '/:path*',

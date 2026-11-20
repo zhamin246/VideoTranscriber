@@ -8,12 +8,12 @@ export const YOUTUBE_TRANSCRIPT_GENERATOR_HREF = "/youtube-transcript-generator"
 
 export const youtubeTranscriptGeneratorSeo = {
   meta: {
-    title: "YouTube to Transcript from a Link | Video Transcriber",
+    title: "YouTube Transcript Generator — Free Transcript from a Public Link",
     description:
       "Paste a public link and use YouTube to transcript. Export TXT, DOCX, SRT, or VTT from the workspace. Private or blocked videos may not fetch.",
   },
   hero: {
-    h1: "Paste a Public Link for YouTube to Transcript",
+    h1: "YouTube Transcript Generator",
     subtitle:
       "YouTube to transcript on this page means a public watch, Shorts, or youtu.be URL becomes text you can search and export. Paste the link, run transcription, then copy or download from the workspace.",
     chips: [
@@ -26,7 +26,7 @@ export const youtubeTranscriptGeneratorSeo = {
   },
   how: {
     title: "How YouTube to transcript works",
-    lead: "YouTube to transcript is for a public URL, not for a file you already downloaded. Paste the link, transcribe the spoken audio with AI, then stay in the workspace to copy, export, or generate notes. Private, age-gated, or login-walled videos may not fetch — that is a platform limit, not a setting we can flip. YouTube to transcript on this page does not install a browser extension or open YouTube Studio.",
+    lead: "YouTube to transcript is for a public URL, not for a file you already downloaded. Paste the link, transcribe the spoken audio with AI, then stay in the workspace to copy, export, or generate notes. Private, age-gated, or login-walled videos may not fetch — that is a platform limit, not a setting we can flip. For local MP4, MOV, or WebM files, use our [[video to text converter|/video-to-text]] instead.",
     steps: [
       {
         n: "1",

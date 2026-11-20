@@ -10,12 +10,12 @@ export const INSTAGRAM_TRANSCRIPT_GENERATOR_HREF = "/instagram-transcript-genera
 
 export const instagramTranscriptGeneratorSeo = {
   meta: {
-    title: "Instagram Transcript from a Public Reel and Video Posts",
+    title: "Instagram Transcript Generator — Reels & Public Video Posts",
     description:
       "Get Instagram transcript from a public Reel or video URL. Copy or export TXT, DOCX, SRT, or VTT in the workspace. Private posts may not fetch.",
   },
   hero: {
-    h1: "Paste a Public Link for Instagram Transcript",
+    h1: "Instagram Transcript Generator",
     subtitle:
       "Instagram transcript on this page is spoken audio from a public Reel or video post, written so you can search and export it. Paste an instagram.com Reel or post URL, run transcription, then copy or download from the workspace.",
     chips: [

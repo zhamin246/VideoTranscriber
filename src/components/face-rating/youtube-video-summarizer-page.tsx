@@ -240,13 +240,13 @@ export default function YoutubeVideoSummarizerPage() {
               </div>
             </section>
 
-            <RelatedTools currentPath="/youtube-video-summarizer" />
+            <RelatedTools currentPath="/ai-video-summarizer" />
 
             <LandingFaqSection title={seo.faq.title} items={seo.faq.items} />
 
 
             <section className="ac-section-wash overflow-hidden">
-              <div className="overflow-hidden text-center" style={{ backgroundColor: "#8882F5" }}>
+              <div className="ac-purple-cta-band overflow-hidden text-center">
                 <div className="mx-auto grid max-w-6xl items-end gap-y-6 px-4 py-10 lg:px-8">
                   <h2
                     className="ac-section-heading font-bold text-white"

@@ -116,6 +116,24 @@
   color: #000;
 }
 
+.ac-section-heading.text-white {
+  color: #fff;
+}
+
+/** Purple footer CTA — title + body copy always white (button keeps ac-purple-cta-btn). */
+.ac-purple-cta-band {
+  background-color: #8882f5;
+  color: #fff;
+}
+
+.ac-purple-cta-band .ac-section-heading {
+  color: #fff;
+}
+
+.ac-purple-cta-band p {
+  color: #fff;
+}
+
 .ac-try-free-btn {
   display: inline-flex;
   align-items: center;

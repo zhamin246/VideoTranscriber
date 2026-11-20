@@ -22,12 +22,12 @@ import HeroUpload from "./hero-upload";
 import MediaFilesStrip from "./media-files-strip";
 import WorkspaceNav from "./workspace-nav";
 import PromoBanner from "./promo-banner";
-import ReviewMarquee from "./review-marquee";
 import ScrollCta from "./scroll-cta";
 import { content, CONVERT_HREF } from "./data";
 import { YOUTUBE_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/youtube-transcript-generator-content";
 import { V } from "./visual";
 import { useCaseAsset } from "@/lib/convert/use-case-assets";
+import { BodyWithInternalLinks } from "./body-with-internal-links";
 
 /**
  * THESIS: AudioCleaner-style converter home — upload well first, not a split face hero.
@@ -132,16 +132,10 @@ export default function FaceRatingLandingPage() {
             <h1 className="text-[28px] font-bold leading-[1.2] tracking-tight text-[#111827] sm:text-[36px] sm:leading-[46px] md:text-[40px] md:leading-[50px]">
               Free Online Video Transcriber
             </h1>
-            <div className="mx-auto mt-2 w-full max-w-3xl px-0 font-normal text-[#4B5563] sm:mt-2 sm:space-y-1 sm:text-lg sm:leading-[27px]">
-              {hero.description.split("\n").map((line) => (
-                <p
-                  key={line}
-                  className="max-sm:whitespace-nowrap max-sm:text-[12px] max-sm:leading-[16px] max-sm:tracking-[-0.02em] sm:text-pretty"
-                >
-                  {line}
-                </p>
-              ))}
-            </div>
+            <BodyWithInternalLinks
+              className="mx-auto mt-3 max-w-3xl text-pretty text-[14px] font-normal leading-[22px] text-[#4B5563] sm:mt-2 sm:text-lg sm:leading-[27px]"
+              text={hero.description}
+            />
             <div className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:mt-4 sm:gap-x-5">
               {(
                 [
@@ -503,32 +497,12 @@ export default function FaceRatingLandingPage() {
           </div>
         </section>
 
-        <section
-          className="pb-16 pt-16 sm:pb-24 sm:pt-32"
-          style={{
-            backgroundImage:
-              "linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(136,130,245,0.05) 40%, rgba(136,130,245,0.05) 60%, rgba(255,255,255,0.02) 100%)",
-          }}
-        >
-          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 text-center">
-              <h2
-                className="ac-section-heading font-bold"
-              >
-                Built for everyday tasks
-              </h2>
-              <p className="text-lg text-slate-700" style={{ fontSize: 18, lineHeight: "27px" }}>
-                See how people review recordings, organize research, and turn speech into text they can search and share.
-              </p>
-            </div>
-            <ReviewMarquee />
-          </div>
-        </section>
+        
 
         <FaceRatingFaq />
 
         <section className="ac-section-wash overflow-hidden">
-          <div className="overflow-hidden text-center" style={{ backgroundColor: "#8882F5" }}>
+          <div className="ac-purple-cta-band overflow-hidden text-center">
             <div className="mx-auto grid max-w-6xl items-end gap-y-6 px-4 py-10 lg:px-8">
               <h2
                 className="ac-section-heading font-bold text-white"

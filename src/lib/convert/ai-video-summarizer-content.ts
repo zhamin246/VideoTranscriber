@@ -163,6 +163,10 @@ export const aiVideoSummarizerSeo = {
       },
     ],
   },
+  youtubeSummarizer: {
+    title: "YouTube video summarizer from a public link",
+    body: "A YouTube video summarizer workflow starts with the same public watch, Shorts, or youtu.be URL you would paste on our [[YouTube Transcript Generator|/youtube-transcript-generator]]. Speech becomes a searchable transcript first; then Smart Summary, chapters, and Ask AI read that text instead of re-buffering the player. This replaces a separate YouTube-only summarizer page—one workspace covers uploads and links. When you only need timed captions, export SRT through [[YouTube Subtitle Downloader|/youtube-subtitle-downloader]] after the transcript is ready. Local screen recordings or MP4 files still belong on [[video to text converter|/video-to-text]] before you summarize.",
+  },
   faq: {
     title: "AI Video Summarizer FAQ",
     items: [

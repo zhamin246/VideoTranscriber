@@ -18,10 +18,10 @@ import HeroUpload from "./hero-upload";
 import MediaFilesStrip from "./media-files-strip";
 import WorkspaceNav from "./workspace-nav";
 import PromoBanner from "./promo-banner";
-import ReviewMarquee from "./review-marquee";
 import RelatedTools from "./related-tools";
 import ScrollCta from "./scroll-cta";
 import { LandingFaqSection } from "./landing-faq-section";
+import { BodyWithInternalLinks } from "./body-with-internal-links";
 import { V } from "./visual";
 import { MP3_TO_SRT_HREF, mp3ToSrtSeo } from "@/lib/convert/mp3-to-srt-content";
 
@@ -105,7 +105,7 @@ export default function Mp3ToSrtPage() {
                     {seo.how.title}
                   </h2>
                   <p className="text-lg text-slate-700" style={{ fontSize: 18, lineHeight: "27px" }}>
-                    {seo.how.lead}
+                    <BodyWithInternalLinks text={seo.how.lead} />
                   </p>
                 </div>
                 <div className="mx-auto mt-16 grid gap-8 md:grid-cols-3">
@@ -243,24 +243,7 @@ export default function Mp3ToSrtPage() {
               </div>
             </section>
 
-            <section
-              className="pb-16 pt-16 sm:pb-24 sm:pt-32"
-              style={{
-                backgroundImage:
-                  "linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(136,130,245,0.05) 40%, rgba(136,130,245,0.05) 60%, rgba(255,255,255,0.02) 100%)",
-              }}
-            >
-              <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 text-center">
-                  <h2
-                    className="ac-section-heading font-bold"
-                  >
-                    What people are saying
-                  </h2>
-                </div>
-                <ReviewMarquee />
-              </div>
-            </section>
+            
 
             <RelatedTools currentPath={MP3_TO_SRT_HREF} />
 
@@ -268,7 +251,7 @@ export default function Mp3ToSrtPage() {
 
 
             <section className="ac-section-wash overflow-hidden">
-              <div className="overflow-hidden text-center" style={{ backgroundColor: "#8882F5" }}>
+              <div className="ac-purple-cta-band overflow-hidden text-center">
                 <div className="mx-auto grid max-w-6xl items-end gap-y-6 px-4 py-10 lg:px-8">
                   <h2
                     className="ac-section-heading font-bold text-white"

@@ -9,7 +9,6 @@ import { AI_VIDEO_SUMMARIZER_HREF } from "@/lib/convert/ai-video-summarizer-cont
 import { VIDEO_TO_TEXT_CONVERTER_HREF } from "@/lib/convert/video-to-text-converter-content";
 import { YOUTUBE_SUBTITLE_DOWNLOADER_HREF } from "@/lib/convert/youtube-subtitle-downloader-content";
 import { YOUTUBE_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/youtube-transcript-generator-content";
-import { YOUTUBE_VIDEO_SUMMARIZER_HREF } from "@/lib/convert/youtube-video-summarizer-content";
 import { TIKTOK_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/tiktok-transcript-generator-content";
 import { INSTAGRAM_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/instagram-transcript-generator-content";
 import { FACEBOOK_TRANSCRIPT_GENERATOR_HREF } from "@/lib/convert/facebook-transcript-generator-content";
@@ -55,7 +54,7 @@ export const content = {
             title: "Social Media Transcriber",
             items: [
               { label: "YouTube Transcript Generator", href: YOUTUBE_TRANSCRIPT_GENERATOR_HREF },
-              { label: "YouTube Video Summarizer", href: YOUTUBE_VIDEO_SUMMARIZER_HREF },
+              { label: "YouTube Video Summarizer", href: AI_VIDEO_SUMMARIZER_HREF },
               { label: "YouTube Subtitle Downloader", href: YOUTUBE_SUBTITLE_DOWNLOADER_HREF },
               { label: "TikTok Transcript Generator", href: TIKTOK_TRANSCRIPT_GENERATOR_HREF },
               { label: "Instagram Transcript Generator", href: INSTAGRAM_TRANSCRIPT_GENERATOR_HREF },
@@ -81,7 +80,7 @@ export const content = {
     titleItalic: "File or Public Link",
     subtitle: "",
     description:
-      "This free video transcriber turns speech into searchable text.\nUpload or paste a link—review, export, or add notes in one workspace.",
+      "This free video transcriber turns speech into searchable text. Upload or paste a link below—or use the [[video to text converter|/video-to-text]] for a local file—then review, export, and add notes in one workspace.",
     primaryCta: { label: "Start transcribing", href: CONVERT_HREF },
     secondaryCta: { label: "See examples", href: "/#usecases" },
     volume: "Semantic linework — not a pixel tracing.",

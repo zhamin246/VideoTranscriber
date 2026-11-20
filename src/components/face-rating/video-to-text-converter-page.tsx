@@ -20,7 +20,6 @@ import HeroUpload from "./hero-upload";
 import MediaFilesStrip from "./media-files-strip";
 import WorkspaceNav from "./workspace-nav";
 import PromoBanner from "./promo-banner";
-import ReviewMarquee from "./review-marquee";
 import ScrollCta from "./scroll-cta";
 import { LandingFaqSection } from "./landing-faq-section";
 import RelatedTools from "./related-tools";
@@ -247,27 +246,7 @@ export default function VideoToTextConverterPage() {
               </div>
             </section>
 
-            <section
-              className="pb-16 pt-16 sm:pb-24 sm:pt-32"
-              style={{
-                backgroundImage:
-                  "linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(136,130,245,0.05) 40%, rgba(136,130,245,0.05) 60%, rgba(255,255,255,0.02) 100%)",
-              }}
-            >
-              <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 text-center">
-                  <h2
-                    className="ac-section-heading font-bold"
-                  >
-                    {seo.testimonials.title}
-                  </h2>
-                  <p className="text-lg text-slate-700" style={{ fontSize: 18, lineHeight: "27px" }}>
-                    {seo.testimonials.lead}
-                  </p>
-                </div>
-                <ReviewMarquee />
-              </div>
-            </section>
+            
 
             <RelatedTools currentPath="/video-to-text" />
 
@@ -275,7 +254,7 @@ export default function VideoToTextConverterPage() {
 
 
             <section className="ac-section-wash overflow-hidden">
-              <div className="overflow-hidden text-center" style={{ backgroundColor: "#8882F5" }}>
+              <div className="ac-purple-cta-band overflow-hidden text-center">
                 <div className="mx-auto grid max-w-6xl items-end gap-y-6 px-4 py-10 lg:px-8">
                   <h2
                     className="ac-section-heading font-bold text-white"

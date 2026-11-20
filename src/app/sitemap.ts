@@ -15,14 +15,12 @@ const STATIC_PATHS = [
   "/mp3-to-srt",
   "/video-to-text",
   "/youtube-transcript-generator",
-  "/youtube-video-summarizer",
   "/tiktok-transcript-generator",
   "/instagram-transcript-generator",
   "/facebook-transcript-generator",
   "/x-transcript-generator",
   "/ai-video-summarizer",
   "/youtube-subtitle-downloader",
-  "/ai-tools",
 ] as const;
 
 function absoluteUrl(path: string, locale: string): string {

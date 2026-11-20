@@ -3,8 +3,8 @@ import {
   TIKTOK_TRANSCRIPT_GENERATOR_HREF,
   tiktokTranscriptGeneratorSeo,
 } from "@/lib/convert/tiktok-transcript-generator-content";
-import { defaultLocale } from "@/i18n/locale";
 import { Metadata } from "next";
+import { buildToolPageMetadata } from "@/lib/seo/build-tool-page-metadata";
 
 export async function generateMetadata({
   params,
@@ -12,43 +12,13 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const base = process.env.NEXT_PUBLIC_WEB_URL || "";
-  let canonicalUrl = `${base}${TIKTOK_TRANSCRIPT_GENERATOR_HREF}`;
-  if (locale !== defaultLocale) {
-    canonicalUrl = `${base}/${locale}${TIKTOK_TRANSCRIPT_GENERATOR_HREF}`;
-  }
-
   const { title, description } = tiktokTranscriptGeneratorSeo.meta;
-
-  return {
+  return buildToolPageMetadata({
+    path: TIKTOK_TRANSCRIPT_GENERATOR_HREF,
+    locale,
     title,
     description,
-    alternates: {
-      canonical: canonicalUrl,
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonicalUrl,
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      },
-    },
-  };
+  });
 }
 
 export default function Page() {

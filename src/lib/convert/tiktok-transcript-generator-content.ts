@@ -9,12 +9,12 @@ export const TIKTOK_TRANSCRIPT_GENERATOR_HREF = "/tiktok-transcript-generator";
 
 export const tiktokTranscriptGeneratorSeo = {
   meta: {
-    title: "TikTok Transcript from a Public Link",
+    title: "TikTok Transcript Generator — Free Transcript from a Public Link",
     description:
       "Get TikTok transcript from a public tiktok.com video URL. Copy or export TXT, DOCX, SRT, or VTT in the workspace. Private videos may not fetch.",
   },
   hero: {
-    h1: "Paste a Public Link for TikTok Transcript",
+    h1: "TikTok Transcript Generator",
     subtitle:
       "TikTok transcript on this page is spoken audio from a public TikTok video, written so you can search and export it. Paste a tiktok.com video URL, run transcription, then copy or download from the workspace.",
     chips: [

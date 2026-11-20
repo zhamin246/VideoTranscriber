@@ -3,8 +3,8 @@ import {
   AI_VIDEO_SUMMARIZER_HREF,
   aiVideoSummarizerSeo,
 } from "@/lib/convert/ai-video-summarizer-content";
-import { defaultLocale } from "@/i18n/locale";
 import { Metadata } from "next";
+import { buildToolPageMetadata } from "@/lib/seo/build-tool-page-metadata";
 
 export async function generateMetadata({
   params,
@@ -12,44 +12,13 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const base = process.env.NEXT_PUBLIC_WEB_URL || "";
-  let canonicalUrl = `${base}${AI_VIDEO_SUMMARIZER_HREF}`;
-  if (locale !== defaultLocale) {
-    canonicalUrl = `${base}/${locale}${AI_VIDEO_SUMMARIZER_HREF}`;
-  }
-
   const { title, description } = aiVideoSummarizerSeo.meta;
-
-  return {
+  return buildToolPageMetadata({
+    path: AI_VIDEO_SUMMARIZER_HREF,
+    locale,
     title,
     description,
-    alternates: {
-      canonical: canonicalUrl,
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonicalUrl,
-      siteName: "Video Transcriber",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      },
-    },
-  };
+  });
 }
 
 export default function Page() {

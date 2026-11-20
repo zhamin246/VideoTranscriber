@@ -3,8 +3,8 @@ import {
   AUDIO_TO_TEXT_CONVERTER_HREF,
   audioToTextConverterSeo,
 } from "@/lib/convert/audio-to-text-converter-content";
-import { defaultLocale } from "@/i18n/locale";
 import { Metadata } from "next";
+import { buildToolPageMetadata } from "@/lib/seo/build-tool-page-metadata";
 
 export async function generateMetadata({
   params,
@@ -12,44 +12,13 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const base = process.env.NEXT_PUBLIC_WEB_URL || "";
-  let canonicalUrl = `${base}${AUDIO_TO_TEXT_CONVERTER_HREF}`;
-  if (locale !== defaultLocale) {
-    canonicalUrl = `${base}/${locale}${AUDIO_TO_TEXT_CONVERTER_HREF}`;
-  }
-
   const { title, description } = audioToTextConverterSeo.meta;
-
-  return {
+  return buildToolPageMetadata({
+    path: AUDIO_TO_TEXT_CONVERTER_HREF,
+    locale,
     title,
     description,
-    alternates: {
-      canonical: canonicalUrl,
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonicalUrl,
-      siteName: "Video Transcriber",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      },
-    },
-  };
+  });
 }
 
 export default function Page() {

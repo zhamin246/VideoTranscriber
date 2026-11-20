@@ -13,7 +13,6 @@ import {
   WORKSPACE_DIRECTORY_EXTRA_NAV,
   WORKSPACE_MEDIA_TOOL_NAV,
   WORKSPACE_PLATFORM_TOOL_NAV,
-  WORKSPACE_TOOL_NAV,
   type WorkspaceToolNavItem,
 } from "./workspace-tool-nav-items";
 import { V } from "./visual";
@@ -23,7 +22,6 @@ const TOOL_BLURBS: Record<string, string> = {
   "/audio-to-text-converter": "Turn recordings and podcasts into editable text.",
   "/mp3-to-srt": "Upload MP3 and export timed SRT or VTT subtitles.",
   "/ai-video-summarizer": "Summarize long videos with AI chapter notes.",
-  "/youtube-video-summarizer": "Summarize YouTube videos from a link.",
   "/youtube-subtitle-downloader": "Download captions and subtitles from YouTube.",
   "/youtube-transcript-generator": "Paste a YouTube URL and get a full transcript.",
   "/tiktok-transcript-generator": "Transcribe TikTok videos from a link.",
@@ -137,8 +135,6 @@ export default function AiToolsPage() {
                 Browse transcription tools for video, audio, and social platforms—pick
                 one to start free.
               </p>
-
-              <ToolSection title="Popular tools" items={WORKSPACE_TOOL_NAV} />
 
               <ToolSection
                 title="Video & audio transcriber"

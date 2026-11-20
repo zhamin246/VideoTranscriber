@@ -1,5 +1,6 @@
 import "@/app/globals.css";
 
+import type { Viewport } from "next";
 import { getLocale, setRequestLocale } from "next-intl/server";
 import { locales, defaultLocale } from "@/i18n/locale";
 import { cn } from "@/lib/utils";
@@ -22,6 +23,13 @@ const inter = localFont({
   variable: "--font-inter",
   fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+};
 
 const instrumentSerif = localFont({
   src: [
@@ -69,7 +77,6 @@ export default async function RootLayout({
             `,
           }}
         />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
         <meta name="mobile-web-app-capable" content="yes" />
         {googleAdsenseCode && (
           <meta name="google-adsense-account" content={googleAdsenseCode} />

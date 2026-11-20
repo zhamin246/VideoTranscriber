@@ -8,7 +8,7 @@ export const AUDIO_TO_TEXT_CONVERTER_HREF = "/audio-to-text-converter";
 
 export const audioToTextConverterSeo = {
   meta: {
-    title: "Audio to Text Converter to Transcribe | Video Transcriber",
+    title: "Audio to Text Converter — Transcribe MP3, WAV, and M4A Online",
     description:
       "Use this audio to text converter to upload MP3, WAV, or M4A and get text. Export TXT, DOCX, SRT, or VTT. Video files go to a different page.",
   },
@@ -26,7 +26,7 @@ export const audioToTextConverterSeo = {
   },
   how: {
     title: "How this audio to text converter works",
-    lead: "An audio to text converter turns spoken words in a file into text you can search, copy, and save. On this page that means an MP3, WAV, or M4A upload — not a video file and not a pasted URL. Work in the browser: upload the audio file, choose language and speaker options if you need them, run transcription, then stay in the workspace.",
+    lead: "An audio to text converter turns spoken words in a file into text you can search, copy, and save. On this page that means an MP3, WAV, or M4A upload — not a video file and not a pasted URL. When you need MP4, MOV, or WebM instead, use the [[video to text converter|/video-to-text]].",
     steps: [
       {
         n: "1",

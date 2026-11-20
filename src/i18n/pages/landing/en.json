@@ -640,7 +640,6 @@
           "title": "Tools",
           "children": [
             { "title": "AI Video Summarizer", "url": "/ai-video-summarizer" },
-            { "title": "YouTube Video Summarizer", "url": "/youtube-video-summarizer" },
             { "title": "My files", "url": "/my-assets" }
           ]
         },

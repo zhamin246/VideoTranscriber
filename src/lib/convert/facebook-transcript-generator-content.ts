@@ -121,9 +121,13 @@ export const facebookTranscriptGeneratorSeo = {
       },
     ],
   },
-  testimonials: {
-    title: "What Our Users Say",
-    lead: "Use searchable transcripts to review spoken content, organize information, and spend less time searching through long videos.",
+  pageGuide: {
+    title: "Facebook links, formats, and failures",
+    paragraphs: [
+      "Facebook Transcript Generator is for public facebook.com video URLs and supported fb.watch shortcuts when the clip can be fetched without logging in as the owner. Page links, group feeds without a single watch URL, and friends-only Reels often stop at fetch—this is access, not a transcription setting. Cross-posted YouTube uploads should use [[YouTube Transcript Generator|/youtube-transcript-generator]]; vertical clips on Instagram use [[Instagram Transcript Generator|/instagram-transcript-generator]].",
+      "After speech becomes text you can export TXT or DOCX for scripts, plus SRT or VTT when timing matters. This page does not accept uploads; MP4 or MOV files go to the [[video to text converter|/video-to-text]], and WAV or MP3 podcasts go to [[Audio to Text|/audio-to-text-converter]]. Summaries and chapters live in [[AI Video Summarizer|/ai-video-summarizer]] once a transcript exists.",
+      "Typical issues: sharing a Page instead of the Watch URL, expired embeds on copied posts, muted opening seconds that leave empty lines, or heavy music covering dialogue. Copy the link from Share → Copy link, open it in a private window to confirm playback, then paste again. If the same clip is also on TikTok, [[TikTok Transcript Generator|/tiktok-transcript-generator]] may work when this URL does not.",
+    ],
   },
   faq: {
     title: "Facebook Transcript Generator FAQ",

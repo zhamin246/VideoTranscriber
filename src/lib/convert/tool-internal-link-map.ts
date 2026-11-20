@@ -8,7 +8,7 @@ export const TOOL_INTERNAL_LINKS = [
   { href: "/audio-to-text-converter", anchor: "Audio to Text" },
   { href: "/mp3-to-srt", anchor: "MP3 to SRT" },
   { href: "/youtube-transcript-generator", anchor: "YouTube Transcript Generator" },
-  { href: "/youtube-video-summarizer", anchor: "YouTube Video Summarizer" },
+  { href: "/ai-video-summarizer", anchor: "YouTube Video Summarizer" },
   { href: "/youtube-subtitle-downloader", anchor: "YouTube Subtitle Downloader" },
   { href: "/tiktok-transcript-generator", anchor: "TikTok Transcript Generator" },
   { href: "/instagram-transcript-generator", anchor: "Instagram Transcript Generator" },

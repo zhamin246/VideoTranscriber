@@ -21,10 +21,10 @@ import HeroUpload from "./hero-upload";
 import MediaFilesStrip from "./media-files-strip";
 import WorkspaceNav from "./workspace-nav";
 import PromoBanner from "./promo-banner";
-import ReviewMarquee from "./review-marquee";
 import ScrollCta from "./scroll-cta";
 import { LandingFaqSection } from "./landing-faq-section";
 import RelatedTools from "./related-tools";
+import { BodyWithInternalLinks } from "./body-with-internal-links";
 import { V } from "./visual";
 import {
   FACEBOOK_TRANSCRIPT_GENERATOR_HREF,
@@ -246,25 +246,20 @@ export default function FacebookTranscriptGeneratorPage() {
               </div>
             </section>
 
-            <section
-              className="pb-16 pt-16 sm:pb-24 sm:pt-32"
-              style={{
-                backgroundImage:
-                  "linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(136,130,245,0.05) 40%, rgba(136,130,245,0.05) 60%, rgba(255,255,255,0.02) 100%)",
-              }}
-            >
-              <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 text-center">
-                  <h2
-                    className="ac-section-heading font-bold"
-                  >
-                    {seo.testimonials.title}
-                  </h2>
-                  <p className="text-lg text-slate-700" style={{ fontSize: 18, lineHeight: "27px" }}>
-                    {seo.testimonials.lead}
-                  </p>
+            
+
+            <section className="ac-section-wash px-4 py-12 sm:px-8">
+              <div className="mx-auto max-w-3xl">
+                <h2 className="ac-section-heading text-center font-bold">
+                  {seo.pageGuide.title}
+                </h2>
+                <div className="mt-6 space-y-4 text-left text-[15px] leading-relaxed text-slate-700 sm:text-base">
+                  {seo.pageGuide.paragraphs.map((p) => (
+                    <p key={p.slice(0, 48)}>
+                      <BodyWithInternalLinks text={p} />
+                    </p>
+                  ))}
                 </div>
-                <ReviewMarquee />
               </div>
             </section>
 
@@ -274,7 +269,7 @@ export default function FacebookTranscriptGeneratorPage() {
 
 
             <section className="ac-section-wash overflow-hidden">
-              <div className="overflow-hidden text-center" style={{ backgroundColor: "#8882F5" }}>
+              <div className="ac-purple-cta-band overflow-hidden text-center">
                 <div className="mx-auto grid max-w-6xl items-end gap-y-6 px-4 py-10 lg:px-8">
                   <h2
                     className="ac-section-heading font-bold text-white"
