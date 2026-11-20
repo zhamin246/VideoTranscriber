@@ -13,6 +13,8 @@ const withNextIntl = createNextIntlPlugin();
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
+  /** Emit title/description/canonical in <head> before body (not streamed at EOF) for curl and all crawlers. */
+  htmlLimitedBots: /.*/,
   reactStrictMode: false,
   pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
   images: {
