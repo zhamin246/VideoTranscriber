@@ -12,21 +12,12 @@ export async function generateMetadata({
   const description =
     "Video to text, audio transcription, YouTube and TikTok transcript generators, AI summarizer, and subtitle tools in one directory.";
 
-  const meta = buildToolPageMetadata({
+  return buildToolPageMetadata({
     path: "/ai-tools",
     locale,
     title,
     description,
   });
-
-  return {
-    ...meta,
-    robots: {
-      index: false,
-      follow: true,
-      googleBot: { index: false, follow: true },
-    },
-  };
 }
 
 export default function Page() {
